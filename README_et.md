@@ -1,3 +1,0 @@
-# micromouse
-
-hello
