@@ -24,6 +24,7 @@ class Sensor {
   
   public:
     Sensor(const int pin);
+    ~Sensor();
     float getDistance();
     bool isWall();
     

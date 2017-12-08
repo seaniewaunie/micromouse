@@ -11,6 +11,10 @@ Sensor::Sensor(const int pin){
     m_sonar = new NewPing(m_pin, m_pin, MAX_DISTANCE);
 }
 
+Sensor::~Sensor(){
+    delete m_sonar;
+}
+
 float Sensor::getDistance(){
     return m_sonar->ping_cm();
 }

@@ -13,5 +13,5 @@ void setup() {
 void loop() {
   Serial.print("North Distance: ");
   Serial.println( north.getDistance() );
-  delay(1000);
+  delay(50);
 }
