@@ -9,7 +9,7 @@
  *
  * The Diagnostic Object requires 6 pins, 1 for each sensor and 1 for each LED in the North, East, and West directions
  *
- * update() polls each sensors "isWall()" function, then calls "turnON()" or "flashLED()" for the respective
+ * update() polls each sensor's "isWall()" function, then calls "turnON()" or "flashLED()" for the respective
  * sensors LED object. This function would ideally be called often
  *
  * As described in the Preliminary design, an LED will light up when there is no wall within critical distance of the sensor,

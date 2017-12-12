@@ -35,7 +35,7 @@ Diagnostics::~Diagnostics(){
 
 void Diagnostics::update(){
     // upon calling update, all sensors will be polled to determine if there is a wall
-    // if there is, the LED associated with it will turn on
+    // if there is no wall, the LED associated with it will turn on
 
     // north Sensor
     if(m_northSensor->isWall() == false) 
