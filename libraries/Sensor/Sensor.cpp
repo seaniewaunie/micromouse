@@ -1,3 +1,11 @@
+/*
+ * Author: Sean Graff
+ * Created: 12/8/17
+ * Version: 1.0
+ * 
+ * Sensor Implementation file
+ */ 
+
 #include "Arduino.h"
 #include "Sensor.h"
 
