@@ -22,16 +22,17 @@ LED::~LED(){
     // no dynamic memory
 }
 
-LED::turnON(){
+void LED::turnON(){
     digitalWrite(m_pin, HIGH);
 }
 
-LED::turnOFF(){
+void LED::turnOFF(){
     digitalWrite(m_pin, LOW);
 }
 
-LED::flashLED(){
+void LED::flashLED(){
     turnON();
     delay(SENSOR_DELAY_MS);
     turnOFF();
+    delay(SENSOR_DELAY_MS);
 }
