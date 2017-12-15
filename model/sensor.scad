@@ -38,5 +38,3 @@ module sensor ()
     }
     
 }
-
-sensor();
