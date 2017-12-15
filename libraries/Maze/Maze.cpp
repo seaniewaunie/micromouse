@@ -10,6 +10,7 @@ Maze::Maze() {
 	current = &maze[SIZE];
 }
 
+
 Maze::~Maze() {
 	free(maze);
 	free(current);
@@ -20,19 +21,23 @@ int8_t Maze::getNext(uint8_t sensor) {
 	Node* next;
 	uint8_t nextDir;
 	uint8_t wall;
-	if(current->wall == NULL) {
+        /*
+        if(current->wall == NULL) {
 		current->wall = rshift(sensor,offset());
 		wall = sensor;
 	} else {
 		Serial.println("calling from memory");
 		wall = lshift(current->wall,offset());
-	}
+	}*/
+        current->wall = rshift(sensor,offset());
+        wall = sensor;
 	if(!(wall & 8) && (current+northofcurrent())->wall == NULL) {
 		Serial.println("moving to north");
 		next = current + northofcurrent();
 		next->prev = current;
 		nextDir = N;
 		finalseq.push(N);
+                dirlist.push(N);
 	}
 	else if(!(wall & 4) && (current+eastofcurrent())->wall == NULL) {
 		Serial.println("moving to east");
@@ -41,6 +46,7 @@ int8_t Maze::getNext(uint8_t sensor) {
 		facing = rshift(facing,1);
 		nextDir = E;
 		finalseq.push(E);
+                dirlist.push(E);
 	}
 	else if(!(wall & 1) && (current+westofcurrent())->wall == NULL) {
 		Serial.println("moving to west");
@@ -49,20 +55,23 @@ int8_t Maze::getNext(uint8_t sensor) {
 		facing = rshift(facing,3);
 		nextDir = W;
 		finalseq.push(W);
+                dirlist.push(W);
 	}
-	else if(!(wall & 2) && (current+westofcurrent())->wall == NULL) {
-		Serial.println("moving to south");
+	else if(!(wall & 2) && (current+southofcurrent())->wall == NULL) {
+            	Serial.println("moving to south");
 		next = current + southofcurrent();
 		next->prev = current;
 		facing = rshift(facing,2);
 		nextDir = S;
 		finalseq.push(S);
+                dirlist.push(S);
 	}
 	else {
 		Serial.println("going back to prev");
 		next = current->prev;
-		facing = rshift(facing,2);
-		nextDir = S;
+                Serial.print(dirlist.peek());
+                nextDir = rshift(dirlist.pop(),2);
+               	facing = nextDir;
 		finalseq.pop();
 	}
 	nextIndex = next - current;

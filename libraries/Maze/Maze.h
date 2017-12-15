@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <QueueArray.h>
+#include <StackArray.h>
 
 #define ROW 3
 #define COL 3
@@ -28,10 +29,10 @@ public:
 	Maze();
 	~Maze();
 	int8_t getNext(uint8_t);
-	QueueArray<uint8_t> getPath();
-	
+	QueueArray<uint8_t> getPath();	
 private:
 	QueueArray<uint8_t> finalseq;
+        StackArray<uint8_t> dirlist;
 	uint8_t facing;
 	Node* current;
 	Node* maze;

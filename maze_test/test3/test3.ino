@@ -49,12 +49,13 @@ void loop() {
   buttonState = digitalRead(buttonPin);
   if (buttonState != lastButtonState) {
     if (buttonState == HIGH) {
+      uint8_t sensorD = (8*diagnostics.getNorthSensor()->isWall()) + (4*diagnostics.getEastSensor()->isWall()) + (1*diagnostics.getWestSensor()->isWall()) + (2*mutex);
+      mutex = mutex & 0;
       
-      if(index != goal) {
+      if(sensorD != 0 || diagnostics.checkWin() == false) {
         Serial.print("currently at node: ");  Serial.println(index);
         //* sensor call
-        uint8_t sensorD = (8*diagnostics.getNorthSensor()->isWall()) + (4*diagnostics.getEastSensor()->isWall()) + (1*diagnostics.getWestSensor()->isWall()) + (2*mutex);
-        mutex = mutex & 0;
+        
         Serial.print("SensorD: "); Serial.println(sensorD);
         
         
