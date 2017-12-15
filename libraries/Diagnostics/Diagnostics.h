@@ -35,7 +35,16 @@ class Diagnostics {
 
     ~Diagnostics();
     void update();
+
+    Sensor *getNorthSensor();
+    Sensor *getEastSensor();
+    Sensor *getWestSensor();
     
+    LED *getNorthLED();
+    LED *getEastLED();
+    LED *getWestLED();
+
+
   private:
     // the micromouse has 3 sensors per the Preliminary Design
     Sensor *m_northSensor;

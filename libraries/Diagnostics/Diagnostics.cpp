@@ -1,7 +1,7 @@
 /*
  * Author: Sean Graff
  * Created: 12/11/17
- * Version: 1.0
+ * Version: 1.1
  * 
  * Diagnostics Implementation file
  */ 
@@ -38,19 +38,43 @@ void Diagnostics::update(){
     // if there is no wall, the LED associated with it will turn on
 
     // north Sensor
-    if(m_northSensor->isWall() == false) 
+    if(m_northSensor->isWall()) 
         m_northLED->turnON();
     else 
         m_northLED->turnOFF();
     
     // east Sensor
-    if(m_eastSensor->isWall() == false)
+    if(m_eastSensor->isWall())
         m_eastLED->turnON();
     else
         m_eastLED->turnOFF();
 
-    if(m_westSensor->isWall() == false)
+    if(m_westSensor->isWall())
         m_westLED->turnON();
     else
         m_westLED->turnOFF();
+}
+
+Sensor* Diagnostics::getNorthSensor(){
+    return m_northSensor;
+}
+
+Sensor* Diagnostics::getEastSensor(){
+    return m_eastSensor;
+}
+
+Sensor* Diagnostics::getWestSensor(){
+    return m_westSensor;
+}
+
+LED* Diagnostics::getNorthLED(){
+    return m_northLED;
+}
+
+LED* Diagnostics::getEastLED(){
+    return m_eastLED;
+}
+
+LED* Diagnostics::getWestLED(){
+    return m_westLED;
 }
