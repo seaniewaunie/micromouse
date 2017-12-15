@@ -16,12 +16,17 @@ Maze::~Maze() {
 }
 
 int8_t Maze::getNext(uint8_t sensor) {
+	Serial.println(long(current));
 	Node* next;
 	uint8_t nextDir;
-	current->wall = rshift(sensor,offset());
-	uint8_t wall = sensor;
-        Serial.print("logical wall is: ");
-        Serial.println(wall);
+	uint8_t wall;
+	if(current->wall == NULL) {
+		current->wall = rshift(sensor,offset());
+		wall = sensor;
+	} else {
+		Serial.println("calling from memory");
+		wall = lshift(current->wall,offset());
+	}
 	if(!(wall & 8) && (current+northofcurrent())->wall == NULL) {
 		Serial.println("moving to north");
 		next = current + northofcurrent();
