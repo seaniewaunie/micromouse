@@ -63,7 +63,8 @@ void loop() {
         Serial.println();
       }
       else {
-        delay(100);
+        diagnostics.celebrate();
+        delay(2000);
         Serial.println("done");
         QueueArray<uint8_t> finalseq = maze->getPath();
         while(!finalseq.isEmpty()) {
