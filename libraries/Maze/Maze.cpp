@@ -60,7 +60,7 @@ int8_t Maze::getNext(uint8_t sensor) {
 	}
 	else {
 		Serial.println("going back to prev");
-		next->prev = current;
+		next = current->prev;
 		facing = rshift(facing,2);
 		nextDir = S;
 		finalseq.pop();

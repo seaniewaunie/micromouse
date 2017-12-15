@@ -37,6 +37,8 @@ class Diagnostics {
     void update();
     void celebrate();
 
+    bool checkWin();
+
     Sensor *getNorthSensor();
     Sensor *getEastSensor();
     Sensor *getWestSensor();
