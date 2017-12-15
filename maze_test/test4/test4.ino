@@ -51,7 +51,7 @@ void loop() {
     if (buttonState == HIGH) {
       uint8_t sensorD = (8*diagnostics.getNorthSensor()->isWall()) + (4*diagnostics.getEastSensor()->isWall()) + (1*diagnostics.getWestSensor()->isWall()) + (2*mutex);
       mutex = mutex & 0;
-      if(sensorD != 0) {
+      if(sensorD != 0 || diagnostics.checkWin() == false) {
         Serial.print("currently at node: ");  Serial.println(index);
         Serial.print("SensorD: "); Serial.println(sensorD);
         //uint8_t D = maze->getNext(_maze1[index]);
@@ -63,19 +63,19 @@ void loop() {
         Serial.println();
       }
       else {
-        diagnostics.celebrate();
-        delay(2000);
-        Serial.println("done");
-        QueueArray<uint8_t> finalseq = maze->getPath();
-        while(!finalseq.isEmpty()) {
-          lightLED(finalseq.pop());
-          delay(1000);       
-        }
-        exit(0);
+        if(diagnostics.checkWin()){
+            diagnostics.celebrate();
+            delay(2000);
+            Serial.println("done");
+            QueueArray<uint8_t> finalseq = maze->getPath();
+            while(!finalseq.isEmpty()) {
+              lightLED(finalseq.pop());
+              delay(1000);       
+            }
+            exit(0);
+        } // check win
       }
-      } else {
-        /* empty */
-      }
+    }
       delay(50);
   }
   lastButtonState = buttonState;

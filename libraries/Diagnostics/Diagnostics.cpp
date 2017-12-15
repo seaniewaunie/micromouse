@@ -1,7 +1,7 @@
 /*
  * Author: Sean Graff
  * Created: 12/11/17
- * Version: 1.1
+ * Version: 1.2
  * 
  * Diagnostics Implementation file
  */ 
@@ -10,6 +10,7 @@
 #include "Diagnostics.h"
 
 #define LED_DELAY_MS 100
+#define MAZE_LENGTH_CM 108
 
 Diagnostics::Diagnostics(const int northSensorPin, const int eastSensorPin, \
                          const int westSensorPin, const int northLEDPin, \
@@ -69,6 +70,21 @@ void Diagnostics::celebrate(){
         m_westLED->turnOFF();
         delay(LED_DELAY_MS);
     }
+}
+
+// check to see if the micromouse is done
+bool Diagnostics::checkWin(){
+    // poll north first
+    if(m_northSensor->getDistance() > MAZE_LENGTH_CM/2){
+        // now poll east
+        if(m_eastSensor->getDistance() > MAZE_LENGTH_CM/2){
+            //now west
+            if(m_westSensor->getDistance() > MAZE_LENGTH_CM/2){
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 Sensor* Diagnostics::getNorthSensor(){
