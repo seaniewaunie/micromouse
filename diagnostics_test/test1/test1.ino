@@ -25,6 +25,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   diagnostics.update();
+  diagnostics.celebrate();
   //diagnostics.getNorthLED()->flashLED();
-  delay(1);
+  delay(1000);
 }

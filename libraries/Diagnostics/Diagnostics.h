@@ -35,6 +35,7 @@ class Diagnostics {
 
     ~Diagnostics();
     void update();
+    void celebrate();
 
     Sensor *getNorthSensor();
     Sensor *getEastSensor();

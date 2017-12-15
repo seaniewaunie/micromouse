@@ -11,7 +11,7 @@
 #include "Arduino.h"
 #include "LED.h"
 
-#define SENSOR_DELAY_MS 100
+#define LED_DELAY_MS 100
 
 LED::LED(const int pin){
     m_pin = pin;
@@ -32,7 +32,7 @@ void LED::turnOFF(){
 
 void LED::flashLED(){
     turnON();
-    delay(SENSOR_DELAY_MS);
+    delay(LED_DELAY_MS);
     turnOFF();
-    delay(SENSOR_DELAY_MS);
+    delay(LED_DELAY_MS);
 }

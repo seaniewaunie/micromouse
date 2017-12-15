@@ -9,6 +9,7 @@
 #include "Arduino.h"
 #include "Diagnostics.h"
 
+#define LED_DELAY_MS 100
 
 Diagnostics::Diagnostics(const int northSensorPin, const int eastSensorPin, \
                          const int westSensorPin, const int northLEDPin, \
@@ -53,6 +54,21 @@ void Diagnostics::update(){
         m_westLED->turnON();
     else
         m_westLED->turnOFF();
+}
+
+
+// upon finishing a maze, the micromouse will celebrate!
+void Diagnostics::celebrate(){
+    for(int i = 0; i < 10; i++){
+        m_northLED->turnON();
+        m_eastLED->turnON();
+        m_westLED->turnON();
+        delay(LED_DELAY_MS);
+        m_northLED->turnOFF();
+        m_eastLED->turnOFF();
+        m_westLED->turnOFF();
+        delay(LED_DELAY_MS);
+    }
 }
 
 Sensor* Diagnostics::getNorthSensor(){
