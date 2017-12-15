@@ -4,9 +4,9 @@
 
 #include "LED.h"
 
-#define NORTH_LED_PIN 5
-#define WEST_LED_PIN 6
-#define EAST_LED_PIN 7
+#define NORTH_LED_PIN 7
+#define EAST_LED_PIN 6
+#define WEST_LED_PIN 5
 
 // Instantiate LED Objects
 LED north_led(NORTH_LED_PIN);

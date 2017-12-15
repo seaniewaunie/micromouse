@@ -18,8 +18,10 @@ Maze::~Maze() {
 int8_t Maze::getNext(uint8_t sensor) {
 	Node* next;
 	uint8_t nextDir;
-	current->wall = sensor;
-	uint8_t wall = lshift(sensor,offset());
+	current->wall = rshift(sensor,offset());
+	uint8_t wall = sensor;
+        Serial.print("logical wall is: ");
+        Serial.println(wall);
 	if(!(wall & 8) && (current+northofcurrent())->wall == NULL) {
 		Serial.println("moving to north");
 		next = current + northofcurrent();
