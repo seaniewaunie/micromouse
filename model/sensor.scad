@@ -3,38 +3,27 @@
 //Sensor
 //Date: 12/15/2017
 
-//units in mm
-//sensor
+include <model_constants.scad>;
 
-module sensor ()
-{
-    sensor_barrel_r = 8;
-    sensor_barrel_h = 12;
-    sensor_pcb_l = 21;
-    sensor_pcb_w = 46;
-    sensor_pcb_h = 3;
-    sensor_total_h = 15;
-    distance_bw_speaker_foci = 30;
+module sensor () {
     
     //sensor speaker1
-    
-    translate([distance_bw_speaker_foci/2, 0, sensor_barrel_h/2+sensor_pcb_h]){
-       color("silver")
-        cylinder(r=sensor_barrel_r, h=sensor_barrel_h, center = true);
+    translate([SENSOR_DISTANCE_BW_BARREL_FOCI / 2, 0, SENSOR_BARREL_H / 2 + SENSOR_PCB_H]) {
+        color("silver")
+        cylinder(d = SENSOR_BARREL_D, h = SENSOR_BARREL_H, center = true);
     }
     
     //sensor speaker2
-    translate([-distance_bw_speaker_foci/2, 0, sensor_barrel_h/2+sensor_pcb_h]){
+    translate([-SENSOR_DISTANCE_BW_BARREL_FOCI / 2, 0, SENSOR_BARREL_H / 2 + SENSOR_PCB_H]) {
         color("silver")
-
-        cylinder(r=sensor_barrel_r, h=sensor_barrel_h, center = true);
-    }
-    //sensor pcb
-    translate([0,0,sensor_pcb_h]){
-    rotate(a=0, v=[1,0,0]){
-        color("blue")
-        cube([sensor_pcb_w,sensor_pcb_l,sensor_pcb_h], center = true);
-    }
+        cylinder(d = SENSOR_BARREL_D, h = SENSOR_BARREL_H, center = true);
     }
     
+    //sensor pcb
+    translate([0, 0, SENSOR_PCB_H]) {
+        rotate(a = 0, v = [1, 0, 0]) {
+            color("blue")
+            cube([SENSOR_PCB_W, SENSOR_PCB_L, SENSOR_PCB_H], center = true);
+        }
+    }
 }

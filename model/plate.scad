@@ -2,7 +2,9 @@
 // Author: Aksel Thomas
 // Date: 12/15/2017
 
-module plate(l=70, w=54, h=0.1, color="silver") {
+include <model_constants.scad>;
+
+module plate(l = PLATE_L, w = PLATE_W, h = PLATE_H, color = "silver") {
     color(color)
     cube([l, w, h], center = true);
 }

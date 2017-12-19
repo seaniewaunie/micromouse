@@ -2,31 +2,21 @@
 // Author: Aksel Thomas
 // Date: 12/15/2017
 
-led_cylinder_r = 3;
-led_cylinder_h = 9;
-led_lead_r = 1/4;
-led_lead_short_h = 26;
-led_lead_long_h = 28;
+include <model_constants.scad>
 
-module led(xt=0, yt=0, zt=0, color="red") {
-
-translate([xt, yt, zt]) {
-
-translate([0, 0, 18.5]) {
-    color(color)
-    cylinder(r=led_cylinder_r, h=led_cylinder_h, center = true);
-}
-
-translate([0, 1, 1]) {
-    color("silver")
-    cylinder(r=led_lead_r, h=led_lead_short_h, center = true);
-}
-
-translate([0, -1, 0]) {
-    color("silver")
-    cylinder(r=led_lead_r, h=led_lead_long_h, center = true);
-}
-
-}
-
+module led(xt = 0, yt = 0, zt = 0, color = "red") {
+    translate([xt, yt, zt]) {
+        translate([0, 0, 0]) {
+            color(color)
+            cylinder(d = LED_CASE_D, h = LED_CASE_H, center = false);
+        }
+        translate([0, LED_LEAD_OFFSET, -LED_LEAD_SHORT_H]) {
+            color("silver")
+            cylinder(d = LED_LEAD_D, h = LED_LEAD_SHORT_H, center = false);
+        }
+        translate([0, -LED_LEAD_OFFSET, -LED_LEAD_LONG_H]) {
+            color("silver")
+            cylinder(d = LED_LEAD_D, h = LED_LEAD_LONG_H, center = false);
+        }
+    }
 }
