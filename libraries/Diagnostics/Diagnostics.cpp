@@ -1,7 +1,8 @@
 /*
  * Author: Sean Graff
  * Created: 12/11/17
- * Version: 1.2
+ * Version: 1.3
+ * Last Edit: 1/30/18
  * 
  * Diagnostics Implementation file
  */ 
@@ -14,7 +15,8 @@
 
 Diagnostics::Diagnostics(const int northSensorPin, const int eastSensorPin, \
                          const int westSensorPin, const int northLEDPin, \
-                         const int eastLEDPin, const int westLEDPin)
+                         const int eastLEDPin, const int westLEDPin, \
+                         const int modeLEDPin)
 { 
     m_northSensor = new Sensor(northSensorPin);
     m_eastSensor = new Sensor(eastSensorPin);
@@ -23,6 +25,8 @@ Diagnostics::Diagnostics(const int northSensorPin, const int eastSensorPin, \
     m_northLED = new LED(northLEDPin);
     m_eastLED = new LED(eastLEDPin);
     m_westLED = new LED(westLEDPin);
+
+    m_modeLED = new LED(modeLEDPin);
 }
 
 Diagnostics::~Diagnostics(){
@@ -33,6 +37,7 @@ Diagnostics::~Diagnostics(){
     delete m_northLED;
     delete m_eastLED;
     delete m_westLED;
+    delete m_modeLED;
 }
 
 void Diagnostics::update(){
@@ -65,6 +70,7 @@ void Diagnostics::celebrate(){
         m_eastLED->turnON();
         m_westLED->turnON();
         delay(LED_DELAY_MS);
+
         m_northLED->turnOFF();
         m_eastLED->turnOFF();
         m_westLED->turnOFF();
@@ -109,4 +115,8 @@ LED* Diagnostics::getEastLED(){
 
 LED* Diagnostics::getWestLED(){
     return m_westLED;
+}
+
+LED* Diagnostics::getModeLED(){
+    return m_modeLED;
 }
