@@ -17,15 +17,11 @@ led(xt = 0, yt = -10, zt = 50, color = "red");
 // Not sure if we need a plate
 // plate();
 
-arduino();
+arduino(xt = 0, yt = 0, zt = 0);
 
-translate([0, 20, 50]) {
-motor();
-}
+motor(xt = 0, yt = 20, zt = 50);
 
-translate([0, -20, -50]) {
-sensor();
-}
+sensor(xt = 0, yt = -20, zt = -50);
 
 back_wheel(xt = 0, yt = -60, zt = 0);
 
