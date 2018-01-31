@@ -16,7 +16,7 @@
 Diagnostics::Diagnostics(const int northSensorPin, const int eastSensorPin, \
                          const int westSensorPin, const int northLEDPin, \
                          const int eastLEDPin, const int westLEDPin, \
-                         const int modeLEDPin)
+                         const int southLEDPin, const int modeLEDPin)
 { 
     m_northSensor = new Sensor(northSensorPin);
     m_eastSensor = new Sensor(eastSensorPin);
@@ -25,6 +25,7 @@ Diagnostics::Diagnostics(const int northSensorPin, const int eastSensorPin, \
     m_northLED = new LED(northLEDPin);
     m_eastLED = new LED(eastLEDPin);
     m_westLED = new LED(westLEDPin);
+    m_southLED = new LED(southLEDPin);
 
     m_modeLED = new LED(modeLEDPin);
 }
@@ -37,6 +38,7 @@ Diagnostics::~Diagnostics(){
     delete m_northLED;
     delete m_eastLED;
     delete m_westLED;
+    delete m_southLED;
     delete m_modeLED;
 }
 
@@ -69,11 +71,13 @@ void Diagnostics::celebrate(){
         m_northLED->turnON();
         m_eastLED->turnON();
         m_westLED->turnON();
+        m_southLED->turnON();
         delay(LED_DELAY_MS);
 
         m_northLED->turnOFF();
         m_eastLED->turnOFF();
         m_westLED->turnOFF();
+        m_southLED->turnOFF();
         delay(LED_DELAY_MS);
     }
 }
@@ -115,6 +119,10 @@ LED* Diagnostics::getEastLED(){
 
 LED* Diagnostics::getWestLED(){
     return m_westLED;
+}
+
+LED* Diagnostics::getSouthLED(){
+    return m_southLED;
 }
 
 LED* Diagnostics::getModeLED(){

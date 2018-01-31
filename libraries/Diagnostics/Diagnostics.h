@@ -34,7 +34,7 @@ class Diagnostics {
     Diagnostics(const int northSensorPin, const int eastSensorPin, \
                 const int westSensorPin, const int northLEDPin, \
                 const int eastLEDPin, const int westLEDPin, \
-                const int modeLEDPin);
+                const int southLEDPin, const int modeLEDPin);
 
     ~Diagnostics();
     void update();
@@ -49,6 +49,7 @@ class Diagnostics {
     LED *getNorthLED();
     LED *getEastLED();
     LED *getWestLED();
+    LED *getSouthLED();
     
     LED *getModeLED();
     
@@ -63,6 +64,7 @@ class Diagnostics {
     LED *m_northLED;
     LED *m_eastLED;
     LED *m_westLED;
+    LED *m_southLED;
 
     // LED for mode of operation
     LED *m_modeLED;

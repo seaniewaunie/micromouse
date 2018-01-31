@@ -24,16 +24,13 @@
 // Instantiate Diagnostics Object
 Diagnostics diagnostics(NORTH_SENSOR_PIN, EAST_SENSOR_PIN, WEST_SENSOR_PIN, \
                         NORTH_LED_PIN,    EAST_LED_PIN,    WEST_LED_PIN, \
-                        MODE_LED_PIN);
+                        SOUTH_LED_PIN, MODE_LED_PIN);
 
 
 // TODO: create a button object
 const int buttonPin = 2;
 int buttonState = 0;
 int lastButtonState = 0;
-
-
-LED southLED(SOUTH_LED_PIN);
 
 Maze *maze;
 
@@ -91,7 +88,7 @@ void lightLED(uint8_t D) {
     switch(D) {
       case N: Serial.println("N"); diagnostics.getNorthLED()->flashLED(); break;
       case E: Serial.println("E"); diagnostics.getEastLED()->flashLED(); break;
-      case S: Serial.println("S"); southLED.flashLED(); break;
+      case S: Serial.println("S"); diagnostics.getSouthLED()->flashLED(); break;
       case W: Serial.println("W"); diagnostics.getWestLED()->flashLED(); break;
       }
   }
