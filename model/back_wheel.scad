@@ -4,7 +4,7 @@
 
 include <model_constants.scad>;
 
-module back_wheel(xt = 0, yt = 0, zt = 0, color = [.2, .2, .2]) {
+module back_wheel(xt = 0, yt = 0, zt = 0, color = [0.2, 0.2, 0.2]) {
     color(color) {
         translate([xt, yt, zt]) {
             rotate(a = 90, v = [1, 0, 0]) {
