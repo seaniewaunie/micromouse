@@ -4,7 +4,9 @@
 
 include <model_constants.scad>;
 
-module plate(l = PLATE_L, w = PLATE_W, h = PLATE_H, color = "silver") {
+module plate(l = PLATE_L, w = PLATE_W, h = PLATE_H, xt = 0, yt = 0, zt = 0, color = "silver") {
     color(color)
-    cube([l, w, h], center = true);
+    translate([xt, yt, zt]) {
+        cube([l, w, h], center = true);
+    }
 }

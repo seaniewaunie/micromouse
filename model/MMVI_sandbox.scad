@@ -1,4 +1,10 @@
-//units in mm
+// File: MMVI_sandbox.scad
+// Author: Aksel Thomas
+// Date: 2/2/2018
+
+// The purpose of this file is to be a sandbox for viewing various
+// components.
+// The units are in mm.
 
 include <led.scad>;
 include <arduino.scad>;
