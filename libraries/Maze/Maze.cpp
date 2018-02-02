@@ -57,6 +57,7 @@ int8_t Maze::getNext(uint8_t sensor) {
 		finalseq.push(W);
                 dirlist.push(W);
 	}
+        // TODO: Is this else if ever called?
 	else if(!(wall & 2) && (current+southofcurrent())->wall == NULL) {
             	Serial.println("moving to south");
 		next = current + southofcurrent();
@@ -69,9 +70,10 @@ int8_t Maze::getNext(uint8_t sensor) {
 	else {
 		Serial.println("going back to prev");
 		next = current->prev;
+                //facing = rshift(facing, 2);
                 Serial.print(dirlist.peek());
                 nextDir = rshift(dirlist.pop(),2);
-               	facing = nextDir;
+                facing = nextDir;
 		finalseq.pop();
 	}
 	nextIndex = next - current;
