@@ -5,6 +5,8 @@
 // The purpose of this file is to lay out the components roughly where
 // they will go in relation to each other in the robot.
 
+// TODO: Add USB battery pack
+
 include <led.scad>;
 include <arduino.scad>;
 include <back_wheel.scad>;
@@ -18,10 +20,12 @@ include <caster_wheel.scad>;
 include <wall_segment.scad>;
 include <model_constants.scad>;
 
-WHEEL_OFFSET = 90;
+WHEEL_OFFSET = 55;
 MOTOR_OFFSET_FROM_WHEEL = -33.5;
-SENSOR_HEIGHT_OFFSET = 20;
-SENSOR_FORE_AFT_OFFSET = 80;
+SIDE_SENSOR_HEIGHT_OFFSET = 10;
+SIDE_SENSOR_FORE_AFT_OFFSET = -80;
+FRONT_SENSOR_FORE_AFT_OFFSET = 70;
+FRONT_SENSOR_HEIGHT_OFFSET = 15;
 GROUND_OFFSET = -36;
 
 // The ground (not part of the model, shown for reference)
@@ -45,14 +49,41 @@ rotate(a = 270, v = [0, 0, 1]) {
     motor(xt = WHEEL_OFFSET + MOTOR_OFFSET_FROM_WHEEL);
 }
 
-arduino();
+rotate([0, 0, 90]) {
+    arduino(zt = 15);
+}
 
-caster_wheel(xt = 100, yt = -CASTER_WHEEL_PLATE_L / 2, zt = 6);
+caster_wheel(xt = 70, yt = -CASTER_WHEEL_PLATE_L / 2, zt = 6);
 
+// Right sensor
 rotate(a = 90, v = [1, 0, 0]) {
-    sensor(xt = SENSOR_FORE_AFT_OFFSET, yt = SENSOR_HEIGHT_OFFSET, zt = 5);
+    sensor(xt = SIDE_SENSOR_FORE_AFT_OFFSET, yt = SIDE_SENSOR_HEIGHT_OFFSET, zt = 5);
 }
 
+// Left sensor
 rotate(a = 270, v = [1, 0, 0]) {
-    sensor(xt = SENSOR_FORE_AFT_OFFSET, yt = -SENSOR_HEIGHT_OFFSET, zt = 5);
+    sensor(xt = SIDE_SENSOR_FORE_AFT_OFFSET, yt = -SIDE_SENSOR_HEIGHT_OFFSET, zt = 5);
 }
+
+// Front sensor
+rotate([90, 0, 90]) {
+    sensor(yt = FRONT_SENSOR_HEIGHT_OFFSET, zt = FRONT_SENSOR_FORE_AFT_OFFSET);
+}
+
+rotate([0, 0, 90]) {
+    tenergy_battery(xt = -TENERGY_L/2, yt = -70, zt = 12);
+}
+
+h_bridge(zt = 40);
+
+pushbutton(zt = 60);
+
+led(zt = 90, color = "green");
+
+led(yt = 40, zt = 50);
+
+led(yt = -40, zt = 50);
+
+led(xt = 30, zt = 50);
+
+led(xt = -30, zt = 50);
