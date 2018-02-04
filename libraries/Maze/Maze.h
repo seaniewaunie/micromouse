@@ -5,10 +5,12 @@
 #include <QueueArray.h>
 #include <StackArray.h>
 
+/* Maze dimension configuration */
 #define ROW 3
 #define COL 3
 #define SIZE ROW*COL
 
+/* cardinal direction encodings */
 enum cardinal {
 	N=8,
 	E=4,
@@ -16,6 +18,9 @@ enum cardinal {
 	W=1
 };
 
+/* object class for a cell in the maze.
+ * maze is composed of objects of nodes
+ */
 class Node {
 public:
 	uint8_t wall;
@@ -25,10 +30,11 @@ public:
 class Maze {
 	
 public:	
-	int nextIndex;
 	Maze();
 	~Maze();
+	//returns next direction to move to
 	int8_t getNext(uint8_t);
+	//returns sequence of directions from start to goal
 	QueueArray<uint8_t> getPath();	
 private:
 	QueueArray<uint8_t> finalseq;
@@ -36,7 +42,11 @@ private:
 	uint8_t facing;
 	Node* current;
 	Node* maze;
+	
+	//function to find how much offset between reference and relative direction
 	uint8_t offset();
+	
+	//helper functions to offset reference direction with relative direction
 	int8_t northofcurrent();
 	int8_t eastofcurrent();
 	int8_t southofcurrent();
@@ -44,6 +54,7 @@ private:
 	
 };
 
+//cyclical 4-bit shift functions 
 uint8_t lshift(uint8_t, uint8_t);
 uint8_t rshift(uint8_t, uint8_t);
 
