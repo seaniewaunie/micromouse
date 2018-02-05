@@ -29,9 +29,9 @@ FRONT_SENSOR_HEIGHT_OFFSET = 15;
 GROUND_OFFSET = -36;
 
 // The ground (not part of the model, shown for reference)
-plate(l = 300, w = 400, zt = GROUND_OFFSET, color="palegreen");
+plate(l = 180, w = 180, zt = GROUND_OFFSET, color="palegreen");
 
-wall_segment(xt = -WALL_SEGMENT_L / 2, yt = 150, zt = GROUND_OFFSET);
+wall_segment(xt = -WALL_SEGMENT_L / 2, yt = 90, zt = GROUND_OFFSET);
 
 // Right back wheel and motor
 // Assumes the motor output shaft overlaps wheel by 1 mm
