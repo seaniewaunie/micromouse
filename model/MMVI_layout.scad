@@ -18,12 +18,13 @@ include <pushbutton.scad>;
 include <h_bridge.scad>;
 include <caster_wheel.scad>;
 include <wall_segment.scad>;
+include <usb_battery.scad>;
 include <model_constants.scad>;
 
 WHEEL_OFFSET = 55;
 MOTOR_OFFSET_FROM_WHEEL = -33.5;
 SIDE_SENSOR_HEIGHT_OFFSET = 10;
-SIDE_SENSOR_FORE_AFT_OFFSET = -80;
+SIDE_SENSOR_FORE_AFT_OFFSET = -60;
 FRONT_SENSOR_FORE_AFT_OFFSET = 70;
 FRONT_SENSOR_HEIGHT_OFFSET = 15;
 GROUND_OFFSET = -36;
@@ -75,6 +76,10 @@ rotate([0, 0, 90]) {
 }
 
 h_bridge(zt = 40);
+
+rotate([0, 0, 90]) {
+    usb_battery(xt = -USB_BATTERY_L/2, yt = -120);
+}
 
 pushbutton(zt = 60);
 
