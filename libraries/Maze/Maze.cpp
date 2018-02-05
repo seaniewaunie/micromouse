@@ -42,13 +42,17 @@ int8_t Maze::getNext(uint8_t sensor) {
 	else {
 		/* wall configuration in memory is in reference direction, shift it to the current relative direction */ 
 		wall = lshift(current->wall,offset());
+                Serial.println("I've been here before, I'm using my memory!");
+
 	}
 	
 	/* find next cell to move to 
 	 * cell must not have wall between and cell must be unvisited
 	 */
-	if(!(wall & 8) && (current+northofcurrent())->wall == NULL) {
-		/* next memory address to jump to */
+	if(!(wall & 8)) {
+            if((current + northofcurrent())->wall == NULL){
+		Serial.println("moving to unexplored north");
+                /* next memory address to jump to */
 		next = current + northofcurrent();
 		/* set current cell as the cell traveled from */
 		next->prev = current;
@@ -59,8 +63,46 @@ int8_t Maze::getNext(uint8_t sensor) {
 		/* add this movement to stack */
 		finalseq.push(N);
                 dirlist.push(N);
+            }
+            else{
+                Serial.println("I know north is open, but I'm going to check the other directions before going there");
+                if(!(wall & 4)) {
+                    Serial.println("moving to east");
+                    next = current + eastofcurrent();
+                    next->prev = current;
+                    //adjust facing direction
+                    facing = rshift(facing,1);
+                    nextDir = E;
+                    finalseq.push(E);
+                    dirlist.push(E);
+                }
+                else if(!(wall & 1)) {
+                    Serial.println("moving to west");
+                    next = current + westofcurrent();
+                    next->prev = current;
+                    facing = rshift(facing,3);
+                    nextDir = W;
+                    finalseq.push(W);
+                    dirlist.push(W);
+                }
+                else{
+                    Serial.println("moving to explored north");
+                    /* next memory address to jump to */
+                    next = current + northofcurrent();
+                    /* set current cell as the cell traveled from */
+                    next->prev = current;
+                    /* next direction to move to */
+                    nextDir = N;
+                    /* since moving straight, no need to adjust facing directions */
+                    
+                    /* add this movement to stack */
+                    finalseq.push(N);
+                    dirlist.push(N);
+                }
+
+            }
 	}
-	else if(!(wall & 4) && (current+eastofcurrent())->wall == NULL) {
+	else if(!(wall & 4)) {
 		Serial.println("moving to east");
 		next = current + eastofcurrent();
 		next->prev = current;
@@ -70,7 +112,7 @@ int8_t Maze::getNext(uint8_t sensor) {
 		finalseq.push(E);
                 dirlist.push(E);
 	}
-	else if(!(wall & 1) && (current+westofcurrent())->wall == NULL) {
+	else if(!(wall & 1)) {
 		Serial.println("moving to west");
 		next = current + westofcurrent();
 		next->prev = current;
@@ -79,17 +121,32 @@ int8_t Maze::getNext(uint8_t sensor) {
 		finalseq.push(W);
                 dirlist.push(W);
 	}
-        // TODO: Is this else if ever called?
-	else if(!(wall & 2) && (current+southofcurrent())->wall == NULL) {
-            	Serial.println("moving to south");
-		next = current + southofcurrent();
+	else if(!(wall & 2)) {
+                // the only time we ever move south is in a dead end.
+                Serial.println("moving to south");
+                next = current + southofcurrent();
 		next->prev = current;
-		facing = rshift(facing,2);
+		Serial.println("gets here 1");
+
+                facing = rshift(facing,2);
+                Serial.println("gets here 2");
+
 		nextDir = S;
-		finalseq.push(S);
+		Serial.println("gets here 3");
+
+                finalseq.push(S);
+                Serial.println("gets here 4");
+
                 dirlist.push(S);
+                Serial.println("gets here 5");
+                //*/
 	}
+        /*
+         * Sean commented this out because it is un-needed. Our final sequence should be parsed
+         * to find "backtracking" and remove it.. or edit it, and this will give us our "shortest path"
+         * for now we have a "path"
 	else {
+        // TODO: This causes the program to crash when entering a dead end
 		Serial.println("going back to prev");
 		next = current->prev;
                 //facing = rshift(facing, 2);
@@ -98,6 +155,7 @@ int8_t Maze::getNext(uint8_t sensor) {
                 facing = nextDir;
 		finalseq.pop();
 	}
+        */
 	current = next;
 	return nextDir;
 }

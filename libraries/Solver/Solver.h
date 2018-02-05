@@ -17,6 +17,9 @@
  * explore each of these options in search for the exit. Once it finds the exit, it will know that it found it, and mark it in memory,
  * but it will return to the maze and explore the other routes in case one of them lead to a faster solution.
  *
+ *
+ * calculateNextMovement() uses a very detailed DFS... or Best First Search
+ *
  */
 
 #ifndef SOLVER_H
@@ -45,8 +48,6 @@ class Solver {
     Diagnostics *m_diagnostics; 
 
     Node *m_curr;
-
-
 
 };
 

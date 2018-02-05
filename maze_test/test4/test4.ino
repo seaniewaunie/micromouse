@@ -51,13 +51,13 @@ void loop() {
       uint8_t sensorD = (8*diagnostics.getNorthSensor()->isWall()) + (4*diagnostics.getEastSensor()->isWall()) + (1*diagnostics.getWestSensor()->isWall()) + (2*mutex);
       mutex = mutex & 0;
       if(sensorD != 0 || diagnostics.checkWin() == false) {
-        Serial.print("currently at node: ");  Serial.println(index);
+        //Serial.print("currently at node: ");  Serial.println(index);
         Serial.print("SensorD: "); Serial.println(sensorD);
         //uint8_t D = maze->getNext(_maze1[index]);
         uint8_t D = maze->getNext(sensorD);
         Serial.print("D is: "); Serial.println(D);
-        index += maze->nextIndex;
-        Serial.print("next node is: "); Serial.println(index);
+        //index += maze->nextIndex;
+        //Serial.print("next node is: "); Serial.println(index);
         lightLED(D);
         Serial.println();
       }
@@ -79,6 +79,7 @@ void loop() {
   }
   lastButtonState = buttonState;
   diagnostics.update();
+  delay(50);
 }
 
 // function for notifying turning -- flashes LED a few times
