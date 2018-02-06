@@ -6,8 +6,8 @@
 #include <StackArray.h>
 
 /* Maze dimension configuration */
-#define ROW 5
-#define COL 5
+#define ROW 10
+#define COL 10
 #define SIZE ROW*COL
 
 /* cardinal direction encodings */
