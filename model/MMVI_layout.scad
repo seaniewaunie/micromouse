@@ -5,8 +5,6 @@
 // The purpose of this file is to lay out the components roughly where
 // they will go in relation to each other in the robot.
 
-// TODO: Add USB battery pack
-
 include <led.scad>;
 include <arduino.scad>;
 include <back_wheel.scad>;
@@ -80,7 +78,7 @@ rotate([0, 0, 90]) {
 h_bridge(zt = 40);
 
 rotate([0, 0, 90]) {
-    usb_battery(xt = -USB_BATTERY_L/2, yt = -120);
+    usb_battery(xt = -USB_BATTERY_L/2, yt = -65, zt = 40);
 }
 
 pushbutton(zt = 60);
