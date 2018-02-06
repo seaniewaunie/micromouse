@@ -103,7 +103,8 @@ int8_t Maze::getNext(uint8_t sensor) {
             }
 	}
 	else if(!(wall & 4)) {
-		Serial.println("moving to east");
+            if((current + eastofcurrent())->wall == NULL){
+		Serial.println("moving to unexplored east");
 		next = current + eastofcurrent();
 		next->prev = current;
 		//adjust facing direction
@@ -111,6 +112,30 @@ int8_t Maze::getNext(uint8_t sensor) {
 		nextDir = E;
 		finalseq.push(E);
                 dirlist.push(E);
+            }
+            else{
+                Serial.println("I know east is open, but I'm going to check west before going there.");
+                if(!(wall & 1)) {
+                    Serial.println("moving to west");
+                    next = current + westofcurrent();
+                    next->prev = current;
+                    facing = rshift(facing,3);
+                    nextDir = W;
+                    finalseq.push(W);
+                    dirlist.push(W);
+                }
+                else{
+                    Serial.println("Moving to explored east");
+                    next = current + eastofcurrent();
+                    next->prev = current;
+                    //adjust facing direction
+                    facing = rshift(facing,1);
+                    nextDir = E;
+                    finalseq.push(E);
+                    dirlist.push(E);
+
+                }
+            }
 	}
 	else if(!(wall & 1)) {
 		Serial.println("moving to west");
@@ -126,19 +151,19 @@ int8_t Maze::getNext(uint8_t sensor) {
                 Serial.println("moving to south");
                 next = current + southofcurrent();
 		next->prev = current;
-		Serial.println("gets here 1");
+		//Serial.println("gets here 1");
 
                 facing = rshift(facing,2);
-                Serial.println("gets here 2");
+                //Serial.println("gets here 2");
 
 		nextDir = S;
-		Serial.println("gets here 3");
+		//Serial.println("gets here 3");
 
                 finalseq.push(S);
-                Serial.println("gets here 4");
+                //Serial.println("gets here 4");
 
                 dirlist.push(S);
-                Serial.println("gets here 5");
+                //Serial.println("gets here 5");
                 //*/
 	}
         /*
