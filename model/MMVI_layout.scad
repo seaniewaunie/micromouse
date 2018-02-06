@@ -23,11 +23,13 @@ include <model_constants.scad>;
 
 WHEEL_OFFSET = 55;
 MOTOR_OFFSET_FROM_WHEEL = -33.5;
-SIDE_SENSOR_HEIGHT_OFFSET = 10;
-SIDE_SENSOR_FORE_AFT_OFFSET = -60;
+SIDE_SENSOR_HEIGHT_OFFSET = -22;
+SIDE_SENSOR_FORE_AFT_OFFSET = -55;
 FRONT_SENSOR_FORE_AFT_OFFSET = 70;
-FRONT_SENSOR_HEIGHT_OFFSET = 15;
+FRONT_SENSOR_HEIGHT_OFFSET = 17;
 GROUND_OFFSET = -36;
+
+translate([0, 0, 36]) {
 
 // The ground (not part of the model, shown for reference)
 plate(l = 180, w = 180, zt = GROUND_OFFSET, color="palegreen");
@@ -92,3 +94,5 @@ led(yt = -40, zt = 50);
 led(xt = 30, zt = 50);
 
 led(xt = -30, zt = 50);
+
+}
