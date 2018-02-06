@@ -30,9 +30,9 @@ GROUND_OFFSET = -36;
 translate([0, 0, 36]) {
 
 // The ground (not part of the model, shown for reference)
-plate(l = 180, w = 180, zt = GROUND_OFFSET, color="palegreen");
+plate(l = 180, w = 180, xt = 10, yt = 30, zt = GROUND_OFFSET, color="palegreen");
 
-wall_segment(xt = -WALL_SEGMENT_L / 2, yt = 90, zt = GROUND_OFFSET);
+wall_segment(xt = -WALL_SEGMENT_L / 2 + 10, yt = 120, zt = GROUND_OFFSET);
 
 // Right back wheel and motor
 // Assumes the motor output shaft overlaps wheel by 1 mm

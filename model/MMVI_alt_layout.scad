@@ -12,6 +12,7 @@ include <plate.scad>;
 include <motor.scad>;
 include <sensor.scad>;
 include <tenergy_battery.scad>;
+include <usb_battery.scad>;
 include <pushbutton.scad>;
 include <h_bridge.scad>;
 include <caster_wheel.scad>;
@@ -27,33 +28,37 @@ FRONT_SENSOR_FORE_AFT_OFFSET = 15;
 FRONT_SENSOR_HEIGHT_OFFSET = 20;
 GROUND_OFFSET = -16;
 
+translate([0, 0, -GROUND_OFFSET]) {
+
 // The ground (not part of the model, shown for reference)
-plate(l = 180, w = 180, zt = GROUND_OFFSET, color="palegreen");
+plate(l = 180, w = 180, xt = 60, yt = 35, zt = GROUND_OFFSET, color="palegreen");
 
-wall_segment(xt = -WALL_SEGMENT_L / 2, yt = 90, zt = GROUND_OFFSET);
+wall_segment(xt = -WALL_SEGMENT_L / 2 + 60, yt = 125, zt = GROUND_OFFSET);
 
-// Right back wheel and motor
-// Assumes the motor output shaft overlaps wheel by 4 mm
-32_mm_wheel(yt = WHEEL_OFFSET);
-rotate(a = 90, v = [0, 0, 1]) {
-    motor(xt = WHEEL_OFFSET + MOTOR_OFFSET_FROM_WHEEL);
-}
-
-// Left back wheel and motor
-// Assumes the motor output shaft overlaps wheel by 1 mm
-rotate(a = 180, v = [1, 0, 0]) {
+translate([5, 0, 0]) {
+    // Right back wheel and motor
+    // Assumes the motor output shaft overlaps wheel by 4 mm
     32_mm_wheel(yt = WHEEL_OFFSET);
-}
-rotate(a = 270, v = [0, 0, 1]) {
-    motor(xt = WHEEL_OFFSET + MOTOR_OFFSET_FROM_WHEEL);
+    rotate(a = 90, v = [0, 0, 1]) {
+        motor(xt = WHEEL_OFFSET + MOTOR_OFFSET_FROM_WHEEL);
+    }
+
+    // Left back wheel and motor
+    // Assumes the motor output shaft overlaps wheel by 4 mm
+    rotate(a = 180, v = [1, 0, 0]) {
+        32_mm_wheel(yt = WHEEL_OFFSET);
+    }
+    rotate(a = 270, v = [0, 0, 1]) {
+        motor(xt = WHEEL_OFFSET + MOTOR_OFFSET_FROM_WHEEL);
+    }
 }
 
 rotate([0, 0, 90]) {
-    arduino(yt = 15, zt = 15);
+    arduino(yt = -15, zt = 65);
 }
 
 rotate([0, 0, 90]) {
-    caster_ball(xt = HOUSING_W / 2, yt = -70, zt = -11.1);
+    caster_ball(xt = CASTER_BALL_HOUSING_W / 2, yt = -65, zt = -11.1);
 }
 
 // Right sensor
@@ -75,16 +80,25 @@ rotate([0, 0, 90]) {
     tenergy_battery(xt = -TENERGY_L/2, yt = -55, zt = 35);
 }
 
-h_bridge(xt = -15, zt = 40);
+rotate([0, 0, 90]) {
+    usb_battery(xt = -USB_BATTERY_L/2, yt = -65, zt = 55);
+}
 
-pushbutton(zt = 60);
+h_bridge(xt = -6, zt = 25);
 
-led(zt = 90, color = "green");
+translate([0, 0, 30]) {
 
-led(yt = 40, zt = 50);
+    pushbutton(zt = 60);
 
-led(yt = -40, zt = 50);
+    led(zt = 90, color = "green");
 
-led(xt = 15, zt = 50);
+    led(yt = 40, zt = 50);
 
-led(xt = -45, zt = 50);
+    led(yt = -40, zt = 50);
+
+    led(xt = 15, zt = 50);
+
+    led(xt = -25, zt = 50);
+}
+
+}
