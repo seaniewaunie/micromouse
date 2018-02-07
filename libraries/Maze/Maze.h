@@ -40,7 +40,8 @@ private:
 	QueueArray<uint8_t> finalseq;
         StackArray<uint8_t> dirlist;
 	uint8_t facing;
-	Node* current;
+	uint8_t mutex = 1;
+        Node* current;
 	Node* maze;
 	
 	//function to find how much offset between reference and relative direction

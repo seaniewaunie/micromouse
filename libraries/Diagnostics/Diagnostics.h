@@ -27,6 +27,7 @@
 #include "Arduino.h"
 #include "Sensor.h"
 #include "LED.h"
+#include "Node.h"
 
 class Diagnostics {
   
@@ -39,6 +40,8 @@ class Diagnostics {
     ~Diagnostics();
     void update();
     void celebrate();
+    
+    void turnOnLED(DIRECTION dir);
 
     bool checkWin();
 

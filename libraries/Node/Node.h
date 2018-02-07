@@ -13,6 +13,7 @@
  *
  * A direction is set to open when it's respective sensor returns false for isWall()
  *
+ * m_orientation saves the state in which the node was explored last.
  */
 
 #ifndef NODE_H
@@ -20,11 +21,25 @@
 
 #include "Arduino.h"
 
+enum DIRECTION{
+    N=8,
+    E=4,
+    S=2,
+    W=1
+};
+
 class Node {
   
   public:
-    Node(bool north, bool east, bool south, bool west);
+    Node(bool north, bool east, bool south, bool west, Node *prev);
     ~Node();
+
+    void setOrientation(uint8_t orient);
+    void rotateLeft();
+    void rotateRight();
+    void turnAround();
+
+    uint8_t getOrientation();
 
     bool isNorthOpen();
     bool isEastOpen();
@@ -58,10 +73,12 @@ class Node {
     void setWest(Node* node);
 
   private:
-    bool m_north;
-    bool m_east;
-    bool m_south;
-    bool m_west;
+    uint8_t m_orientation;
+    
+    bool m_northDir;
+    bool m_eastDir;
+    bool m_southDir;
+    bool m_westDir;
 
     bool m_deadEnd;
     bool m_fork;
@@ -70,10 +87,10 @@ class Node {
     bool m_start;
     bool m_end;
 
-    Node* m_north;
-    Node* m_east;
-    Node* m_south;
-    Node* m_west;
+    Node* m_northNode;
+    Node* m_eastNode;
+    Node* m_southNode;
+    Node* m_westNode;
 };
 
 #endif

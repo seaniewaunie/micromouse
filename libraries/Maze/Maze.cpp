@@ -25,47 +25,54 @@ Maze::~Maze() {
  * is actually North in the reference direction. After execution 
  * mouse is facing North again.
  */
+int8_t Maze::getNext(uint8_t sensor){
+    // unfortunately the previous algorithm just won't work, there's too many exception cases
+}
+
+
+/*
 int8_t Maze::getNext(uint8_t sensor) {
 	Node* next;
 	uint8_t nextDir;
 	uint8_t wall;
 	int nextIndex;
 	
-	/* if this cell hasnt been visited */
+	// if this cell hasnt been visited 
+        
 	if(current->wall == NULL) {
 		//store wall configuration in memory in the reference direction viewpoint
 		current->wall = rshift(sensor,offset());
 		//use relative direction viewpoint for further calculation
 		wall = sensor;
 	}
-	/* if this cell has been visited before, use wall configuration from the memory */
+	// if this cell has been visited before, use wall configuration from the memory 
 	else {
-		/* wall configuration in memory is in reference direction, shift it to the current relative direction */ 
+		// wall configuration in memory is in reference direction, shift it to the current relative direction 
+                 
 		wall = lshift(current->wall,offset());
                 Serial.println("I've been here before, I'm using my memory!");
 
 	}
 	
-	/* find next cell to move to 
-	 * cell must not have wall between and cell must be unvisited
-	 */
+	// find next cell to move to cell must not have wall between and cell must be unvisited
 	if(!(wall & 8)) {
+            Serial.println("I know north is open");
             if((current + northofcurrent())->wall == NULL){
 		Serial.println("moving to unexplored north");
-                /* next memory address to jump to */
+                // next memory address to jump to
 		next = current + northofcurrent();
-		/* set current cell as the cell traveled from */
+		// set current cell as the cell traveled from 
 		next->prev = current;
-		/* next direction to move to */
+		// next direction to move to
 		nextDir = N;
-		/* since moving straight, no need to adjust facing directions */
+                // since moving straight, no need to adjust facing directions
 		
-		/* add this movement to stack */
+		// add this movement to stack
 		finalseq.push(N);
                 dirlist.push(N);
             }
             else{
-                Serial.println("I know north is open, but I'm going to check the other directions before going there");
+                Serial.println("I'm going to check the other directions before going there");
                 if(!(wall & 4)) {
                     Serial.println("moving to east");
                     next = current + eastofcurrent();
@@ -87,15 +94,15 @@ int8_t Maze::getNext(uint8_t sensor) {
                 }
                 else{
                     Serial.println("moving to explored north");
-                    /* next memory address to jump to */
+                    // next memory address to jump to
                     next = current + northofcurrent();
-                    /* set current cell as the cell traveled from */
+                    // set current cell as the cell traveled from
                     next->prev = current;
-                    /* next direction to move to */
+                    // next direction to move to
                     nextDir = N;
-                    /* since moving straight, no need to adjust facing directions */
+                    // since moving straight, no need to adjust facing directions
                     
-                    /* add this movement to stack */
+                    // add this movement to stack
                     finalseq.push(N);
                     dirlist.push(N);
                 }
@@ -103,6 +110,7 @@ int8_t Maze::getNext(uint8_t sensor) {
             }
 	}
 	else if(!(wall & 4)) {
+            Serial.println("I know east is open");
             if((current + eastofcurrent())->wall == NULL){
 		Serial.println("moving to unexplored east");
 		next = current + eastofcurrent();
@@ -114,15 +122,17 @@ int8_t Maze::getNext(uint8_t sensor) {
                 dirlist.push(E);
             }
             else{
-                Serial.println("I know east is open, but I'm going to check west before going there.");
-                if(!(wall & 1)) {
-                    Serial.println("moving to west");
+                Serial.println("I'm going to check west before making my decision");
+                // if west is open and not the start of the maze
+                if(!(wall & 1) && mutex == 0) {
+                    Serial.println("moving west to starting point");
                     next = current + westofcurrent();
                     next->prev = current;
                     facing = rshift(facing,3);
                     nextDir = W;
                     finalseq.push(W);
                     dirlist.push(W);
+                
                 }
                 else{
                     Serial.println("Moving to explored east");
@@ -133,18 +143,62 @@ int8_t Maze::getNext(uint8_t sensor) {
                     nextDir = E;
                     finalseq.push(E);
                     dirlist.push(E);
-
+                    
+                    // in order to avoid infinite right turning loops, check east one more time
+                    mutex = 0;
                 }
             }
 	}
 	else if(!(wall & 1)) {
-		Serial.println("moving to west");
+            if((current+westofcurrent())->wall == NULL){
+		Serial.println("moving to unexplored west");
 		next = current + westofcurrent();
 		next->prev = current;
 		facing = rshift(facing,3);
 		nextDir = W;
 		finalseq.push(W);
                 dirlist.push(W);
+            }
+            else{
+                Serial.println("all surrounding nodes have been explored before... I need to backtrack");
+                
+                if(!(wall & 8)){
+                    Serial.println("moving to explored north");
+                    // next memory address to jump to 
+                    next = current + northofcurrent();
+                    // set current cell as the cell traveled from
+                    next->prev = current;
+                    // next direction to move to
+                    nextDir = N;
+                    // since moving straight, no need to adjust facing directions
+                    
+                    // add this movement to stack
+                    finalseq.push(N);
+                    dirlist.push(N);
+                }
+                else if(!(wall & 4)){
+                    Serial.println("Moving to explored east");
+                    next = current + eastofcurrent();
+                    next->prev = current;
+                    //adjust facing direction
+                    facing = rshift(facing,1);
+                    nextDir = E;
+                    finalseq.push(E);
+                    dirlist.push(E);
+                }
+                else{
+                    Serial.println("moving to explored west");
+                    next = current + westofcurrent();
+                    next->prev = current;
+                    facing = rshift(facing,3);
+                    nextDir = W;
+                    finalseq.push(W);
+                    dirlist.push(W);
+
+                }
+
+
+            }
 	}
 	else if(!(wall & 2)) {
                 // the only time we ever move south is in a dead end.
@@ -164,10 +218,10 @@ int8_t Maze::getNext(uint8_t sensor) {
 
                 dirlist.push(S);
                 //Serial.println("gets here 5");
-                //*/
+                
 	}
-        /*
-         * Sean commented this out because it is un-needed. Our final sequence should be parsed
+        
+        /* Sean commented this out because it is un-needed. Our final sequence should be parsed
          * to find "backtracking" and remove it.. or edit it, and this will give us our "shortest path"
          * for now we have a "path"
 	else {
@@ -180,11 +234,11 @@ int8_t Maze::getNext(uint8_t sensor) {
                 facing = nextDir;
 		finalseq.pop();
 	}
-        */
+        //
 	current = next;
 	return nextDir;
 }
-
+*/
 QueueArray<uint8_t> Maze::getPath() {
 	return finalseq;
 }

@@ -9,38 +9,74 @@
 #include "Arduino.h"
 #include "Node.h"
 
-Node::Node(bool north, bool east, bool south, bool west){
-    m_north = north;
-    m_east = east;
-    m_south = south;
-    m_west = west;
+#define DEADEND 0b0010 // this is the DIRECTION combination for a dead end
 
-    m_deadEnd = false;
-    m_fork = false;
+// a fork is when more than 1 direction excluding south is open
+#define FORK1 0b1110
+#define FORK2 0b1011
+#define FORK3 0b0111
+#define FORK4 0b1111
+
+Node::Node(bool north, bool east, bool south, bool west, Node *prev){
+    // set constant booleans for directions
+    m_northDir = north;
+    m_eastDir = east;
+    m_southDir = south;
+    m_westDir = west;
+
+    // set orientation ex. NESW --> 0010 if in dead end
+    m_orientation = N*m_northDir + E*m_eastDir + S*m_southDir + W*m_westDir;
+    
+    // determine if the node is a dead end
+    if(m_orientation == DEADEND)
+        m_deadEnd = true;
+    else
+        m_deadEnd = false;
+    
+    // determine if the node is a fork
+    if(m_orientation == FORK1 || m_orientation == FORK2 || m_orientation == FORK3 || m_orientation == FORK4)
+        m_fork = true;
+    else
+        m_fork = false;
+   
+    // when creating a new node, m_explored is always false
+    // this gets updated to true AFTER completing all possible directions on a node
     m_explored = false;
 
+    if(south == true
     m_start = false;
     m_end = false;
+
+    // the south node is the one we just came from, which is sent in the Node() constructor
+    m_southNode = prev;
 }
 
 Node::~Node(){
-    // empty
+   // TODO 
+}
+
+void Node::setOrientation(uint8_t orient){
+    m_orientation = orient;
+}
+
+uint8_t Node::getOrientation(){
+    return m_orientation;
 }
 
 bool Node::isNorthOpen(){
-    return m_north;
+    return m_orientation & N;
 }
 
 bool Node::isEastOpen(){
-    return m_east;
+    return m_orientation & E;
 }
 
 bool Node::isSouthOpen(){
-    return m_south;
+    return m_orientation & S;
 }
 
 bool Node::isWestOpen(){
-    return m_west;
+    return m_orientation & W;
 }
 
 void Node::setDeadEnd(bool val){
@@ -84,33 +120,33 @@ bool Node::isEnd(){
 }
 
 Node* Node::getNorth(){
-    return m_north;
+    return m_northNode;
 }
 
 void Node::setNorth(Node* node){
-    m_north = node;
+    m_northNode = node;
 }
 
 Node* Node::getEast(){
-    return m_east;
+    return m_eastNode;
 }
 
 void Node::setEast(Node* node){
-    m_east = node;
+    m_eastNode = node;
 }
 
 Node* Node::getSouth(){
-    return m_south;
+    return m_southNode;
 }
 
 void Node::setSouth(Node* node){
-    m_south = node;
+    m_southNode = node;
 }
 
 Node* Node::getWest(){
-    return m_west;
+    return m_westNode;
 }
 
 void Node::setWest(Node* node){
-    m_west = node;
+    m_westNode = node;
 }

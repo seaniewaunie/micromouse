@@ -42,22 +42,40 @@ DIRECTION Solver::calculateNextMovement(){
      */
     
     m_diagnostics->update();
-
+    // a wall corresponds to false ( it is not travelable )
+    bool currentNorth, currentEast, currentWest, currentSouth;
+    
     if(m_diagnostics->getNorthSensor()->isWall()){
-       
+         currentNorth = false;
     }
     if(m_diagnostics->getEastSensor()->isWall()){
-
+        currentEast = false;
     }
     if(m_diagnostics->getWestSensor()->isWall()){
-
+        currentWest = false;
     }
-    
+
     // south is ALWAYS free other than when the mouse is at start. I interpreted the mouse being at start when
     // the data structure storing the mouses movements is empty.
+    if(m_queue.peak() == NULL)
+        currentSouth = true;
+    else
+        currentSouth = false;
+    
 }
 
 Diagnostics* Solver::getDiagnostics(){
     return m_diagnostics;
 }
 
+Node* Solver::getCurrentNode(){
+    return m_curr;
+}
+
+StackArray<Node*> Solver::getStack(){
+    return m_stack;
+}
+
+QueueArray<Node*> Solver::getQueue(){
+    return m_queue;
+}

@@ -7,7 +7,7 @@
 #include <QueueArray.h>
 #include <Maze.h>
 #include <stdio.h>
-
+  
 
 // Pin Declarations
 #define NORTH_SENSOR_PIN 13
@@ -37,8 +37,8 @@ Maze *maze;
 const int start = 7;
 const int goal = 1;
 int index = start;
-uint8_t mutex = 1;
-
+uint8_t mutex = 0; //TODO: What is mutex doing? normally 1 -- Mutex is for the starting node -- it's making sure south is closed...
+bool fistNode = true;
 void setup() {
   Serial.begin(9600);
   maze = new Maze();
@@ -48,8 +48,10 @@ void loop() {
   buttonState = digitalRead(buttonPin);
   if (buttonState != lastButtonState) {
     if (buttonState == HIGH) {
-      uint8_t sensorD = (8*diagnostics.getNorthSensor()->isWall()) + (4*diagnostics.getEastSensor()->isWall()) + (1*diagnostics.getWestSensor()->isWall()) + (2*mutex);
-      mutex = mutex & 0;
+      uint8_t sensorD = (8*diagnostics.getNorthSensor()->isWall()) + (4*diagnostics.getEastSensor()->isWall()) + (1*diagnostics.getWestSensor()->isWall());
+      //uint8_t sensorD = (8*diagnostics.getNorthSensor()->isWall()) + (4*diagnostics.getEastSensor()->isWall()) + (1*diagnostics.getWestSensor()->isWall()) + (2*mutex);
+      //mutex = mutex & 0;
+      //mutex = 0; // after the first node, the mutex is always 0 (because moving north causes south to be open)
       if(sensorD != 0 || diagnostics.checkWin() == false) {
         //Serial.print("currently at node: ");  Serial.println(index);
         Serial.print("SensorD: "); Serial.println(sensorD);

@@ -20,6 +20,8 @@
  *
  * calculateNextMovement() uses a very detailed DFS... or Best First Search
  *
+ *
+ * The queue stores the final path, the stack is used to store directions at each node.
  */
 
 #ifndef SOLVER_H
@@ -28,6 +30,9 @@
 #include "Arduino.h"
 #include "Diagnostics.h"
 #include "Node.h"
+#include "StackArray.h"
+#include "QueueArray.h"
+
 
 class Solver {
   
@@ -43,12 +48,23 @@ class Solver {
 
     Diagnostics* getDiagnostics();
 
+    Node* getCurrentNode();
+
+    void printStack();
+    StackArray<Node*> getStack();
+
+    void printQueue();
+    QueueArray<Node*> getQueue();
+
 
   private:
     Diagnostics *m_diagnostics; 
 
     Node *m_curr;
+    
+    StackArray<Node*> m_stack;
 
+    QueueArray<Node*> m_queue;
 };
 
 #endif
