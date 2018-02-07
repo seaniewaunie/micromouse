@@ -24,15 +24,18 @@ WHEEL_OFFSET = 50;
 MOTOR_OFFSET_FROM_WHEEL = -30.5;
 SIDE_SENSOR_HEIGHT_OFFSET = 0;
 SIDE_SENSOR_FORE_AFT_OFFSET = 45;
-FRONT_SENSOR_FORE_AFT_OFFSET = 15;
-FRONT_SENSOR_HEIGHT_OFFSET = 20;
+FRONT_SENSOR_FORE_AFT_OFFSET = 50;
+FRONT_SENSOR_HEIGHT_OFFSET = 22;
 GROUND_OFFSET = -16;
 
 translate([0, 0, -GROUND_OFFSET]) {
 
+$fn = 100;  // increases the resolution of components using arcs
+
 // The ground (not part of the model, shown for reference)
 plate(l = 180, w = 180, xt = 60, yt = 35, zt = GROUND_OFFSET, color="palegreen");
 
+// Wall (not part of the model)
 wall_segment(xt = -WALL_SEGMENT_L / 2 + 60, yt = 125, zt = GROUND_OFFSET);
 
 translate([5, 0, 0]) {
@@ -57,17 +60,17 @@ rotate([0, 0, 90]) {
     arduino(yt = -15, zt = 65);
 }
 
-rotate([0, 0, 90]) {
-    caster_ball(xt = CASTER_BALL_HOUSING_W / 2, yt = -65, zt = -11.1);
+rotate([0, 0, 0]) {
+    caster_ball(yt = -CASTER_BALL_HOUSING_W / 2, xt = 50, zt = -11.1);
 }
 
 // Right sensor
-rotate(a = 90, v = [1, 0, 0]) {
-    sensor(xt = SIDE_SENSOR_FORE_AFT_OFFSET, yt = SIDE_SENSOR_HEIGHT_OFFSET, zt = 7);
+rotate([90, 180, 0]) {
+    sensor(xt = -SIDE_SENSOR_FORE_AFT_OFFSET, yt = SIDE_SENSOR_HEIGHT_OFFSET, zt = 7);
 }
 
 // Left sensor
-rotate(a = 270, v = [1, 0, 0]) {
+rotate([270, 0, 0]) {
     sensor(xt = SIDE_SENSOR_FORE_AFT_OFFSET, yt = -SIDE_SENSOR_HEIGHT_OFFSET, zt = 7);
 }
 

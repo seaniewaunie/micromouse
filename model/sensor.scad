@@ -6,7 +6,7 @@
 include <model_constants.scad>;
 
 module sensor (xt = 0, yt = 0, zt = 0) {
-    
+   
     translate([xt, yt, zt]) {
     
         //sensor speaker1
@@ -28,5 +28,12 @@ module sensor (xt = 0, yt = 0, zt = 0) {
                 cube([SENSOR_PCB_W, SENSOR_PCB_L, SENSOR_PCB_H], center = true);
             }
         }
+        
+        translate([0, -(SENSOR_PCB_L / 2 + SENSOR_PINS_L / 2) + SENSOR_PINS_OFFSET, SENSOR_PCB_H / 2 - SENSOR_PINS_H / 2]) {
+            color("silver") {
+                cube([SENSOR_PINS_W, SENSOR_PINS_L, SENSOR_PINS_H], center = true);
+            }
+        }
+        
     }
 }

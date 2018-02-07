@@ -6,7 +6,7 @@ include <model_constants.scad>
 
 module caster_ball(xt = 0, yt = 0, zt = 0) {
     translate([xt, yt, zt]) {
-        rotate(a = 90, v = [0, 0, 1]) {        
+        //rotate(a = 0, v = [0, 0, 1]) {        
             color([0.2, 0.2, 0.2]) {
                 cube([CASTER_BALL_HOUSING_L, CASTER_BALL_HOUSING_W, CASTER_BALL_HOUSING_H]);
             }
@@ -16,6 +16,6 @@ module caster_ball(xt = 0, yt = 0, zt = 0) {
                     sphere(d = 9.5);
                 }
             }
-        }
+        //}
     }
 }

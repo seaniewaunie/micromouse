@@ -7,7 +7,7 @@ include <model_constants.scad>;
 module usb_battery(xt = 0, yt = 0, zt = 0, color = "dodgerblue") {
     color(color) {
         translate([xt, yt, zt]) {
-            cube([USB_BATTERY_L, USB_BATTERY_W, USB_BATTERY_H]);
+            cube([USB_BATTERY_L, USB_BATTERY_H, USB_BATTERY_W]);
         }
     }
 }
