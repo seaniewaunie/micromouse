@@ -18,9 +18,21 @@ All units are in millimeters.
 ********************/
 
 // Arduino
-ARDUINO_L = 70;
-ARDUINO_W = 54;
-ARDUINO_H = 15;
+//ARDUINO_L = 70;
+//ARDUINO_W = 54;
+//ARDUINO_H = 15;
+ARDUINO_L = 68.961;
+ARDUINO_W = 53.594;
+ARDUINO_H = 15.1892; // height from usb input to lowest soldering on bottom
+
+ARDUINO_PCB_L = 68.961;
+ARDUINO_PCB_W = 53.594;
+ARDUINO_PCB_H = 5.588;
+
+ARDUINO_PINS_H = 10.3886-ARDUINO_PCB_H; // height of pins coming off board
+ARDUINO_PINS_L = 47.752; // this is the longest length for the pins on the right side
+
+// the pins and pcb measurements are there just in case you need them for the arduino
 
 // Back wheel
 BACK_WHEEL_D = 72;
@@ -32,9 +44,12 @@ BACK_WHEEL_NUB_H = 5;
 32_MM_WHEEL_D = 32;
 
 // LED
-LED_CASE_D = 6;
-LED_CASE_H = 9;
-LED_LEAD_D = 0.5;
+//LED_CASE_D = 6;
+LED_CASE_D = 5.334;
+//LED_CASE_H = 9;
+LED_CASE_H = 8.89;
+//LED_LEAD_D = 0.5;
+LED_LEAD_D = 0.508;
 LED_LEAD_SHORT_H = 26;
 LED_LEAD_LONG_H = 28;
 LED_LEAD_OFFSET = 1;
