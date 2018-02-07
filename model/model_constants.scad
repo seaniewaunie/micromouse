@@ -52,13 +52,30 @@ PLATE_W = ARDUINO_W;
 PLATE_H = 0.1;
 
 // Sensor
-SENSOR_BARREL_D = 16;
-SENSOR_BARREL_H = 12;
-SENSOR_PCB_L = 21;
-SENSOR_PCB_W = 46;
-SENSOR_PCB_H = 3;
+//SENSOR_BARREL_D = 16;
+//SENSOR_BARREL_H = 12;
+//SENSOR_PCB_L = 21;
+//SENSOR_PCB_W = 46;
+//SENSOR_PCB_H = 3;
+// -- Begin Caliper Measurements for Sensor --
+SENSOR_BARREL_D = 16.002;
+SENSOR_BARREL_H = 12.2682;
+SENSOR_PCB_L = 20.574;
+SENSOR_PCB_W = 45.339;
+SENSOR_PCB_H = 3.302;
+
 SENSOR_TOTAL_H = SENSOR_BARREL_H + SENSOR_PCB_H;
-SENSOR_DISTANCE_BW_BARREL_FOCI = 30;
+//SENSOR_DISTANCE_BW_BARREL_FOCI = 30;
+// 41.8084 is the length from the left barrel to the right barrel
+// subtract 1/2 D from both sides to get the foci.
+SENSOR_DISTANCE_BW_BARREL_FOCI = 41.8084 - SENSOR_BARREL_D;
+
+// Sensor Pins
+SENSOR_PINS_H = 4.4196-SENSOR_PCB_H;
+SENSOR_PINS_L = 8.6106;
+SENSOR_PINS_W = 10.2362;
+
+// -- End --
 
 // Tenergy battery
 TENERGY_W = 36;
