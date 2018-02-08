@@ -20,11 +20,11 @@ include <caster_ball.scad>;
 include <wall_segment.scad>;
 include <model_constants.scad>;
 
-WHEEL_OFFSET = 50;
-MOTOR_OFFSET_FROM_WHEEL = -30.5;
+WHEEL_OFFSET = 45;
+MOTOR_OFFSET_FROM_WHEEL = -28.5;
 SIDE_SENSOR_HEIGHT_OFFSET = 0;
 SIDE_SENSOR_FORE_AFT_OFFSET = 45;
-FRONT_SENSOR_FORE_AFT_OFFSET = 50;
+FRONT_SENSOR_FORE_AFT_OFFSET = 55;
 FRONT_SENSOR_HEIGHT_OFFSET = 22;
 GROUND_OFFSET = -16;
 
@@ -33,21 +33,21 @@ translate([0, 0, -GROUND_OFFSET]) {
 $fn = 100;  // increases the resolution of components using arcs
 
 // The ground (not part of the model, shown for reference)
-plate(l = 180, w = 180, xt = 60, yt = 35, zt = GROUND_OFFSET, color="palegreen");
+plate(l = 180, w = 180, xt = 60, yt = 39, zt = GROUND_OFFSET, color="palegreen");
 
 // Wall (not part of the model)
-wall_segment(xt = -WALL_SEGMENT_L / 2 + 60, yt = 125, zt = GROUND_OFFSET);
+wall_segment(xt = -WALL_SEGMENT_L / 2 + 60, yt = 129, zt = GROUND_OFFSET);
 
 translate([5, 0, 0]) {
     // Right back wheel and motor
-    // Assumes the motor output shaft overlaps wheel by 4 mm
+    // Assumes the motor output shaft overlaps wheel by 6 mm
     32_mm_wheel(yt = WHEEL_OFFSET);
     rotate(a = 90, v = [0, 0, 1]) {
         motor(xt = WHEEL_OFFSET + MOTOR_OFFSET_FROM_WHEEL);
     }
 
     // Left back wheel and motor
-    // Assumes the motor output shaft overlaps wheel by 4 mm
+    // Assumes the motor output shaft overlaps wheel by 6 mm
     rotate(a = 180, v = [1, 0, 0]) {
         32_mm_wheel(yt = WHEEL_OFFSET);
     }
@@ -57,7 +57,7 @@ translate([5, 0, 0]) {
 }
 
 rotate([0, 0, 90]) {
-    arduino(yt = -15, zt = 65);
+    arduino(yt = -5, zt = 50);
 }
 
 rotate([0, 0, 0]) {
@@ -80,11 +80,11 @@ rotate([90, 0, 90]) {
 }
 
 rotate([0, 0, 90]) {
-    tenergy_battery(xt = -TENERGY_L/2, yt = -55, zt = 35);
+    tenergy_battery(xt = -TENERGY_L/2, yt = -54, zt = 20);
 }
 
-rotate([0, 0, 90]) {
-    usb_battery(xt = -USB_BATTERY_L/2, yt = -65, zt = 55);
+rotate([90, 0, 270]) {
+    usb_battery(xt = -USB_BATTERY_L/2, zt = -55, yt = 43);
 }
 
 h_bridge(xt = -6, zt = 25);
