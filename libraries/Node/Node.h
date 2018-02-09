@@ -31,7 +31,7 @@ enum DIRECTION{
 class Node {
   
   public:
-    Node(bool north, bool east, bool south, bool west, Node *prev);
+    Node(bool north, bool east, bool south, bool west, int id, Node *prev);
     ~Node();
 
     void setOrientation(uint8_t orient);
@@ -40,6 +40,7 @@ class Node {
     void turnAround();
 
     uint8_t getOrientation();
+    int getID();
 
     bool isNorthOpen();
     bool isEastOpen();
@@ -49,11 +50,14 @@ class Node {
     void setDeadEnd(bool val);
     void setFork(bool val);
     void setExplored(bool val);
+ 
+    bool hasBeenVisited();
+    void setVisited(bool val);
 
     bool isDeadEnd();
     bool isFork();
     bool isExplored();
-
+    
     void setStart(bool val);
     void setEnd(bool val);
     
@@ -72,6 +76,8 @@ class Node {
     Node* getWest();
     void setWest(Node* node);
 
+    void printInformation();
+
   private:
     uint8_t m_orientation;
     
@@ -83,9 +89,12 @@ class Node {
     bool m_deadEnd;
     bool m_fork;
     bool m_explored;
+    bool m_visited;
 
     bool m_start;
     bool m_end;
+
+    int m_id;
 
     Node* m_northNode;
     Node* m_eastNode;

@@ -38,7 +38,7 @@ class Diagnostics {
                 const int southLEDPin, const int modeLEDPin);
 
     ~Diagnostics();
-    void update();
+    bool update();
     void celebrate();
     
     void turnOnLED(DIRECTION dir);

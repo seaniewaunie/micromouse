@@ -27,11 +27,20 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
+#include "ArduinoSTL.h"
+//#include "Button.h"
+#include <vector>
+
 #include "Arduino.h"
 #include "Diagnostics.h"
 #include "Node.h"
+// may not need these two below
 #include "StackArray.h"
 #include "QueueArray.h"
+
+#define MAX_MAZE_SIZE 36 //6x6 = 36 nodes
+#define MAX_MAZE_EDGES 60 // there are 60 traversable edges
+#define STARTING_INDEX 0
 
 
 class Solver {
@@ -47,8 +56,19 @@ class Solver {
     DIRECTION calculateNextMovement();
 
     Diagnostics* getDiagnostics();
-
+    
     Node* getCurrentNode();
+    
+    Node* createNode(int id);
+
+    // begin DFS functions
+    void dfs(int s);
+
+    void solve();
+
+    // end DFS functions 
+
+    bool isSolved(){ return m_solved; }
 
     void printStack();
     StackArray<Node*> getStack();
@@ -61,10 +81,24 @@ class Solver {
     Diagnostics *m_diagnostics; 
 
     Node *m_curr;
-    
+    Node *m_prev;
+
+// TODO: delete stack and queue
     StackArray<Node*> m_stack;
 
     QueueArray<Node*> m_queue;
+
+    std::vector<Node*> m_adj[MAX_MAZE_SIZE];
+    bool m_visited[MAX_MAZE_SIZE];
+    
+    bool m_starting;
+
+    int m_connectedNodes;
+
+    bool m_solved;
+
+// debugging button
+//    Button *m_button;
 };
 
 #endif

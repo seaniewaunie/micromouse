@@ -42,7 +42,7 @@ Diagnostics::~Diagnostics(){
     delete m_modeLED;
 }
 
-void Diagnostics::update(){
+bool Diagnostics::update(){
     // upon calling update, all sensors will be polled to determine if there is a wall
     // if there is no wall, the LED associated with it will turn on
 
@@ -62,6 +62,8 @@ void Diagnostics::update(){
         m_westLED->turnON();
     else
         m_westLED->turnOFF();
+
+    return checkWin();
 }
 
 

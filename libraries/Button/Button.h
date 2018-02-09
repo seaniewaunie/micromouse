@@ -20,7 +20,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "WProgram.h"
+#include "Arduino.h"
 
 #define PULLUP HIGH
 #define PULLDOWN LOW
