@@ -20,8 +20,8 @@ include <caster_ball.scad>;
 include <wall_segment.scad>;
 include <model_constants.scad>;
 
-WHEEL_OFFSET = 45;
-MOTOR_OFFSET_FROM_WHEEL = -28.5;
+WHEEL_OFFSET = 42;
+MOTOR_OFFSET_FROM_WHEEL = -24.8;
 SIDE_SENSOR_HEIGHT_OFFSET = 0;
 SIDE_SENSOR_FORE_AFT_OFFSET = 45;
 FRONT_SENSOR_FORE_AFT_OFFSET = 55;
@@ -33,10 +33,10 @@ translate([0, 0, -GROUND_OFFSET]) {
 $fn = 100;  // increases the resolution of components using arcs
 
 // The ground (not part of the model, shown for reference)
-plate(l = 180, w = 180, xt = 60, yt = 39, zt = GROUND_OFFSET, color="palegreen");
+plate(l = 180, w = 180, xt = 60, yt = 44, zt = GROUND_OFFSET, color="palegreen");
 
 // Wall (not part of the model)
-wall_segment(xt = -WALL_SEGMENT_L / 2 + 60, yt = 129, zt = GROUND_OFFSET);
+wall_segment(xt = -WALL_SEGMENT_L / 2 + 60, yt = 134, zt = GROUND_OFFSET);
 
 translate([5, 0, 0]) {
     // Right back wheel and motor

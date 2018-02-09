@@ -42,13 +42,13 @@ BACK_WHEEL_NUB_H = 5;
 
 // 32 mm wheel
 32_MM_WHEEL_D = 32;
+32_MM_WHEEL_H = 6.6;
+32_MM_WHEEL_NUB_H = 2;
+32_MM_WHEEL_NUB_D = 7;
 
 // LED
-//LED_CASE_D = 6;
 LED_CASE_D = 5.334;
-//LED_CASE_H = 9;
 LED_CASE_H = 8.89;
-//LED_LEAD_D = 0.5;
 LED_LEAD_D = 0.508;
 LED_LEAD_SHORT_H = 26;
 LED_LEAD_LONG_H = 28;
@@ -67,12 +67,6 @@ PLATE_W = ARDUINO_W;
 PLATE_H = 0.1;
 
 // Sensor
-//SENSOR_BARREL_D = 16;
-//SENSOR_BARREL_H = 12;
-//SENSOR_PCB_L = 21;
-//SENSOR_PCB_W = 46;
-//SENSOR_PCB_H = 3;
-// -- Begin Caliper Measurements for Sensor --
 SENSOR_BARREL_D = 16.002;
 SENSOR_BARREL_H = 12.2682;
 SENSOR_PCB_L = 20.574;
@@ -80,7 +74,6 @@ SENSOR_PCB_W = 45.339;
 SENSOR_PCB_H = 3.302;
 
 SENSOR_TOTAL_H = SENSOR_BARREL_H + SENSOR_PCB_H;
-//SENSOR_DISTANCE_BW_BARREL_FOCI = 30;
 // 41.8084 is the length from the left barrel to the right barrel
 // subtract 1/2 D from both sides to get the foci.
 SENSOR_DISTANCE_BW_BARREL_FOCI = 41.8084 - SENSOR_BARREL_D;
@@ -90,8 +83,6 @@ SENSOR_PINS_H = 4.4196-SENSOR_PCB_H;
 SENSOR_PINS_L = 8.6106;
 SENSOR_PINS_W = 10.2362;
 SENSOR_PINS_OFFSET = 3; // amount that pins overlap PCB
-
-// -- End --
 
 // Tenergy battery
 TENERGY_W = 36;
