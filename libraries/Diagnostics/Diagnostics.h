@@ -27,7 +27,14 @@
 #include "Arduino.h"
 #include "Sensor.h"
 #include "LED.h"
-#include "Node.h"
+//#include "Node.h"
+
+enum DIRECTION{
+    N,
+    E,
+    S,
+    W
+};
 
 class Diagnostics {
   
@@ -41,7 +48,7 @@ class Diagnostics {
     bool update();
     void celebrate();
     
-    void turnOnLED(DIRECTION dir);
+    void blinkLED(DIRECTION dir);
 
     bool checkWin();
 

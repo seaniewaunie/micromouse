@@ -190,7 +190,7 @@ Node* Node::getWest(){
 void Node::setWest(Node* node){
     m_westNode = node;
 }
-//*
+/*
 void Node::printInformation(){
     Serial.println("----------------------------");
     Serial.println("Information on node:");
@@ -232,10 +232,10 @@ void Node::printInformation(){
     Serial.println("----------------------------");
 }
 //*/
-/*
+//*
 // Eventually, we will comment out the above printInfo because
 // it uses up a LOT of memory
 void Node::printInformation(){
-
+    Serial.println(m_id);
 }
-*/
+//*/

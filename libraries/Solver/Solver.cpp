@@ -1,13 +1,8 @@
-/*
- * Author: Sean Graff
- * Created: 2/1/18
- * Version: 1.0
- * Last Edit: 2/1/18
- *
- * Solver Implementation file
- */
+// Sean
+// 2/12/18
+//
+// Solver Impl. file
 
-#include "Arduino.h"
 #include "Solver.h"
 
 Solver::Solver( const int northSensorPin, const int eastSensorPin, \
@@ -19,183 +14,236 @@ Solver::Solver( const int northSensorPin, const int eastSensorPin, \
                                     westSensorPin, northLEDPin, \
                                     eastLEDPin, westLEDPin, \
                                     southLEDPin, modeLEDPin);
-    //Serial.println("Initializing Solver Object");
+    
+    m_graph = new Graph(MAX_MAZE_SIZE);
 
-    //m_curr = createNode(STARTING_INDEX);
-    m_curr = NULL;
-    m_prev = NULL;
+    m_currentPosition = STARTING_INDEX;
 
     for(int i = 0; i < MAX_MAZE_SIZE; i++){
         m_visited[i] = false;
+        m_deadEndTracker[i] = false;
+        m_eastIsWallTracker[i] = false;
+        m_westIsWallTracker[i] = false;
+        m_northIsWallTracker[i] = false;
+        m_southIsWallTracker[i] = false;
     }
+
+    m_turnCounter = 0;
+    m_facing = N;
+
+    m_startingNode = true;
+
     
-    m_connectedNodes = 0;
-    m_starting = false;
-    m_solved = false;
-    //m_button = new Button(2, PULLDOWN);
+
 }
 
 Solver::~Solver(){
     delete m_diagnostics;
+    delete m_graph;
 }
-/*
-// TODO: this will return a direction
-DIRECTION Solver::calculateNextMovement(){
-    
-    /* The next movement of the micromouse is calculated in the following way:
-     * First, the diagnostics system polls all sensors
-     * Then, the sensors data is interpreted in the following way.
-     * Each direction is checked to see if a wall exists.
-     * When a wall does not exist, that direction is added to a stack of open possible routes the mouse could take for that node.
- 
-     * The Solver checks the top node to see if it has been explored.    
-     * When the mouse empties a stack for a node, the node is considered "explored".
-     * If it hasn't, it will move to that node and repeat the process.
-     * If the mouse reaches a dead end, it needs to back track to the node with multiple possibilities. (If that doesn't exist, something went wrong or the maze is unsolvable)
-     *
-    
-    
-    m_diagnostics->update();
-    // a wall corresponds to false ( it is not travelable )
-    bool currentNorth, currentEast, currentWest, currentSouth;
-  
-    // NOTE: a '1' indicates that there IS a wall
-    // this means a larger number for the orientation is more likely to have a wall to the north
-    currentNorth = m_diagnostics->getNorthSensor()->isWall();
-    currentEast = m_diagnostics->getEastSensor()->isWall();
-    currentWest = m_diagnostics->getWestSensor()->isWall();
 
-
-    // south is ALWAYS free other than when the mouse is at start. I interpreted the mouse being at start when
-    // the data structure storing the mouses movements is empty.
-    if(m_queue.isEmpty()){
-        currentSouth = true;
-        m_prev = NULL; 
-    }
-    else{
-        currentSouth = false;
-        m_prev = m_curr;
-    }
-   
-    // create the node using the information we have gathered.
-    m_curr = new Node(currentNorth, currentEast, currentSouth, currentWest, m_prev);
-    m_curr->printInformation();
-    
-    m_queue.enqueue(m_curr);
-    
-}
-*/
 Diagnostics* Solver::getDiagnostics(){
     return m_diagnostics;
 }
 
-Node* Solver::getCurrentNode(){
-    return m_curr;
-}
+void Solver::nextNode(){
 
-Node* Solver::createNode(int id){
-    Node* ret;
+    DIRECTION nodeMappedDir;
+
+    int wallCount = 0;
+
+    bool northIsWall;
+    bool eastIsWall;
+    bool westIsWall;
+    bool southIsWall;
+
+    Serial.print("m_facing before: ");
+    Serial.println(m_facing);
+    Serial.print("m_currentPosition before: ");
+    Serial.println(m_currentPosition);
     
-    m_solved = m_diagnostics->update();
-    // a wall corresponds to false ( it is not travelable )
-    bool currentNorth, currentEast, currentWest, currentSouth;
-  
-    // NOTE: a '1' indicates that there IS a wall
-    // this means a larger number for the orientation is more likely to have a wall to the north
-    currentNorth = m_diagnostics->getNorthSensor()->isWall();
-    currentEast = m_diagnostics->getEastSensor()->isWall();
-    currentWest = m_diagnostics->getWestSensor()->isWall();
-
-    // south is ALWAYS free other than when the mouse is at start. I interpreted the mouse being at start when
-    // the data structure storing the mouses movements is empty.
-    if(m_starting){
-        currentSouth = true;
-        m_prev = NULL;
-        m_starting = false;
-    }
-    else{
-        currentSouth = false;
-        m_prev = m_curr;
-    }
- 
-    // create the node using the information we have gathered.
-    ret = new Node(currentNorth, currentEast, currentSouth, currentWest, id, m_prev);
-    ret->printInformation();
     
-    return ret;
-}
+    // if the maze hasn't been solved
+    if( !m_diagnostics->update() ){
+        // if the node hasn't been mapped before
+        if( !m_visited[m_currentPosition] ){
+            Serial.println("Node has not been mapped before");
+            // if north has no wall
+            if( !m_diagnostics->getNorthSensor()->isWall() ){
+                // add an edge from the current node to the north node
+                m_graph->addEdge( m_currentPosition, m_currentPosition+incrementNorth() );  
+            }
+            else{
+                wallCount++;
+                m_northIsWallTracker[m_currentPosition] = true;
+            }
+            
+            if( !m_diagnostics->getEastSensor()->isWall() ){
+                m_graph->addEdge( m_currentPosition, m_currentPosition+incrementEast() );
+            }
+            else{
+                wallCount++;
+                m_eastIsWallTracker[m_currentPosition] = true;
+            }
+            
+            if( !m_diagnostics->getWestSensor()->isWall() ){
+                m_graph->addEdge( m_currentPosition, m_currentPosition+incrementWest() );
+            }
+            else{
+                wallCount++;
+                m_westIsWallTracker[m_currentPosition] = true;
+                if(wallCount == 3)
+                    m_deadEndTracker[m_currentPosition] = true;
+            }
+            // there's always an edge to the node south of the mouse except for the startingNode
+            if( !m_startingNode ){
+                m_graph->addEdge( m_currentPosition, m_currentPosition+incrementSouth() );
+            }
+            else{
+                m_startingNode = false;
+                m_southIsWallTracker[m_currentPosition] = true;
+            }
 
-// DFS functions
-void Solver::dfs(int s){
-    //Serial.println("waiting for button press");
-    //Serial.println("got a button press");
+            // save the direction the mouse was facing when this node was mapped
+            m_dirTracker[m_currentPosition] = m_facing;
+            m_visited[m_currentPosition] = true;
+        }
+        else{
+            Serial.println("retrieving data from memory");
+            // the node has been mapped before -- find orientation it was mapped
+            // TODO: this could be an error because the locomotion has to turn around to
+            // account for this -- in the end, interpretting the maze is much easier though
+            m_facing = m_dirTracker[m_currentPosition];
+        }
 
-    m_visited[s] = true;
-    
+        
+        // update local variables to resemble current node
+        northIsWall = m_northIsWallTracker[m_currentPosition];
+        eastIsWall = m_eastIsWallTracker[m_currentPosition];
+        westIsWall = m_westIsWallTracker[m_currentPosition];
+        southIsWall = m_southIsWallTracker[m_currentPosition];
 
-    if(m_adj[s][STARTING_INDEX] == NULL){
-        m_prev = NULL;
-        //m_curr = createNode(s);
-        m_starting = false;
-        //Serial.println("finished creating the starting node");
-    }
-    
+        // visually represent which direction mouse is facing BEFORE motion
+        m_diagnostics->blinkLED(m_facing);
 
-    // dynamically create the maze as we go
-    if(m_prev != NULL){
-        //Serial.println("m_prev is not null");
-        //*m_prev = m_curr;
-        //m_curr = createNode(s);
-        //m_adj[m_curr->getID()].push_back(m_prev);
-        //m_adj[m_prev->getID()].push_back(m_curr);
-        //*/
-    }
-    else{
-        //Serial.println("moving m_curr to adjacency matrix");
-        //m_adj[STARTING_INDEX].push_back(m_curr);
-    }
-
-    for(int i = 0; i < m_adj[s].size(); ++i){
-        if(m_solved == false){
-            if(m_visited[m_adj[s][i]->getID()] == false){
-                //Serial.println("recursively calling dfs");
-                //dfs(m_adj[s][i]->getID());
+        // at this point a decision on where to move needs to be made
+        // explore any unvisited nodes first -- clockwise priority excluding south
+        if( !m_visited[m_currentPosition + incrementNorth()] && !northIsWall ){
+            m_currentPosition += incrementNorth();
+        }
+        else if( !m_visited[m_currentPosition + incrementEast()] && !eastIsWall ){
+            m_currentPosition += incrementEast();
+            turnRight();
+        }
+        else if( !m_visited[m_currentPosition + incrementWest()] && !westIsWall ){
+            m_currentPosition += incrementWest();
+            turnLeft();
+        }
+        else{
+            // all routes the mouse could take have been explored
+            m_deadEndTracker[m_currentPosition] = true;
+            // at this point the mouse needs to move to nodes that are not leading to dead ends
+            if( !m_deadEndTracker[m_currentPosition + incrementNorth()] && !northIsWall ){
+                m_currentPosition += incrementNorth();
+            }
+            else if( !m_deadEndTracker[m_currentPosition + incrementEast()] && !eastIsWall ){
+                m_currentPosition += incrementEast();
+                turnRight();
+            }
+            else if( !m_deadEndTracker[m_currentPosition + incrementWest()] && !westIsWall ){
+                m_currentPosition += incrementWest();
+                turnLeft();
+            }
+            else{
+                m_currentPosition += incrementSouth();
+                turnAround();
             }
         }
-    } 
-}
-
-void Solver::solve(){
-    //Serial.println("entering solve function");
-    for(int i = STARTING_INDEX; i < MAX_MAZE_SIZE; i++){
-        if(m_solved == false){
-            if(m_visited[i] == false){
-                //Serial.println("calling dfs");
-                dfs(i);
-                m_connectedNodes++;
-            }
-        }
+        // visually represent which direction mouse is facing AFTER motion
+        m_diagnostics->blinkLED(m_facing); 
     }
-    if(m_solved == true){
+    else{
+        // can celebrate and also perform DFS to find the shortest path, and visually represent sprint mode
         m_diagnostics->celebrate();
-        Serial.println("The maze has been solved");
+        m_diagnostics->getModeLED()->turnON();
+
+        // call the shortest path function to store directions
+        
+
+    }
+    Serial.print("m_facing after: ");
+    Serial.println(m_facing);
+    Serial.print("m_currentPosition after: ");
+    Serial.println(m_currentPosition);
+}
+
+
+// the increment functions add to the position relative to the mouses facing direction.
+// when the mouse's north sensor is pointing(facing) east, moving the mouse "north" is actually moving
+// the mouse object east one node in the graph
+int Solver::incrementNorth(){
+    switch(m_facing){
+        case N:
+            return VERTICAL_INCREMENT;
+        case E:
+            return HORIZONTAL_INCREMENT;
+        case S:
+            return -VERTICAL_INCREMENT;
+        case W:
+            return -HORIZONTAL_INCREMENT;
     }
 }
 
-// end DFS functions
-
-void Solver::printStack(){
-    
+int Solver::incrementEast(){
+    switch(m_facing){
+        case N:
+            return HORIZONTAL_INCREMENT;
+        case E:
+            return -VERTICAL_INCREMENT;
+        case S:
+            return -HORIZONTAL_INCREMENT;
+        case W:
+            return VERTICAL_INCREMENT;
+    }
 }
 
-StackArray<Node*> Solver::getStack(){
-    return m_stack;
+int Solver::incrementSouth(){
+    switch(m_facing){
+        case N:
+            return -VERTICAL_INCREMENT;
+        case E:
+            return -HORIZONTAL_INCREMENT;
+        case S:
+            return VERTICAL_INCREMENT;
+        case W:
+            return HORIZONTAL_INCREMENT;
+    }
 }
 
-void Solver::printQueue(){
-
+int Solver::incrementWest(){
+    switch(m_facing){
+        case N:
+            return -HORIZONTAL_INCREMENT;
+        case E:
+            return VERTICAL_INCREMENT;
+        case S:
+            return HORIZONTAL_INCREMENT;
+        case W:
+            return -VERTICAL_INCREMENT;
+    }
 }
 
-QueueArray<Node*> Solver::getQueue(){
-    return m_queue;
+void Solver::turnRight(){
+    Serial.println("Turning right");
+    m_facing = static_cast<DIRECTION>((m_facing + 1)%4);    
+}
+
+void Solver::turnLeft(){
+    Serial.println("Turning left");
+    m_facing = static_cast<DIRECTION>((m_facing + 3)%4);
+}
+
+void Solver::turnAround(){
+    Serial.println("Turning around");
+    m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
 }

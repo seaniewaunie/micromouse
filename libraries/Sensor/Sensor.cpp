@@ -12,7 +12,7 @@
 // The Maximum Distance of the HC-SR04 is 400cm as per the Spec sheet
 #define MAX_DISTANCE 400
 
-#define CRITICAL_DISTANCE 16
+#define CRITICAL_DISTANCE 16 // we determined 16 to be the critical distance
 
 Sensor::Sensor(const int pin){
     m_pin = pin;

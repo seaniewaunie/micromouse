@@ -99,6 +99,31 @@ bool Diagnostics::checkWin(){
     return false;
 }
 
+void Diagnostics::blinkLED(DIRECTION dir){
+    LED *useThis;
+    
+    switch(dir){
+        case N:
+            useThis = m_northLED;
+            break;
+        case E:
+            useThis = m_eastLED;
+            break;
+        case S:
+            useThis = m_southLED;
+            break;
+        case W:
+            useThis = m_westLED;
+            break;
+    }
+
+    for(int i = 0; i < 4; i++){
+        useThis->flashLED();
+    }
+   
+}
+
+
 Sensor* Diagnostics::getNorthSensor(){
     return m_northSensor;
 }
