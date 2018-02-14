@@ -35,10 +35,10 @@ ARDUINO_PINS_L = 47.752; // this is the longest length for the pins on the right
 // the pins and pcb measurements are there just in case you need them for the arduino
 
 // Back wheel
-BACK_WHEEL_D = 72;
-BACK_WHEEL_H = 8;
-BACK_WHEEL_NUB_D = 7;
-BACK_WHEEL_NUB_H = 5;
+//BACK_WHEEL_D = 72;
+//BACK_WHEEL_H = 8;
+//BACK_WHEEL_NUB_D = 7;
+//BACK_WHEEL_NUB_H = 5;
 
 // 32 mm wheel
 32_MM_WHEEL_D = 32;
@@ -102,13 +102,13 @@ H_BRIDGE_W = H_BRIDGE_L;
 H_BRIDGE_H = 29;
 
 // Caster wheel
-CASTER_WHEEL_PLATE_L = 39;
-CASTER_WHEEL_PLATE_W = 33;
-CASTER_WHEEL_PLATE_H = 1;
-CASTER_WHEEL_D = 29;
-CASTER_WHEEL_H = 13;
-CASTER_WHEEL_Z_OFFSET = 27.5;
-CASTER_WHEEL_Y_OFFSET = 32;
+//CASTER_WHEEL_PLATE_L = 39;
+//CASTER_WHEEL_PLATE_W = 33;
+//CASTER_WHEEL_PLATE_H = 1;
+//CASTER_WHEEL_D = 29;
+//CASTER_WHEEL_H = 13;
+//CASTER_WHEEL_Z_OFFSET = 27.5;
+//CASTER_WHEEL_Y_OFFSET = 32;
 
 // Caster ball
 CASTER_BALL_HOUSING_L = 19.05;
@@ -122,6 +122,6 @@ WALL_SEGMENT_L = 167;
 WALL_SEGMENT_W = 8;
 
 // USB battery
-USB_BATTERY_L = 95.25;
-USB_BATTERY_W = 22.2;
-USB_BATTERY_H = 25.4;
+//USB_BATTERY_L = 95.25;
+//USB_BATTERY_W = 22.2;
+//USB_BATTERY_H = 25.4;
