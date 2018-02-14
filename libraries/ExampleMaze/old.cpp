@@ -5,16 +5,16 @@ using namespace std;
 
 int main(){
     ExampleMaze e(36);
-    
-    for(int i = 0; i < 15; i++)
-        e.addEdge(i, i+1);
-    
-    e.addEdge(15, 19);
-    e.addEdge(16, 35);
-
-    for(int i = 17; i < 35; i++)
-        e.addEdge(i, i+1);
    
+    e.addEdge(0,1);
+    e.addEdge(0,7);
+    e.addEdge(0,42);
+    e.addEdge(1,2);
+    e.addEdge(1,8);
+    e.addEdge(1,43);
+    e.addEdge(1,0);
+    e.addEdge(1,0);
+
     //e.DFS();
     DIRECTION facing = N;
 

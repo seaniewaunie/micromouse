@@ -7,7 +7,7 @@
 
 #include "ArduinoSTL.h"
 //#include <iostream>
-#include <list>
+#include <vector>
 
 using namespace std;
 
@@ -15,7 +15,7 @@ using namespace std;
 
 class Graph{
     int V;
-    list<int> *adj;
+    vector<int> *adj;
     void DFSUtil(int v, bool visited[]);
 
     public:

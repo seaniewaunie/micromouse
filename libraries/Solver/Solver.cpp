@@ -96,7 +96,7 @@ void Solver::nextNode(){
                     m_deadEndTracker[m_currentPosition] = true;
             }
             // there's always an edge to the node south of the mouse except for the startingNode
-            if( !m_startingNode ){
+            if( !m_startingNode ){ 
                 m_graph->addEdge( m_currentPosition, m_currentPosition+incrementSouth() );
             }
             else{
@@ -109,10 +109,11 @@ void Solver::nextNode(){
             m_visited[m_currentPosition] = true;
         }
         else{
-            Serial.println("retrieving data from memory");
+            //Serial.println("retrieving data from memory");
             // the node has been mapped before -- find orientation it was mapped
             // TODO: this could be an error because the locomotion has to turn around to
             // account for this -- in the end, interpretting the maze is much easier though
+            Serial.println("adjusting to m_facing stored from memory");
             m_facing = m_dirTracker[m_currentPosition];
         }
 
@@ -128,6 +129,9 @@ void Solver::nextNode(){
 
         // at this point a decision on where to move needs to be made
         // explore any unvisited nodes first -- clockwise priority excluding south
+
+
+                    
         if( !m_visited[m_currentPosition + incrementNorth()] && !northIsWall ){
             m_currentPosition += incrementNorth();
         }
@@ -182,54 +186,122 @@ void Solver::nextNode(){
 // when the mouse's north sensor is pointing(facing) east, moving the mouse "north" is actually moving
 // the mouse object east one node in the graph
 int Solver::incrementNorth(){
+//    Serial.println("Increment North called");
     switch(m_facing){
         case N:
-            return VERTICAL_INCREMENT;
+            if(m_currentPosition+VERTICAL_INCREMENT < MAX_MAZE_SIZE)
+                return VERTICAL_INCREMENT;
+            else
+                return VERTICAL_INCREMENT-MAX_MAZE_SIZE;
+            break;
         case E:
-            return HORIZONTAL_INCREMENT;
+            if(m_currentPosition+HORIZONTAL_INCREMENT < MAX_MAZE_SIZE)
+                return HORIZONTAL_INCREMENT;
+            else
+                return HORIZONTAL_INCREMENT-MAX_MAZE_SIZE;
+            break;
         case S:
-            return -VERTICAL_INCREMENT;
+            if(m_currentPosition-VERTICAL_INCREMENT < 0)
+                return MAX_MAZE_SIZE-VERTICAL_INCREMENT;
+            else
+                return -VERTICAL_INCREMENT;
+            break;
         case W:
-            return -HORIZONTAL_INCREMENT;
+            if(m_currentPosition-HORIZONTAL_INCREMENT >= 0)
+                return -HORIZONTAL_INCREMENT;
+            else
+                return MAX_MAZE_SIZE-HORIZONTAL_INCREMENT;
+            break;
     }
 }
 
 int Solver::incrementEast(){
+//    Serial.println("Increment East called");
     switch(m_facing){
         case N:
-            return HORIZONTAL_INCREMENT;
+            if(m_currentPosition+HORIZONTAL_INCREMENT < MAX_MAZE_SIZE)
+                return HORIZONTAL_INCREMENT;
+            else
+                return HORIZONTAL_INCREMENT-MAX_MAZE_SIZE;
+            break;
         case E:
-            return -VERTICAL_INCREMENT;
+            if(m_currentPosition-VERTICAL_INCREMENT < 0)
+                return MAX_MAZE_SIZE-VERTICAL_INCREMENT;
+            else
+                return -VERTICAL_INCREMENT;
+            break;
         case S:
-            return -HORIZONTAL_INCREMENT;
-        case W:
-            return VERTICAL_INCREMENT;
+            if(m_currentPosition-HORIZONTAL_INCREMENT >= 0)
+                return -HORIZONTAL_INCREMENT;
+            else
+                return MAX_MAZE_SIZE-HORIZONTAL_INCREMENT;
+            break;
+        case W: 
+            if(m_currentPosition+VERTICAL_INCREMENT < MAX_MAZE_SIZE)
+                return VERTICAL_INCREMENT;
+            else
+                return VERTICAL_INCREMENT-MAX_MAZE_SIZE;
+            break;
     }
 }
 
 int Solver::incrementSouth(){
+//    Serial.println("Increment South called");
     switch(m_facing){
         case N:
-            return -VERTICAL_INCREMENT;
+            if(m_currentPosition-VERTICAL_INCREMENT < 0)
+                return MAX_MAZE_SIZE-VERTICAL_INCREMENT;
+            else
+                return -VERTICAL_INCREMENT;
+            break;
         case E:
-            return -HORIZONTAL_INCREMENT;
+            if(m_currentPosition-HORIZONTAL_INCREMENT >= 0)
+                return -HORIZONTAL_INCREMENT;
+            else
+                return MAX_MAZE_SIZE-HORIZONTAL_INCREMENT;
+            break;
         case S:
-            return VERTICAL_INCREMENT;
+            if(m_currentPosition+VERTICAL_INCREMENT < MAX_MAZE_SIZE)
+                return VERTICAL_INCREMENT;
+            else
+                return VERTICAL_INCREMENT-MAX_MAZE_SIZE;
+            break;
         case W:
-            return HORIZONTAL_INCREMENT;
+            if(m_currentPosition+HORIZONTAL_INCREMENT < MAX_MAZE_SIZE)
+                return HORIZONTAL_INCREMENT;
+            else
+                return HORIZONTAL_INCREMENT-MAX_MAZE_SIZE;
+            break;
     }
 }
 
 int Solver::incrementWest(){
+    Serial.println("Increment West called");
     switch(m_facing){
         case N:
-            return -HORIZONTAL_INCREMENT;
+            if(m_currentPosition-HORIZONTAL_INCREMENT >= 0)
+                return -HORIZONTAL_INCREMENT;
+            else
+                return MAX_MAZE_SIZE-HORIZONTAL_INCREMENT;
+            break;
         case E:
-            return VERTICAL_INCREMENT;
+            if(m_currentPosition+VERTICAL_INCREMENT < MAX_MAZE_SIZE)
+                return VERTICAL_INCREMENT;
+            else
+                return VERTICAL_INCREMENT-MAX_MAZE_SIZE;
+            break;
         case S:
-            return HORIZONTAL_INCREMENT;
+            if(m_currentPosition+HORIZONTAL_INCREMENT < MAX_MAZE_SIZE)
+                return HORIZONTAL_INCREMENT;
+            else
+                return HORIZONTAL_INCREMENT-MAX_MAZE_SIZE;
+            break;
         case W:
-            return -VERTICAL_INCREMENT;
+            if(m_currentPosition-VERTICAL_INCREMENT < 0)
+                return MAX_MAZE_SIZE-VERTICAL_INCREMENT;
+            else
+                return -VERTICAL_INCREMENT;
+            break;
     }
 }
 

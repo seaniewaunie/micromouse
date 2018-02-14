@@ -2,7 +2,7 @@
 
 Graph::Graph(int V){
     this->V = V;
-    adj = new list<int>[V];
+    adj = new vector<int>[V];
 }
 
 Graph::~Graph(){
@@ -18,7 +18,7 @@ void Graph::DFSUtil(int v, bool visited[]){
     cout << v << " ";
     
 
-    list<int>::iterator i;
+    vector<int>::iterator i;
     for(i = adj[v].begin(); i != adj[v].end(); ++i){
         if(!visited[*i])
             DFSUtil(*i, visited);
