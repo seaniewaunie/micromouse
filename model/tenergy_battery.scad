@@ -7,12 +7,7 @@ include <model_constants.scad>;
 module tenergy_battery(xt = 0, yt = 0, zt = 0) {
     translate([xt, yt, zt]) {
         color("white") {
-            cube([TENERGY_L, TENERGY_W, TENERGY_H]);
-        }
-        color("black") {
-            translate([TENERGY_L/4, TENERGY_W/2, TENERGY_H]) {
-                text("Tenergy");
-            }
+            cube([TENERGY_W, TENERGY_L, TENERGY_H]);
         }
     }
 }
