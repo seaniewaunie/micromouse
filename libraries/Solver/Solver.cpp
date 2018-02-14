@@ -145,7 +145,7 @@ void Solver::nextNode(){
         }
         else{
             // all routes the mouse could take have been explored
-            m_deadEndTracker[m_currentPosition] = true;
+//            m_deadEndTracker[m_currentPosition] = true;
             // at this point the mouse needs to move to nodes that are not leading to dead ends
             if( !m_deadEndTracker[m_currentPosition + incrementNorth()] && !northIsWall ){
                 m_currentPosition += incrementNorth();
@@ -159,8 +159,10 @@ void Solver::nextNode(){
                 turnLeft();
             }
             else{
+                m_deadEndTracker[m_currentPosition] = true;
                 m_currentPosition += incrementSouth();
                 turnAround();
+            
             }
         }
         // visually represent which direction mouse is facing AFTER motion
@@ -276,7 +278,7 @@ int Solver::incrementSouth(){
 }
 
 int Solver::incrementWest(){
-    Serial.println("Increment West called");
+    //Serial.println("Increment West called");
     switch(m_facing){
         case N:
             if(m_currentPosition-HORIZONTAL_INCREMENT >= 0)
