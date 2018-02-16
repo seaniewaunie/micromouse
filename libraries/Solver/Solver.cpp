@@ -33,7 +33,9 @@ Solver::Solver( const int northSensorPin, const int eastSensorPin, \
 
     m_startingNode = true;
 
-    
+    m_isSolved = false;    
+
+    m_isReadyToSprint = false;
 
 }
 
@@ -47,9 +49,9 @@ Diagnostics* Solver::getDiagnostics(){
 }
 
 void Solver::nextNode(){
-
-    DIRECTION nodeMappedDir;
-
+    // visually represent how long this function takes by flashing the MODE led
+    m_diagnostics->getModeLED()->turnON();
+ 
     int wallCount = 0;
 
     bool northIsWall;
@@ -57,17 +59,19 @@ void Solver::nextNode(){
     bool westIsWall;
     bool southIsWall;
 
-    Serial.print("m_facing before: ");
-    Serial.println(m_facing);
+    //Serial.print("m_facing before: ");
+    //Serial.println(m_facing);
     Serial.print("m_currentPosition before: ");
     Serial.println(m_currentPosition);
     
     
     // if the maze hasn't been solved
-    if( !m_diagnostics->update() ){
+    if(!m_isSolved){
+        m_isSolved = m_diagnostics->update();
         // if the node hasn't been mapped before
         if( !m_visited[m_currentPosition] ){
             Serial.println("Node has not been mapped before");
+            m_difference = 0;
             // if north has no wall
             if( !m_diagnostics->getNorthSensor()->isWall() ){
                 // add an edge from the current node to the north node
@@ -113,7 +117,15 @@ void Solver::nextNode(){
             // the node has been mapped before -- find orientation it was mapped
             // TODO: this could be an error because the locomotion has to turn around to
             // account for this -- in the end, interpretting the maze is much easier though
-            Serial.println("adjusting to m_facing stored from memory");
+            Serial.println("adjusting to m_facing stored from memory"); 
+           
+            
+            // refine this to work perfectly
+            m_difference = m_dirTracker[m_currentPosition] - m_facing;
+            if(m_difference < -1) m_difference = m_difference * -1; // makeshift abs() function
+
+            cout << "m_difference between current facing and previous facing: " << m_difference << std::endl;
+            
             m_facing = m_dirTracker[m_currentPosition];
         }
 
@@ -125,7 +137,7 @@ void Solver::nextNode(){
         southIsWall = m_southIsWallTracker[m_currentPosition];
 
         // visually represent which direction mouse is facing BEFORE motion
-        m_diagnostics->blinkLED(m_facing);
+        //m_diagnostics->blinkLED(m_facing);
 
         // at this point a decision on where to move needs to be made
         // explore any unvisited nodes first -- clockwise priority excluding south
@@ -134,13 +146,17 @@ void Solver::nextNode(){
                     
         if( !m_visited[m_currentPosition + incrementNorth()] && !northIsWall ){
             m_currentPosition += incrementNorth();
+            
+            goForward();
         }
         else if( !m_visited[m_currentPosition + incrementEast()] && !eastIsWall ){
             m_currentPosition += incrementEast();
+           
             turnRight();
         }
         else if( !m_visited[m_currentPosition + incrementWest()] && !westIsWall ){
             m_currentPosition += incrementWest();
+           
             turnLeft();
         }
         else{
@@ -149,44 +165,71 @@ void Solver::nextNode(){
             // at this point the mouse needs to move to nodes that are not leading to dead ends
             if( !m_deadEndTracker[m_currentPosition + incrementNorth()] && !northIsWall ){
                 m_currentPosition += incrementNorth();
+               
+                goForward();
             }
             else if( !m_deadEndTracker[m_currentPosition + incrementEast()] && !eastIsWall ){
                 m_currentPosition += incrementEast();
+                
                 turnRight();
             }
             else if( !m_deadEndTracker[m_currentPosition + incrementWest()] && !westIsWall ){
                 m_currentPosition += incrementWest();
+                              
                 turnLeft();
             }
             else{
                 m_deadEndTracker[m_currentPosition] = true;
+                
                 m_currentPosition += incrementSouth();
+               
                 turnAround();
             
             }
         }
         // visually represent which direction mouse is facing AFTER motion
-        m_diagnostics->blinkLED(m_facing); 
+        //m_diagnostics->blinkLED(m_facing); 
+        
+        m_diagnostics->getModeLED()->turnOFF();
+
     }
-    else{
+    else if(!m_isReadyToSprint){
         // can celebrate and also perform DFS to find the shortest path, and visually represent sprint mode
         m_diagnostics->celebrate();
         m_diagnostics->getModeLED()->turnON();
-
-        // call the shortest path function to store directions
+        m_isSolved = true;
         
-
+        // call the shortest path function to store directions
+        m_isReadyToSprint = true;
+        //m_graph->DFS();    
+        
     }
-    Serial.print("m_facing after: ");
-    Serial.println(m_facing);
+    else{
+        // button pressed AND shortest path is set in memory...
+        // delay for 5 seconds after button press... 
+        for(int i = 0; i < 5; i++){
+            m_diagnostics->getModeLED()->turnON();
+            delay(500);
+            m_diagnostics->getModeLED()->turnOFF();
+            delay(500);
+        }
+        m_diagnostics->getModeLED()->turnON();
+    }
+
+    //Serial.print("m_facing after: ");
+    //Serial.println(m_facing);
     Serial.print("m_currentPosition after: ");
     Serial.println(m_currentPosition);
+
+    
 }
 
 
 // the increment functions add to the position relative to the mouses facing direction.
 // when the mouse's north sensor is pointing(facing) east, moving the mouse "north" is actually moving
 // the mouse object east one node in the graph
+
+// these increment functions could be implemented with a modulous type circular function possible
 int Solver::incrementNorth(){
 //    Serial.println("Increment North called");
     switch(m_facing){
@@ -307,17 +350,73 @@ int Solver::incrementWest(){
     }
 }
 
+
+void Solver::goForward(){
+    m_diagnostics->getNorthLED()->flashLED();
+    m_diagnostics->getNorthLED()->flashLED();
+}
+
 void Solver::turnRight(){
-    Serial.println("Turning right");
-    m_facing = static_cast<DIRECTION>((m_facing + 1)%4);    
+    //Serial.println("Turning right");
+    if(m_difference == 2){
+        m_diagnostics->getWestLED()->flashLED();
+        m_diagnostics->getWestLED()->flashLED();
+    }
+    else if(m_difference == 1){
+        m_diagnostics->getNorthLED()->flashLED();
+        m_diagnostics->getNorthLED()->flashLED();
+    }
+    else if(m_difference == -1){
+        m_diagnostics->getSouthLED()->flashLED();
+        m_diagnostics->getSouthLED()->flashLED();
+    }
+    else{ 
+        m_diagnostics->getEastLED()->flashLED();
+        m_diagnostics->getEastLED()->flashLED();
+    }
+    m_facing = static_cast<DIRECTION>((m_facing + 1)%4);
 }
 
 void Solver::turnLeft(){
-    Serial.println("Turning left");
+    if(m_difference == 2){
+        m_diagnostics->getEastLED()->flashLED();
+        m_diagnostics->getEastLED()->flashLED();
+    }
+    else if(m_difference == -1){
+        m_diagnostics->getNorthLED()->flashLED();
+        m_diagnostics->getNorthLED()->flashLED();
+    }
+    else if(m_difference == 1){
+        m_diagnostics->getSouthLED()->flashLED();
+        m_diagnostics->getSouthLED()->flashLED();
+    }
+    else{ 
+        m_diagnostics->getWestLED()->flashLED();
+        m_diagnostics->getWestLED()->flashLED();
+    }
+
+    //Serial.println("Turning left");
     m_facing = static_cast<DIRECTION>((m_facing + 3)%4);
 }
 
 void Solver::turnAround(){
-    Serial.println("Turning around");
+    //Serial.println("Turning around");
+    if(m_difference == 2){
+        m_diagnostics->getNorthLED()->flashLED();
+        m_diagnostics->getNorthLED()->flashLED();
+    }
+    else if(m_difference == -1){
+        m_diagnostics->getEastLED()->flashLED();
+        m_diagnostics->getEastLED()->flashLED();
+    }
+    else if(m_difference == 1){
+        m_diagnostics->getWestLED()->flashLED();
+        m_diagnostics->getWestLED()->flashLED();
+    }
+    else{ 
+        m_diagnostics->getSouthLED()->flashLED();
+        m_diagnostics->getSouthLED()->flashLED();
+    }
+
     m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
 }

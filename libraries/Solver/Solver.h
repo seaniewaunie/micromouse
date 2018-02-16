@@ -40,6 +40,7 @@ class Solver {
         int incrementSouth();
         int incrementWest();
 
+        void goForward();
         void turnRight();
         void turnLeft();
         void turnAround();
@@ -53,14 +54,21 @@ class Solver {
         bool m_visited[MAX_MAZE_SIZE];
         int m_turnCounter;
         DIRECTION m_facing;
+        int m_difference;
         DIRECTION m_dirTracker[MAX_MAZE_SIZE];
         bool m_deadEndTracker[MAX_MAZE_SIZE];
         bool m_startingNode;
         
+        bool m_isSolved;
+
         bool m_eastIsWallTracker[MAX_MAZE_SIZE];
         bool m_westIsWallTracker[MAX_MAZE_SIZE];
         bool m_northIsWallTracker[MAX_MAZE_SIZE];
         bool m_southIsWallTracker[MAX_MAZE_SIZE];
+        
+        // begin sprint mode variables
+        bool m_isReadyToSprint;
+
 };
 
 #endif
