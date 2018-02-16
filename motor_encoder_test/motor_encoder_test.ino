@@ -71,6 +71,8 @@ void loop() {
   if(currentMillis - previousMillis > sampleDuration) {
     previousMillis = currentMillis;
     pid_setDutyCycle(18.0);
+    Serial.print("DC: ");
+    Serial.println(dutyCycle);
   }
 }
 
@@ -100,31 +102,38 @@ void encoderB_ISR() {
   }
 }
 
-#define Kp 7
-#define Kd 1
-#define Ki 0.8
+#define Kp 5
+#define Kd 0.05
+#define Ki 0
 
 void pid_setDutyCycle(const float desired_distance) {
-  static float last_error = 0, integral = 0;
+  static float last_error = 0, integral = 0, derivative = 0;
   
   actual_distance = ((float)encoderPos/CPR) * wheel_circum;
   Serial.print("distance_travelled: ");
   Serial.println(actual_distance);
   
-  float error = desired_distance - actual_distance;
-  float derivative = (last_error - error)/sampleTime;
+  float error = (100.0 * (desired_distance - actual_distance)/float(desired_distance));
+
+  Serial.print("error: ");
+  Serial.println(error);
+  derivative = error - last_error;
   float my_dutyCycle = (error * Kp) + (derivative * Kd) + (integral * Ki);
+
+  Serial.print("my_dutyCycle: ");
+  Serial.println(my_dutyCycle);
   
   last_error = error;
 
-  if(my_dutyCycle >= 100.0) {
+  if(my_dutyCycle >= 255.0) {
     dutyCycle = 255;
   }
-  else if(my_dutyCycle < 20) {
+  else if(my_dutyCycle < 55.0) {
     dutyCycle = 0;
   }
   else {
-    dutyCycle = int((my_dutyCycle/100.0) * 255);
+    dutyCycle = int(my_dutyCycle);
+    //dutyCycle = int((my_dutyCycle/100.0) * 255);
     integral += error*sampleTime;
   }
 }

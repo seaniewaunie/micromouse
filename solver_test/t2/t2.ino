@@ -5,7 +5,7 @@
 #define NORTH_SENSOR_PIN 2
 #define EAST_SENSOR_PIN 3
 #define WEST_SENSOR_PIN 4
-
+  
 #define NORTH_LED_PIN 5
 #define EAST_LED_PIN 6
 #define WEST_LED_PIN 7
@@ -41,7 +41,7 @@ void loop() {
   }
   
   solver.getDiagnostics()->update();
-  delay(50);
+  delay(10);
   
 }
 

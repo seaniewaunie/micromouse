@@ -70,18 +70,27 @@ bool Diagnostics::update(){
 // upon finishing a maze, the micromouse will celebrate!
 void Diagnostics::celebrate(){
     for(int i = 0; i < 10; i++){
-        m_northLED->turnON();
-        m_eastLED->turnON();
-        m_westLED->turnON();
-        m_southLED->turnON();
-        delay(LED_DELAY_MS);
-
         m_northLED->turnOFF();
         m_eastLED->turnOFF();
         m_westLED->turnOFF();
         m_southLED->turnOFF();
+        m_modeLED->turnOFF();
+        delay(LED_DELAY_MS);
+         
+        m_northLED->turnON();
+        m_eastLED->turnON();
+        m_westLED->turnON();
+        m_southLED->turnON();
+        m_modeLED->turnON();
         delay(LED_DELAY_MS);
     }
+
+    m_northLED->turnOFF();
+    m_eastLED->turnOFF();
+    m_westLED->turnOFF();
+    m_southLED->turnOFF();
+    m_modeLED->turnOFF();
+
 }
 
 // check to see if the micromouse is done
