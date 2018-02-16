@@ -352,8 +352,19 @@ int Solver::incrementWest(){
 
 
 void Solver::goForward(){
-    m_diagnostics->getNorthLED()->flashLED();
-    m_diagnostics->getNorthLED()->flashLED();
+    if(m_difference == 2){
+
+    }
+    else if(m_difference == 1){
+
+    }
+    else if(m_difference == -1){
+
+    }
+    else{
+        m_diagnostics->getNorthLED()->flashLED();
+        m_diagnostics->getNorthLED()->flashLED();
+    }
 }
 
 void Solver::turnRight(){
@@ -382,11 +393,11 @@ void Solver::turnLeft(){
         m_diagnostics->getEastLED()->flashLED();
         m_diagnostics->getEastLED()->flashLED();
     }
-    else if(m_difference == -1){
+    else if(m_difference == 1){
         m_diagnostics->getNorthLED()->flashLED();
         m_diagnostics->getNorthLED()->flashLED();
     }
-    else if(m_difference == 1){
+    else if(m_difference == -1){
         m_diagnostics->getSouthLED()->flashLED();
         m_diagnostics->getSouthLED()->flashLED();
     }
