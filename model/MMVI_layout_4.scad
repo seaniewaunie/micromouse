@@ -19,7 +19,7 @@ include <model_constants.scad>
 
 SENSOR_FORE_AFT_OFFSET = 20;
 FRONT_SENSOR_FORE_AFT_OFFSET = 15 + SENSOR_FORE_AFT_OFFSET;
-GROUND_OFFSET = 16;
+GROUND_OFFSET = 16.3;
 
 // increases the resolution of components using arcs
 $fn = 100;
@@ -40,7 +40,7 @@ rotate([-90, 0, -90]) {
 
 tenergy_battery(yt = -TENERGY_L/2, xt = 10, zt = -12 + GROUND_OFFSET);
 
-caster_ball(xt = 48, yt = -CASTER_BALL_HOUSING_L / 2, zt = -11.1 + GROUND_OFFSET);
+caster_ball(xt = 48, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET);
 
 arduino(xt = 20, zt = 50 + GROUND_OFFSET);
 

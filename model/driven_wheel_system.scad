@@ -9,7 +9,7 @@ include <32_mm_wheel.scad>
 include <motor.scad>
 
 WHEEL_OFFSET = 42;
-// Assumes the motor output shaft overlaps wheel by 6 mm
+// Assumes the motor output shaft overlaps wheel by ~6 mm
 MOTOR_OFFSET_FROM_WHEEL = -24.8;
 
 module driven_wheel_system(xt = 0, yt = 0, zt = 0) {
