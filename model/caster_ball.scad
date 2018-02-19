@@ -11,8 +11,8 @@ module caster_ball(xt = 0, yt = 0, zt = 0) {
         }
         color("silver") {
             
-            translate([CASTER_BALL_HOUSING_W / 2, CASTER_BALL_HOUSING_L / 2, 0]) {
-                sphere(d = 9.5);
+            translate([CASTER_BALL_HOUSING_W / 2, CASTER_BALL_HOUSING_L / 2, CASTER_BALL_HOUSING_H - CASTER_BALL_TOTAL_H + (0.5 * CASTER_BALL_D)]) {
+                sphere(d = CASTER_BALL_D);
             }
         }
     }
