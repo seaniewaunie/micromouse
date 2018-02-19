@@ -35,14 +35,14 @@ h_bridge(xt = -6 + SENSOR_FORE_AFT_OFFSET, zt = 25 + GROUND_OFFSET);
 
 // Front sensor
 rotate([-90, 0, -90]) {
-    sensor(yt = -22 - GROUND_OFFSET, zt = FRONT_SENSOR_FORE_AFT_OFFSET);
+    sensor(yt = -20 - GROUND_OFFSET, zt = FRONT_SENSOR_FORE_AFT_OFFSET);
 }
 
 tenergy_battery(yt = -TENERGY_L/2, xt = 10, zt = -12 + GROUND_OFFSET);
 
 caster_ball(xt = 48, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET);
 
-arduino(xt = 20, zt = 50 + GROUND_OFFSET);
+arduino(xt = 40, zt = 50 + GROUND_OFFSET);
 
 led_system(zt = 100, xt = 20);
 

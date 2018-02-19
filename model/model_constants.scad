@@ -85,9 +85,9 @@ SENSOR_PINS_W = 10.2362;
 SENSOR_PINS_OFFSET = 3; // amount that pins overlap PCB
 
 // Tenergy battery
-TENERGY_W = 36;
-TENERGY_H = 19;
-TENERGY_L = 70;
+TENERGY_W = 36.500;
+TENERGY_H = 18.948;
+TENERGY_L = 69.698;
 
 // Pushbutton
 PUSHBUTTON_BODY_L = 6;
