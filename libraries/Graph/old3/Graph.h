@@ -3,8 +3,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include "ArduinoSTL.h"
-//#include <iostream>
+//#include "ArduinoSTL.h"
+#include <iostream>
 #include <vector>
 #include <utility>
 //#include <limits.h>
@@ -27,6 +27,7 @@ class Graph{
         // dijkstra utilities
         int minDistance();
         void printSolution();
+        void printPath(int j);
 
     private:
         // weighted graph variables
@@ -38,7 +39,7 @@ class Graph{
         bool m_sptSet[MAX_MAZE_SIZE];
         int m_dist[MAX_MAZE_SIZE]; // tells distance to node
         std::vector<int> m_shortestPath; // keeps track of path to end node
-
+        int m_parent[MAX_MAZE_SIZE];
 };
 
 #endif

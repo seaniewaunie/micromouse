@@ -6,16 +6,16 @@
 using namespace std;
 
 Graph::Graph(){
-    m_currentSize = 0;
+//    m_currentSize = 0;
     
-    for(int i = 0; i < MAX_MAZE_SIZE; i++)
+    for(uint8_t i = 0; i < MAX_MAZE_SIZE; i++)
         m_dist[i] = INT_MAX, m_sptSet[i] = false;
     
     m_parent[STARTING_NODE] = -1;
     m_dist[STARTING_NODE] = 0;
 
-    for(int i = 0; i < MAX_MAZE_SIZE; i++){
-        for(int j = 0; j < MAX_MAZE_SIZE; j++){
+    for(uint8_t i = 0; i < MAX_MAZE_SIZE; i++){
+        for(uint8_t j = 0; j < MAX_MAZE_SIZE; j++){
             graph[i][j] = 0;
         }
     }
@@ -77,7 +77,7 @@ void Graph::printSolution(){
         }
     }
 }
-
+/*
 void Graph::storeEndPath(int j){
     
     if(m_parent[j] == -1)
@@ -88,7 +88,7 @@ void Graph::storeEndPath(int j){
     //cout << j << " ";
     m_shortestPath.push_back(j);
 }
-
+*/
 void Graph::Dijkstra(){
     // convert m_adj to [49][49] adjacency matrix
     //bool graph[MAX_MAZE_SIZE][MAX_MAZE_SIZE];
@@ -100,9 +100,10 @@ void Graph::Dijkstra(){
         m_sptSet[u] = true;
         
         for(int x = 0; x < MAX_MAZE_SIZE; x++){
+
         if(!m_sptSet[x] && graph[u][x] && m_dist[u] != INT_MAX && m_dist[u] + graph[u][x] < m_dist[x]){
                 m_parent[x] = u;
-                m_dist[x] = m_dist[u] + add;
+                m_dist[x] = m_dist[u] + graph[u][x];
             }
         }
     }

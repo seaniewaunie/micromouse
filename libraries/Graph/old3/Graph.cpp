@@ -9,10 +9,11 @@ Graph::Graph(){
     m_currentSize = 0;
     
     for(int i = 0; i < MAX_MAZE_SIZE; i++)
-        m_dist[i] = INT_MAX, m_sptSet[i] = false;
+        m_dist[i] = INT_MAX, m_sptSet[i] = false, m_parent[i] = 99;
 
     m_dist[STARTING_NODE] = 0;
-
+    
+    m_parent[STARTING_NODE] = -1;
 }
 
 Graph::~Graph(){
@@ -41,25 +42,56 @@ void Graph::printGraph(){
     }
 }
 
+void Graph::printPath(int j){
+    if(m_parent[j] == -1)
+        return;
+    
+    if(m_parent[j] != 99)
+        printPath(m_parent[j]);
+
+    cout << j << " ";
+}
+
+void Graph::printSolution(){
+    int src = 0;
+    cout << "Node\tDistance\tPath" << endl;
+    for(int i = 1; i < MAX_MAZE_SIZE; i++){
+        if(m_dist[i] != INT_MAX){
+            cout << src << "->" << i;
+            cout << "\t" << m_dist[i];
+            cout << "\t\t" << src << " ";
+            if(m_parent[i] != 99)
+                printPath(i);
+            cout << "\n";
+        }
+    }
+}
+
+
 void Graph::Dijkstra(){
     int u, v, w;
-    for(int i = 0; i < MAX_MAZE_SIZE; i++){
+    // each index in maze
+    for(int i = 0; i < MAX_MAZE_SIZE-1; i++){
+        cout << "Node: " << i << "\n";
         u = minDistance();
-        for(auto it = m_adj[i].begin(); it!=m_adj[i].end(); it++){
+        // each element in vector for index in maze
+        for(auto it = m_adj[u].begin(); it!=m_adj[u].end(); it++){
             v = it->first;
             w = it->second;
-            
+            cout << "\t\tu: " << u << "\tv: " << v << "\tw: " << w << endl;
             m_sptSet[u] = true;
 
             if(!m_sptSet[v] && w && m_dist[u] != INT_MAX && m_dist[u]+w < m_dist[v]){
                 m_dist[v] = m_dist[u] + w;
+                m_parent[v] = u;
             }
-
         }
+        cout << "\n";
     }
     
     printSolution();
 }
+
 
 void Graph::setEndIndex(int i){
     m_endIndex = i;
@@ -75,10 +107,11 @@ int Graph::minDistance(){
     return min_index;
 }
 
+/*
 void Graph::printSolution(){
     cout << "Vertex\tDistance from Source\n";
     for(int i = 0; i < MAX_MAZE_SIZE; i++)
         if(m_dist[i] != INT_MAX)
             cout << i << "\t" << m_dist[i] << "\n";
 }
-
+*/
