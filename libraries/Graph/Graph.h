@@ -28,6 +28,7 @@ class Graph{
         int minDistance();
         void printSolution();
         void printPath(int j);
+        void storeEndPath(int end); // stores the path to end node
 
     private:
         // weighted graph variables

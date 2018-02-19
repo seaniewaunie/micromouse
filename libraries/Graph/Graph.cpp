@@ -14,6 +14,8 @@ Graph::Graph(){
     m_dist[STARTING_NODE] = 0;
     
     m_parent[STARTING_NODE] = -1;
+    // shortest path will always start with 0
+    m_shortestPath.push_back(STARTING_NODE);
 }
 
 Graph::~Graph(){
@@ -107,11 +109,14 @@ int Graph::minDistance(){
     return min_index;
 }
 
-/*
-void Graph::printSolution(){
-    cout << "Vertex\tDistance from Source\n";
-    for(int i = 0; i < MAX_MAZE_SIZE; i++)
-        if(m_dist[i] != INT_MAX)
-            cout << i << "\t" << m_dist[i] << "\n";
+void Graph::storeEndPath(int end){
+    if(m_parent[end] == -1)
+        return;
+    
+    if(m_parent[end] != 99)
+        printPath(m_parent[end]);
+
+    cout << end << " ";
+    m_shortestPath.push_back(end);
 }
-*/
+
