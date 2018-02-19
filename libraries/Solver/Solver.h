@@ -15,11 +15,15 @@
 
 #include "Graph.h"
 
-#define MAX_MAZE_SIZE 49 //7x7 = 49 nodes
+// defined in Graph.h
+//#define MAX_MAZE_SIZE 49 //7x7 = 49 nodes
 // NOTE: I know it's a 6x6 maze, but there is an exit node... so I'm accounting for that
 
 #define VERTICAL_INCREMENT 1
 #define HORIZONTAL_INCREMENT 7
+
+#define TURN_WEIGHT 5
+#define STRAIGHT_WEIGHT 1
 
 #define STARTING_INDEX 0 // starting index doesn't matter in this design
 

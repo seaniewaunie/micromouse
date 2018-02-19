@@ -7,10 +7,11 @@
 #include <iostream>
 #include <vector>
 #include <utility>
-#include <limits.h>
+//#include <limits.h>
 
 #define MAX_MAZE_SIZE 49
 #define STARTING_NODE 0
+#define INT_MAX 999
 
 class Graph{
 

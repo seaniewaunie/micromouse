@@ -1,9 +1,11 @@
-// Sean
+// Sean Graff
 // 2/12/18
 //
 // Solver Impl. file
 
 #include "Solver.h"
+
+using namespace std;
 
 Solver::Solver( const int northSensorPin, const int eastSensorPin, \
                 const int westSensorPin, const int northLEDPin, \
@@ -15,7 +17,7 @@ Solver::Solver( const int northSensorPin, const int eastSensorPin, \
                                     eastLEDPin, westLEDPin, \
                                     southLEDPin, modeLEDPin);
     
-    m_graph = new Graph(MAX_MAZE_SIZE);
+    m_graph = new Graph();
 
     m_currentPosition = STARTING_INDEX;
 
@@ -64,10 +66,15 @@ void Solver::nextNode(){
     Serial.print("m_currentPosition before: ");
     Serial.println(m_currentPosition);
     
-    
+     // a maze is solved if distance check returns true or 
+    // the current position % 6 == 0  <-- this is good for north,
+    // but we need a good way to know we have solved the maze
+    // if the exit is on the sides
+    if(!m_isSolved)
+        m_isSolved = ( m_diagnostics->update() );
+
     // if the maze hasn't been solved
     if(!m_isSolved){
-        m_isSolved = m_diagnostics->update();
         // if the node hasn't been mapped before
         if( !m_visited[m_currentPosition] ){
             Serial.println("Node has not been mapped before");
@@ -75,7 +82,8 @@ void Solver::nextNode(){
             // if north has no wall
             if( !m_diagnostics->getNorthSensor()->isWall() ){
                 // add an edge from the current node to the north node
-                m_graph->addEdge( m_currentPosition, m_currentPosition+incrementNorth() );  
+                m_graph->addEdge( m_currentPosition, m_currentPosition+incrementNorth(), STRAIGHT_WEIGHT );  
+                //m_graph->addEdge( m_currentPosition, m_currentPosition+incrementNorth() );  
             }
             else{
                 wallCount++;
@@ -83,7 +91,8 @@ void Solver::nextNode(){
             }
             
             if( !m_diagnostics->getEastSensor()->isWall() ){
-                m_graph->addEdge( m_currentPosition, m_currentPosition+incrementEast() );
+                m_graph->addEdge( m_currentPosition, m_currentPosition+incrementEast(), TURN_WEIGHT );
+                //m_graph->addEdge( m_currentPosition, m_currentPosition+incrementEast() );
             }
             else{
                 wallCount++;
@@ -91,14 +100,25 @@ void Solver::nextNode(){
             }
             
             if( !m_diagnostics->getWestSensor()->isWall() ){
-                m_graph->addEdge( m_currentPosition, m_currentPosition+incrementWest() );
+                m_graph->addEdge(m_currentPosition, m_currentPosition+incrementWest(), TURN_WEIGHT); 
+                //m_graph->addEdge( m_currentPosition, m_currentPosition+incrementWest() );
             }
             else{
                 wallCount++;
                 m_westIsWallTracker[m_currentPosition] = true;
-                if(wallCount == 3)
+                if(wallCount == 3){
                     m_deadEndTracker[m_currentPosition] = true;
+                    //m_graph->setDeadEnd(m_currentPosition);
+                }
             }
+            
+            if(m_startingNode){
+                m_startingNode = false;
+                m_southIsWallTracker[m_currentPosition] = true;
+            }
+
+/*
+            // no longer needed in new graph implementation
             // there's always an edge to the node south of the mouse except for the startingNode
             if( !m_startingNode ){ 
                 m_graph->addEdge( m_currentPosition, m_currentPosition+incrementSouth() );
@@ -107,6 +127,7 @@ void Solver::nextNode(){
                 m_startingNode = false;
                 m_southIsWallTracker[m_currentPosition] = true;
             }
+*/
 
             // save the direction the mouse was facing when this node was mapped
             m_dirTracker[m_currentPosition] = m_facing;
@@ -180,7 +201,9 @@ void Solver::nextNode(){
             }
             else{
                 m_deadEndTracker[m_currentPosition] = true;
-                
+               
+                //m_graph->setDeadEnd(m_currentPosition);
+
                 m_currentPosition += incrementSouth();
                
                 turnAround();
@@ -198,11 +221,11 @@ void Solver::nextNode(){
         m_diagnostics->celebrate();
         m_diagnostics->getModeLED()->turnON();
         m_isSolved = true;
-        
+
         // call the shortest path function to store directions
         m_isReadyToSprint = true;
-        //m_graph->DFS();    
-        
+        m_graph->printGraph();
+        m_graph->Dijkstra(); 
     }
     else{
         // button pressed AND shortest path is set in memory...
@@ -352,6 +375,7 @@ int Solver::incrementWest(){
 
 
 void Solver::goForward(){
+    // TODO: MAY not need to worry about difference for this one
     if(m_difference == 2){
 
     }
