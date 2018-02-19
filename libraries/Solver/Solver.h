@@ -29,6 +29,7 @@
 
 class Solver {
     public:
+        Solver();
         Solver(const int northSensorPin, const int eastSensorPin, \
             const int westSensorPin, const int northLEDPin, \
             const int eastLEDPin, const int westLEDPin, \

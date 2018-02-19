@@ -13,6 +13,11 @@
 #define LED_DELAY_MS 100
 #define MAZE_LENGTH_CM 108
 
+Diagnostics::Diagnostics(){
+    //empty
+}
+
+
 Diagnostics::Diagnostics(const int northSensorPin, const int eastSensorPin, \
                          const int westSensorPin, const int northLEDPin, \
                          const int eastLEDPin, const int westLEDPin, \

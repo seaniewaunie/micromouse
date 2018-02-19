@@ -7,6 +7,10 @@
 
 using namespace std;
 
+Solver::Solver(){
+    //empty
+}
+
 Solver::Solver( const int northSensorPin, const int eastSensorPin, \
                 const int westSensorPin, const int northLEDPin, \
                 const int eastLEDPin, const int westLEDPin, \
@@ -43,7 +47,7 @@ Solver::Solver( const int northSensorPin, const int eastSensorPin, \
 
 Solver::~Solver(){
     delete m_diagnostics;
-    delete m_graph;
+    //delete m_graph;
 }
 
 Diagnostics* Solver::getDiagnostics(){
@@ -63,7 +67,7 @@ void Solver::nextNode(){
 
     //Serial.print("m_facing before: ");
     //Serial.println(m_facing);
-    Serial.print("m_currentPosition before: ");
+    Serial.print(F("m_currentPosition before: "));
     Serial.println(m_currentPosition);
     
      // a maze is solved if distance check returns true or 
@@ -77,13 +81,13 @@ void Solver::nextNode(){
     if(!m_isSolved){
         // if the node hasn't been mapped before
         if( !m_visited[m_currentPosition] ){
-            Serial.println("Node has not been mapped before");
+            //Serial.println("Node has not been mapped before");
             m_difference = 0;
             // if north has no wall
             if( !m_diagnostics->getNorthSensor()->isWall() ){
                 // add an edge from the current node to the north node
                 m_graph->addEdge( m_currentPosition, m_currentPosition+incrementNorth(), STRAIGHT_WEIGHT );  
-                //m_graph->addEdge( m_currentPosition, m_currentPosition+incrementNorth() );  
+                //m_graph.addEdge( m_currentPosition, m_currentPosition+incrementNorth() );  
             }
             else{
                 wallCount++;
@@ -92,7 +96,7 @@ void Solver::nextNode(){
             
             if( !m_diagnostics->getEastSensor()->isWall() ){
                 m_graph->addEdge( m_currentPosition, m_currentPosition+incrementEast(), TURN_WEIGHT );
-                //m_graph->addEdge( m_currentPosition, m_currentPosition+incrementEast() );
+                //m_graph.addEdge( m_currentPosition, m_currentPosition+incrementEast() );
             }
             else{
                 wallCount++;
@@ -101,14 +105,14 @@ void Solver::nextNode(){
             
             if( !m_diagnostics->getWestSensor()->isWall() ){
                 m_graph->addEdge(m_currentPosition, m_currentPosition+incrementWest(), TURN_WEIGHT); 
-                //m_graph->addEdge( m_currentPosition, m_currentPosition+incrementWest() );
+                //m_graph.addEdge( m_currentPosition, m_currentPosition+incrementWest() );
             }
             else{
                 wallCount++;
                 m_westIsWallTracker[m_currentPosition] = true;
                 if(wallCount == 3){
                     m_deadEndTracker[m_currentPosition] = true;
-                    //m_graph->setDeadEnd(m_currentPosition);
+                    //m_graph.setDeadEnd(m_currentPosition);
                 }
             }
             
@@ -121,7 +125,7 @@ void Solver::nextNode(){
             // no longer needed in new graph implementation
             // there's always an edge to the node south of the mouse except for the startingNode
             if( !m_startingNode ){ 
-                m_graph->addEdge( m_currentPosition, m_currentPosition+incrementSouth() );
+                m_graph.addEdge( m_currentPosition, m_currentPosition+incrementSouth() );
             }
             else{
                 m_startingNode = false;
@@ -138,14 +142,14 @@ void Solver::nextNode(){
             // the node has been mapped before -- find orientation it was mapped
             // TODO: this could be an error because the locomotion has to turn around to
             // account for this -- in the end, interpretting the maze is much easier though
-            Serial.println("adjusting to m_facing stored from memory"); 
+            //Serial.println("adjusting to m_facing stored from memory"); 
            
             
             // refine this to work perfectly
             m_difference = m_dirTracker[m_currentPosition] - m_facing;
             if(m_difference < -1) m_difference = m_difference * -1; // makeshift abs() function
 
-            cout << "m_difference between current facing and previous facing: " << m_difference << std::endl;
+            //cout << "m_difference between current facing and previous facing: " << m_difference << std::endl;
             
             m_facing = m_dirTracker[m_currentPosition];
         }
@@ -202,7 +206,7 @@ void Solver::nextNode(){
             else{
                 m_deadEndTracker[m_currentPosition] = true;
                
-                //m_graph->setDeadEnd(m_currentPosition);
+                //m_graph.setDeadEnd(m_currentPosition);
 
                 m_currentPosition += incrementSouth();
                
@@ -224,8 +228,11 @@ void Solver::nextNode(){
 
         // call the shortest path function to store directions
         m_isReadyToSprint = true;
-        m_graph->printGraph();
-        m_graph->Dijkstra(); 
+        //m_graph.printGraph();
+        //cout << "performing dijkstras\n";
+        m_graph->Dijkstra();
+        //cout << "storing end path\n";
+        //m_graph.storeEndPath(m_currentPosition);
     }
     else{
         // button pressed AND shortest path is set in memory...
@@ -241,7 +248,7 @@ void Solver::nextNode(){
 
     //Serial.print("m_facing after: ");
     //Serial.println(m_facing);
-    Serial.print("m_currentPosition after: ");
+    Serial.print(F("m_currentPosition after: "));
     Serial.println(m_currentPosition);
 
     

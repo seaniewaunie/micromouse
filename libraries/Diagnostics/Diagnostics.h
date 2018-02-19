@@ -39,6 +39,7 @@ enum DIRECTION{
 class Diagnostics {
   
   public:
+    Diagnostics();
     Diagnostics(const int northSensorPin, const int eastSensorPin, \
                 const int westSensorPin, const int northLEDPin, \
                 const int eastLEDPin, const int westLEDPin, \
