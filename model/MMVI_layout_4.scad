@@ -31,11 +31,11 @@ driven_wheel_system(zt = GROUND_OFFSET);
     
 side_sensor_system(xt = SENSOR_FORE_AFT_OFFSET, zt = GROUND_OFFSET);
 
-h_bridge(xt = -6 + SENSOR_FORE_AFT_OFFSET, zt = 25 + GROUND_OFFSET);
+h_bridge(xt = -30 + SENSOR_FORE_AFT_OFFSET, yt = -H_BRIDGE_LOWER_W / 2, zt = 9 + GROUND_OFFSET);
 
 // Front sensor
 rotate([-90, 0, -90]) {
-    sensor(yt = -22 - GROUND_OFFSET, zt = FRONT_SENSOR_FORE_AFT_OFFSET);
+    sensor(yt = -20 - GROUND_OFFSET, zt = FRONT_SENSOR_FORE_AFT_OFFSET);
 }
 
 tenergy_battery(yt = -TENERGY_L/2, xt = 10, zt = -12 + GROUND_OFFSET);
