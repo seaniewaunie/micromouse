@@ -27,6 +27,17 @@
 
 #define STARTING_INDEX 0 // starting index doesn't matter in this design
 
+// the bitfield for booleans that each node has associated with it
+struct Node{
+    bool visited:1;
+    DIRECTION direction:2;
+    bool deadEnd:1;
+    bool eastIsWall:1;
+    bool westIsWall:1;
+    bool northIsWall:1;
+    bool southIsWall:1;
+};
+
 class Solver {
     public:
         Solver();
@@ -56,21 +67,28 @@ class Solver {
         Graph *m_graph;
         Diagnostics *m_diagnostics;
         int m_currentPosition;
-        bool m_visited[MAX_MAZE_SIZE];
         int m_turnCounter;
         DIRECTION m_facing;
         int m_difference;
-        DIRECTION m_dirTracker[MAX_MAZE_SIZE];
-        bool m_deadEndTracker[MAX_MAZE_SIZE];
         bool m_startingNode;
         
         bool m_isSolved;
 
+// this variable will take up 1 byte * 49 
+// TODO: could make dynamic?
+        Node m_nodeContainer[MAX_MAZE_SIZE];
+
+/*
+// these variables take up A LOT of memory
+        DIRECTION m_dirTracker[MAX_MAZE_SIZE];
+        bool m_deadEndTracker[MAX_MAZE_SIZE];
         bool m_eastIsWallTracker[MAX_MAZE_SIZE];
         bool m_westIsWallTracker[MAX_MAZE_SIZE];
         bool m_northIsWallTracker[MAX_MAZE_SIZE];
         bool m_southIsWallTracker[MAX_MAZE_SIZE];
-        
+        bool m_visited[MAX_MAZE_SIZE];
+*/    
+
         // begin sprint mode variables
         bool m_isReadyToSprint;
 
