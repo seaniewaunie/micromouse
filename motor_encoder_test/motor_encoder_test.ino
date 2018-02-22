@@ -1,3 +1,5 @@
+#include <Sensor.h>
+
 /* Reading rotary encoder values from single motor 
  * and adjusting duty cycle via PID 
  *  by Erfan Turdi
@@ -13,8 +15,14 @@ int enA = 10;
 int in1 = 9;
 int in2 = 8;
 
+int in1V = HIGH;
+int in2V = LOW;
+
 #define encoderPinA 2 //Digital interrupt pin on Arduino triggered by hall effect sensor A 
 #define encoderPinB 3 //Digital interrupt pin on Arduino triggered by hall effect sensor B
+#define sensorPin 13  //Sensor trig pin
+
+Sensor sensor(sensorPin);
 
 /* ROTARY ENCODER CIRCUIT CONNECTION!!
  *  
@@ -32,17 +40,15 @@ int in2 = 8;
 #define EPR 1188 //events per revolution
 
 volatile signed long int encoderPos = 0; //stores and keep track of numbers of cycles (motor shaft)
-volatile signed long int revolution = 0; //stores and keep track of numbers of revolution (297 cycles/revolution)
 
 volatile byte inputValue = 0; //to read digital values of pin 2 and 3
 
-const float wheel_circum = 2 * PI * 1.43; //in cetimeters
-unsigned long sampleDuration = 500; //in milliseconds
-float sampleTime = 1/sampleDuration;
+const float wheel_circum = 2 * PI * 0.43; //in cetimeters
+unsigned long encoderSampleDuration = 300, sensorSampleDuration = 500;//in milliseconds
+float encoderSampleTime = 1/encoderSampleDuration, sensorSampleTime = 1/sensorSampleDuration;
 
-unsigned int dutyCycle = 0;
-unsigned long previousMillis = 0;
-float actual_distance = 0;
+unsigned int encoderDutyCycle, sensorDutyCycle, combinedDutyCycle = 0;
+unsigned long encoderPreviousMillis = 0, sensorPreviousMillis = 0;
 
 void setup() {
 
@@ -66,22 +72,31 @@ void setup() {
 
 void loop() {
   /* motor code */
-  spinMotorA(dutyCycle);
+  spinMotorA(combinedDutyCycle);
+  
   unsigned long currentMillis = millis();
-  if(currentMillis - previousMillis > sampleDuration) {
-    previousMillis = currentMillis;
-    pid_setDutyCycle(18.0);
-    Serial.print("DC: ");
-    Serial.println(dutyCycle);
+
+  // encoder sampling
+  if(currentMillis - encoderPreviousMillis > encoderSampleDuration) {
+    encoderPreviousMillis = currentMillis;
+    encoderPID_setDutyCycle(18.0);
   }
+
+  currentMillis = millis();
+  if(currentMillis - sensorPreviousMillis > sensorSampleDuration) {
+    sensorPreviousMillis = currentMillis;
+    sensorPID_setDutyCycle(5.3);
+  }
+
+  combinedDutyCycle = int(encoderDutyCycle + 0.2*sensorDutyCycle);
 }
 
 void spinMotorA(unsigned int dutyCycle) {
   
   // this function will run the motors in both directions at a fixed speed
   // turn on motor A
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
+  digitalWrite(in1, in1V);
+  digitalWrite(in2, in2V);
   // set speed to 200 out of possible range 0~255
   analogWrite(enA, dutyCycle);
 }
@@ -102,39 +117,92 @@ void encoderB_ISR() {
   }
 }
 
-#define Kp 5
-#define Kd 0.05
-#define Ki 0
+#define Sp 1
+#define Sd 0
+#define Si 0
 
-void pid_setDutyCycle(const float desired_distance) {
+void sensorPID_setDutyCycle(const float desired_distance) {
   static float last_error = 0, integral = 0, derivative = 0;
   
-  actual_distance = ((float)encoderPos/CPR) * wheel_circum;
-  Serial.print("distance_travelled: ");
+  float actual_distance = sensor.getDistance();
+  Serial.print("distance_away: ");
   Serial.println(actual_distance);
-  
-  float error = (100.0 * (desired_distance - actual_distance)/float(desired_distance));
 
+  float error = (100.0 * (desired_distance - actual_distance)/float(desired_distance));
   Serial.print("error: ");
   Serial.println(error);
-  derivative = error - last_error;
-  float my_dutyCycle = (error * Kp) + (derivative * Kd) + (integral * Ki);
-
-  Serial.print("my_dutyCycle: ");
+  
+  derivative = last_error - error;
+  
+  float my_dutyCycle = (error * Sp) + (derivative * Sd) + (integral * Si);
+  
+  Serial.print("my_dutyCyle: ");
   Serial.println(my_dutyCycle);
   
   last_error = error;
-
+    
   if(my_dutyCycle >= 255.0) {
-    dutyCycle = 255;
+    sensorDutyCycle = 255;
   }
-  else if(my_dutyCycle < 55.0) {
-    dutyCycle = 0;
+  else if(my_dutyCycle < 50.0) {
+    sensorDutyCycle = 0;
   }
   else {
-    dutyCycle = int(my_dutyCycle);
-    //dutyCycle = int((my_dutyCycle/100.0) * 255);
-    integral += error*sampleTime;
+    sensorDutyCycle = int(my_dutyCycle);
+    integral += error;
+  }
+}
+
+#define Ep 4
+#define Ed 0.33
+#define Ei 0.5
+
+void encoderPID_setDutyCycle(const float desired_distance) {
+  static float last_error = 0, integral = 0, derivative = 0;
+  
+  float actual_distance = ((float)encoderPos/CPR) * wheel_circum;
+  Serial.print("distance_travelled: ");
+  Serial.println(actual_distance);
+
+  float error = 100.0 * ((desired_distance - actual_distance)/desired_distance);
+  Serial.print("error: ");
+  Serial.println(error);
+  
+  derivative = (last_error - error);
+
+  float my_dutyCycle = (error * Ep) + (derivative * Ed) + (derivative * Ei);
+  
+  Serial.print("my_dutyCyle: ");
+  Serial.println(my_dutyCycle);
+  
+  if(error*last_error < 0) {
+    flipPolarity();
+  }
+  
+  last_error = error;
+   
+  my_dutyCycle = abs(my_dutyCycle);
+  
+  if(my_dutyCycle >= 255.0) {
+    encoderDutyCycle = 255;
+  }
+  else if(my_dutyCycle < 50.0) {
+    encoderDutyCycle = 0;
+  }
+  else {
+    encoderDutyCycle = int(my_dutyCycle);
+    integral += error;
+  }
+}
+
+void flipPolarity() {
+  if(in1V == HIGH && in2V == LOW) {
+    in1V = LOW;
+    in2V = HIGH;
+  }
+  else {
+    in1V = HIGH;
+    in2V = LOW;
   }
 }
  
