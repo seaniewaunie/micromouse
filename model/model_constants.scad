@@ -18,9 +18,6 @@ All units are in millimeters.
 ********************/
 
 // Arduino
-//ARDUINO_L = 70;
-//ARDUINO_W = 54;
-//ARDUINO_H = 15;
 ARDUINO_L = 68.961;
 ARDUINO_W = 53.594;
 ARDUINO_H = 15.1892; // height from usb input to lowest soldering on bottom
@@ -33,12 +30,6 @@ ARDUINO_PINS_H = 10.3886-ARDUINO_PCB_H; // height of pins coming off board
 ARDUINO_PINS_L = 47.752; // this is the longest length for the pins on the right side
 
 // the pins and pcb measurements are there just in case you need them for the arduino
-
-// Back wheel
-//BACK_WHEEL_D = 72;
-//BACK_WHEEL_H = 8;
-//BACK_WHEEL_NUB_D = 7;
-//BACK_WHEEL_NUB_H = 5;
 
 // 32 mm wheel
 32_MM_WHEEL_D = 32.309;
@@ -56,10 +47,10 @@ LED_LEAD_OFFSET = 1;
 
 // Motor
 MOTOR_SHAFT_D = 3;
-MOTOR_SHAFT_H = 10;
-MOTOR_BODY_L = 31;
-MOTOR_BODY_W = 10;
-MOTOR_BODY_H = 12;
+MOTOR_SHAFT_H = 9.96;
+MOTOR_BODY_L = 29.01;
+MOTOR_BODY_W = 9.9;
+MOTOR_BODY_H = 11.96;
 
 // Plate
 PLATE_L = ARDUINO_L;
@@ -104,15 +95,6 @@ H_BRIDGE_UPPER_W = 23.012;
 H_BRIDGE_UPPER_L = 15.951;
 H_BRIDGE_UPPER_H = 28.93;
 
-// Caster wheel
-//CASTER_WHEEL_PLATE_L = 39;
-//CASTER_WHEEL_PLATE_W = 33;
-//CASTER_WHEEL_PLATE_H = 1;
-//CASTER_WHEEL_D = 29;
-//CASTER_WHEEL_H = 13;
-//CASTER_WHEEL_Z_OFFSET = 27.5;
-//CASTER_WHEEL_Y_OFFSET = 32;
-
 // Caster ball
 CASTER_BALL_HOUSING_L = 19.152;
 CASTER_BALL_HOUSING_W = 12.217;
@@ -124,8 +106,3 @@ CASTER_BALL_D = 9.525;
 WALL_SEGMENT_H = 50;
 WALL_SEGMENT_L = 167;
 WALL_SEGMENT_W = 8;
-
-// USB battery
-//USB_BATTERY_L = 95.25;
-//USB_BATTERY_W = 22.2;
-//USB_BATTERY_H = 25.4;

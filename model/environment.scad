@@ -14,6 +14,6 @@ module environment(xt = 0, yt = 0, zt = 0) {
         plate(l = 180, w = 180, color = "palegreen");
  
         // Segment of wall
-        wall_segment(xt = -WALL_SEGMENT_L / 2, yt = 90);        
+        wall_segment(xt = 0, yt = 180);        
     }
 }

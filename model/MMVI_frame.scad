@@ -1,9 +1,8 @@
-// File: MMVI_layout.scad
+// File: MMVI_frame.scad
 // Author: Aksel Thomas
-// Date: 2/2/2018
+// Date: 2/22/2018
 
-// The purpose of this file is to lay out the components roughly where
-// they will go in relation to each other in the robot.
+// The purpose of this file is the custom frame.
 
 include <driven_wheel_system.scad>
 include <environment.scad>
@@ -26,6 +25,27 @@ $fn = 100;
 
 // not part of the robot model
 environment(xt = 0, yt = -48, zt = 0);
+
+difference() {
+
+    plate(l = 40, w = 62, h = 25, xt = 110, yt = -31, zt = 4, color = "DarkViolet");
+
+    driven_wheel_system(xt = 120, zt = GROUND_OFFSET);
+
+    plate(l = MOTOR_BODY_W, w = 62, h = MOTOR_BODY_H / 2 + 2, xt = 115, yt = -31, zt = GROUND_OFFSET + (MOTOR_BODY_H / 2) - 1, color = "DarkViolet");
+    
+    tenergy_battery(yt = -TENERGY_L / 2, xt = 130, zt = -6.24 + GROUND_OFFSET);
+    
+}
+
+
+difference() {
+
+    plate(l = 20, w = TENERGY_L + 8, h = 25, xt = 150, yt = -(TENERGY_L + 8) / 2, zt = 4, color = "DarkViolet");
+
+    tenergy_battery(yt = -TENERGY_L / 2, xt = 130, zt = -6.24 + GROUND_OFFSET);
+
+}
 
 driven_wheel_system(zt = GROUND_OFFSET);
     
