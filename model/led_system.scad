@@ -11,12 +11,12 @@ module led_system(xt = 0, yt = 0, zt = 0) {
     translate([xt, yt, zt]) {
         
         // mode LED
-        led(color = "green");
+        led(color = "green", yt = 20);
         
         // four directional LED's
-        led(yt = 20);
-        led(yt = -20);
-        led(xt = 15);
-        led(xt = -15);
+        led(yt = 10);
+        led(yt = -10);
+        led(xt = 4);
+        led(xt = -4);
     }
 }
