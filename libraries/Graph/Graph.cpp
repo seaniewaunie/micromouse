@@ -16,6 +16,9 @@ Graph::Graph(){
     m_parent[STARTING_NODE] = -1;
     // shortest path will always start with 0
     m_shortestPath.push_back(STARTING_NODE);
+
+    m_pathLength = 0;
+    m_SPIndex = 0;
 }
 
 Graph::~Graph(){
@@ -48,7 +51,7 @@ void Graph::printPath(int j){
     if(m_parent[j] == -1)
         return;
     
-    if(m_parent[j] != 99)
+    //if(m_parent[j] != 99)
         printPath(m_parent[j]);
 
     cout << j << " ";
@@ -56,12 +59,12 @@ void Graph::printPath(int j){
 
 void Graph::printSolution(){
     int src = 0;
-    cout << "Node\tDistance\tPath" << endl;
+    cout << F("Node\tDistance\tPath") << endl;
     for(int i = 1; i < MAX_MAZE_SIZE; i++){
         if(m_dist[i] != INT_MAX){
             cout << src << "->" << i;
             cout << "\t" << m_dist[i];
-            cout << "\t\t" << src << " ";
+            cout << "\t" << src << " ";
             if(m_parent[i] != 99)
                 printPath(i);
             cout << "\n";
@@ -74,13 +77,13 @@ void Graph::Dijkstra(){
     int u, v, w;
     // each index in maze
     for(int i = 0; i < MAX_MAZE_SIZE-1; i++){
-        cout << "Node: " << i << "\n";
+        //cout << "Node: " << i << "\n";
         u = minDistance();
         // each element in vector for index in maze
         for(auto it = m_adj[u].begin(); it!=m_adj[u].end(); it++){
             v = it->first;
             w = it->second;
-            cout << "\t\tu: " << u << "\tv: " << v << "\tw: " << w << endl;
+            //cout << "\t\tu: " << u << "\tv: " << v << "\tw: " << w << endl;
             m_sptSet[u] = true;
 
             if(!m_sptSet[v] && w && m_dist[u] != INT_MAX && m_dist[u]+w < m_dist[v]){
@@ -88,7 +91,7 @@ void Graph::Dijkstra(){
                 m_parent[v] = u;
             }
         }
-        cout << "\n";
+        //cout << "\n";
     }
     
     printSolution();
@@ -114,9 +117,18 @@ void Graph::storeEndPath(int end){
         return;
     
     if(m_parent[end] != 99)
-        printPath(m_parent[end]);
+        storeEndPath(m_parent[end]);
 
-    cout << end << " ";
+    //cout << end << " ";
+    m_pathLength++;
     m_shortestPath.push_back(end);
+}
+
+int Graph::getNextSPIndex(){ 
+    return m_shortestPath[m_SPIndex++];
+}
+
+int Graph::getSPSize(){
+    return m_pathLength;
 }
 

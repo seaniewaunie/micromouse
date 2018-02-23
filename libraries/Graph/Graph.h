@@ -29,6 +29,8 @@ class Graph{
         void printSolution();
         void printPath(int j);
         void storeEndPath(int end); // stores the path to end node
+        int getNextSPIndex();
+        int getSPSize();
 
     private:
         // weighted graph variables
@@ -40,7 +42,9 @@ class Graph{
         bool m_sptSet[MAX_MAZE_SIZE];
         int m_dist[MAX_MAZE_SIZE]; // tells distance to node
         std::vector<int> m_shortestPath; // keeps track of path to end node
-        int m_parent[MAX_MAZE_SIZE];
+        char m_parent[MAX_MAZE_SIZE];
+        int m_pathLength;
+        int m_SPIndex;
 };
 
 #endif

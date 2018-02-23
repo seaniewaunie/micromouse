@@ -15,10 +15,6 @@
 
 #include "Graph.h"
 
-// defined in Graph.h
-//#define MAX_MAZE_SIZE 49 //7x7 = 49 nodes
-// NOTE: I know it's a 6x6 maze, but there is an exit node... so I'm accounting for that
-
 #define VERTICAL_INCREMENT 1
 #define HORIZONTAL_INCREMENT 7
 
@@ -27,7 +23,7 @@
 
 #define STARTING_INDEX 0 // starting index doesn't matter in this design
 
-// the bitfield for booleans that each node has associated with it
+// the bitfield for information that each node has associated with it
 struct Node{
     bool visited:1;
     DIRECTION direction:2;
@@ -74,12 +70,11 @@ class Solver {
         
         bool m_isSolved;
 
-// this variable will take up 1 byte * 49 
-// TODO: could make dynamic?
+// this container will take up 1 byte * 49 
         Node m_nodeContainer[MAX_MAZE_SIZE];
 
 /*
-// these variables take up A LOT of memory
+// these arrays take up A LOT of memory - 1 byte * 49 EACH
         DIRECTION m_dirTracker[MAX_MAZE_SIZE];
         bool m_deadEndTracker[MAX_MAZE_SIZE];
         bool m_eastIsWallTracker[MAX_MAZE_SIZE];
