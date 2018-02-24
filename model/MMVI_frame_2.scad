@@ -28,104 +28,118 @@ $fn = 100;
 // not part of the robot model
 environment(xt = 0, yt = -48, zt = 0);
 
+// bottom layer
 union() {
 
-difference() {
+    // rear portion of bottom layer
+    difference() {
+        plate(l = 40, w = 69, h = 21, xt = 110, yt = -34.5, zt = 3, color = "DarkViolet");
+        
+        // motor wiring/cooling cutout
+        plate(l = 10, w = 69 - 2 * DOWEL_XY_BUFFER_ZONE, h = 6, xt = 110 - MOTOR_BODY_W / 2, yt = -34.5 + DOWEL_XY_BUFFER_ZONE, zt = GROUND_OFFSET - 3, color = "DarkViolet");
 
-    plate(l = 40, w = 69, h = 21, xt = 110, yt = -34.5, zt = 3, color = "DarkViolet");
-    
-    plate(l = 10, w = 69 - 2 * DOWEL_XY_BUFFER_ZONE, h = 6, xt = 110 - MOTOR_BODY_W / 2, yt = -34.5 + DOWEL_XY_BUFFER_ZONE, zt = GROUND_OFFSET - 3, color = "DarkViolet");
+        driven_wheel_system(xt = 120, zt = GROUND_OFFSET);
+
+        // open space between motors
+        plate(l = MOTOR_BODY_W, w = 62, h = MOTOR_BODY_H + 4, xt = 115, yt = -31, zt = GROUND_OFFSET  - (MOTOR_BODY_H / 2 ), color = "DarkViolet");
+        
+        tenergy_battery(yt = -TENERGY_L / 2, xt = 130, zt = -11.24 + GROUND_OFFSET);
+
+        // back-right dowel
+        dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -34.5 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+
+        // back-left dowel
+        dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = 34.5 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+
+        // the holes for motor shafts
+        rotate([90, 0, 0]) {
+            translate([120, GROUND_OFFSET, -35.5]) {
+                color("DarkViolet") {
+                    cylinder(d = 5, h = MOTOR_SHAFT_H / 2, center="true");
+                }
+            }
+        }
+
+        rotate([90, 0, 0]) {
+            translate([120, GROUND_OFFSET, 30]) {
+                color("DarkViolet") {
+                    cylinder(d = 5, h = MOTOR_SHAFT_H / 2, center="true");
+                }
+            }
+        }    
+    }
 
 
-    driven_wheel_system(xt = 120, zt = GROUND_OFFSET);
+    // central closure between Tenergy and caster ball
+    plate(l = 3.5, w = CASTER_BALL_HOUSING_L, h = 2 * CASTER_BALL_HOUSING_H + 1, xt = 166.5, yt = -CASTER_BALL_HOUSING_L / 2, zt = -10.61 + GROUND_OFFSET, color = "DarkViolet");
 
-    plate(l = MOTOR_BODY_W, w = 62, h = MOTOR_BODY_H + 4, xt = 115, yt = -31, zt = GROUND_OFFSET  - (MOTOR_BODY_H / 2 ), color = "DarkViolet");
-    
-    tenergy_battery(yt = -TENERGY_L / 2, xt = 130, zt = -11.24 + GROUND_OFFSET);
+    difference() {
+        plate(l = 20, w = TENERGY_L + 8, h = 21, xt = 150, yt = -(TENERGY_L + 8) / 2, zt = 3, color = "DarkViolet");
+
+        // Tenergy wiring/cooling cutout
+        plate(l = 4.5, w = TENERGY_L + 10, h = 12, xt = 166, yt = -(TENERGY_L + 10) / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H / 2 - 6, color = "DarkViolet");
+
+        // required for right dowel
+        dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -TENERGY_L / 2 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+        
+        // required for left dowel
+        dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = TENERGY_L / 2 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+
+        tenergy_battery(yt = -TENERGY_L / 2, xt = 130, zt = -11.24 + GROUND_OFFSET);
+    }
+
+    // front-right dowel
+    difference() {
+        plate(l = DOWEL_XY_BUFFER_ZONE, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 166 - DOWEL_XY_BUFFER_ZONE, yt = -TENERGY_L / 2 - DOWEL_XY_BUFFER_ZONE, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
+
+        dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -TENERGY_L / 2 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+    }
+
+    // front-left dowel
+    difference() {
+        plate(l = DOWEL_XY_BUFFER_ZONE, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 166 - DOWEL_XY_BUFFER_ZONE, yt = TENERGY_L / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
+
+        dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = TENERGY_L / 2 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+    }
 
     // back-right dowel
-    dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -34.5 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+    //difference() {
+    //
+    //    plate(l = DOWEL_XY_BUFFER_ZONE - 1, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 116 - DOWEL_XY_BUFFER_ZONE, yt = -34.5, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
+    //
+    //    dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -34.5 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+    //
+    //}
 
     // back-left dowel
-    dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = 34.5 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+    //difference() {
+    //
+    //    plate(l = DOWEL_XY_BUFFER_ZONE - 1, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 116 - DOWEL_XY_BUFFER_ZONE, yt = 34.5 - DOWEL_XY_BUFFER_ZONE, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
+    //
+    //    dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = 34.5 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+    //
+    //}
 
-    rotate([90, 0, 0]) {
-        translate([120, GROUND_OFFSET, -35.5]) {
+
+    difference() {
+        plate(l = CASTER_BALL_HOUSING_W, w = CASTER_BALL_HOUSING_L, h = CASTER_BALL_HOUSING_H, xt = 170, yt = -CASTER_BALL_HOUSING_L / 2, zt = -10.61 + GROUND_OFFSET, color = "DarkViolet");
+
+        caster_ball(xt = 170, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET);
+
+        // hole for right caster ball screw
+        translate([170 + CASTER_BALL_HOUSING_W / 2, (-CASTER_BALL_HOUSING_L / 2) + (CASTER_BALL_SCREW_HOLE_D / 2) + CASTER_BALL_EDGE_TO_HOLE_L, -10.61 + GROUND_OFFSET]) {
             color("DarkViolet") {
-                cylinder(d = 5, h = MOTOR_SHAFT_H / 2, center="true");
+                cylinder(d = CASTER_BALL_SCREW_HOLE_D, h = CASTER_BALL_HOUSING_H + 1);
+            }
+        }
+
+        // hole for left caster ball screw
+        translate([170 + CASTER_BALL_HOUSING_W / 2, (CASTER_BALL_HOUSING_L / 2) - (CASTER_BALL_SCREW_HOLE_D / 2) - CASTER_BALL_EDGE_TO_HOLE_L, -10.61 + GROUND_OFFSET]) {
+            color("DarkViolet") {
+                cylinder(d = CASTER_BALL_SCREW_HOLE_D, h = CASTER_BALL_HOUSING_H + 1);
             }
         }
     }
-
-    rotate([90, 0, 0]) {
-        translate([120, GROUND_OFFSET, 30]) {
-            color("DarkViolet") {
-                cylinder(d = 5, h = MOTOR_SHAFT_H / 2, center="true");
-            }
-        }
-    }    
-}
-
-plate(l = 3.5, w = CASTER_BALL_HOUSING_L, h = 2 * CASTER_BALL_HOUSING_H + 1, xt = 166.5, yt = -CASTER_BALL_HOUSING_L / 2, zt = -10.61 + GROUND_OFFSET, color = "DarkViolet");
-
-difference() {
-
-    plate(l = 20, w = TENERGY_L + 8, h = 21, xt = 150, yt = -(TENERGY_L + 8) / 2, zt = 3, color = "DarkViolet");
-
-    plate(l = 4.5, w = TENERGY_L + 10, h = 12, xt = 166, yt = -(TENERGY_L + 10) / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H / 2 - 6, color = "DarkViolet");
-
-    dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -TENERGY_L / 2 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
-    
-    dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = TENERGY_L / 2 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
-
-
-    tenergy_battery(yt = -TENERGY_L / 2, xt = 130, zt = -11.24 + GROUND_OFFSET);
-
-}
-
-// front-right dowel
-difference() {
-
-    plate(l = DOWEL_XY_BUFFER_ZONE, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 166 - DOWEL_XY_BUFFER_ZONE, yt = -TENERGY_L / 2 - DOWEL_XY_BUFFER_ZONE, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
-
-    dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -TENERGY_L / 2 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
-
-}
-
-// front-left dowel
-difference() {
-
-    plate(l = DOWEL_XY_BUFFER_ZONE, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 166 - DOWEL_XY_BUFFER_ZONE, yt = TENERGY_L / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
-
-    dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = TENERGY_L / 2 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
-
-}
-
-// back-right dowel
-//difference() {
-//
-//    plate(l = DOWEL_XY_BUFFER_ZONE - 1, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 116 - DOWEL_XY_BUFFER_ZONE, yt = -34.5, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
-//
-//    dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -34.5 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
-//
-//}
-
-// back-left dowel
-//difference() {
-//
-//    plate(l = DOWEL_XY_BUFFER_ZONE - 1, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 116 - DOWEL_XY_BUFFER_ZONE, yt = 34.5 - DOWEL_XY_BUFFER_ZONE, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
-//
-//    dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = 34.5 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
-//
-//}
-
-
-difference() {
-    plate(l = CASTER_BALL_HOUSING_W, w = CASTER_BALL_HOUSING_L, h = CASTER_BALL_HOUSING_H, xt = 170, yt = -CASTER_BALL_HOUSING_L / 2, zt = -10.61 + GROUND_OFFSET, color = "DarkViolet");
-
-    caster_ball(xt = 170, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET);
-
-}
 }
 
 //difference() {
