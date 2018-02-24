@@ -17,6 +17,12 @@ NOTE 2:
 All units are in millimeters.
 ********************/
 
+// dowels
+DOWEL_L = 3.175;
+DOWEL_W = 3.175;
+DOWEL_H = 10;
+DOWEL_XY_BUFFER_ZONE = 5.175;
+
 // Arduino
 ARDUINO_L = 68.961;
 ARDUINO_W = 53.594;
