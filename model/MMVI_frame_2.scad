@@ -15,6 +15,7 @@ include <tenergy_battery.scad>
 include <pushbutton.scad>
 include <h_bridge.scad>
 include <caster_ball.scad>
+include <dowel.scad>
 include <model_constants.scad>
 
 SENSOR_FORE_AFT_OFFSET = 20;
@@ -42,6 +43,12 @@ difference() {
     
     tenergy_battery(yt = -TENERGY_L / 2, xt = 130, zt = -11.24 + GROUND_OFFSET);
 
+    // back-right dowel
+    dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -34.5 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+
+    // back-left dowel
+    dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = 34.5 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+
     rotate([90, 0, 0]) {
         translate([120, GROUND_OFFSET, -35.5]) {
             color("DarkViolet") {
@@ -59,7 +66,7 @@ difference() {
     }    
 }
 
-plate(l = 3.5, w = CASTER_BALL_HOUSING_L, h = CASTER_BALL_HOUSING_H, xt = 166.5, yt = -CASTER_BALL_HOUSING_L / 2, zt = -10.61 + GROUND_OFFSET, color = "DarkViolet");
+plate(l = 3.5, w = CASTER_BALL_HOUSING_L, h = 2 * CASTER_BALL_HOUSING_H + 1, xt = 166.5, yt = -CASTER_BALL_HOUSING_L / 2, zt = -10.61 + GROUND_OFFSET, color = "DarkViolet");
 
 difference() {
 
@@ -67,10 +74,51 @@ difference() {
 
     plate(l = 4.5, w = TENERGY_L + 10, h = 12, xt = 166, yt = -(TENERGY_L + 10) / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H / 2 - 6, color = "DarkViolet");
 
+    dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -TENERGY_L / 2 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+    
+    dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = TENERGY_L / 2 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+
 
     tenergy_battery(yt = -TENERGY_L / 2, xt = 130, zt = -11.24 + GROUND_OFFSET);
 
 }
+
+// front-right dowel
+difference() {
+
+    plate(l = DOWEL_XY_BUFFER_ZONE, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 166 - DOWEL_XY_BUFFER_ZONE, yt = -TENERGY_L / 2 - DOWEL_XY_BUFFER_ZONE, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
+
+    dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -TENERGY_L / 2 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+
+}
+
+// front-left dowel
+difference() {
+
+    plate(l = DOWEL_XY_BUFFER_ZONE, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 166 - DOWEL_XY_BUFFER_ZONE, yt = TENERGY_L / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
+
+    dowel(xt = 166 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = TENERGY_L / 2 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+
+}
+
+// back-right dowel
+//difference() {
+//
+//    plate(l = DOWEL_XY_BUFFER_ZONE - 1, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 116 - DOWEL_XY_BUFFER_ZONE, yt = -34.5, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
+//
+//    dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -34.5 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+//
+//}
+
+// back-left dowel
+//difference() {
+//
+//    plate(l = DOWEL_XY_BUFFER_ZONE - 1, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H, xt = 116 - DOWEL_XY_BUFFER_ZONE, yt = 34.5 - DOWEL_XY_BUFFER_ZONE, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H, color = "DarkViolet");
+//
+//    dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = 34.5 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.24 + GROUND_OFFSET + TENERGY_H - DOWEL_H / 2);
+//
+//}
+
 
 difference() {
     plate(l = CASTER_BALL_HOUSING_W, w = CASTER_BALL_HOUSING_L, h = CASTER_BALL_HOUSING_H, xt = 170, yt = -CASTER_BALL_HOUSING_L / 2, zt = -10.61 + GROUND_OFFSET, color = "DarkViolet");
