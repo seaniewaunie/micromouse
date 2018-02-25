@@ -41,7 +41,7 @@ module sensor (xt = 0, yt = 0, zt = 0) {
             }
         }
 
-        translate([-SENSOR_CAP_L / 2, -SENSOR_PCB_L / 2, SENSOR_PCB_H + SENSOR_CAP_H / 2]) {
+        translate([-SENSOR_SOLDER_JOINT_L / 2, -SENSOR_PCB_L / 2, SENSOR_PCB_H + SENSOR_SOLDER_JOINT_H / 2]) {
             color("silver") {
                 cube([SENSOR_SOLDER_JOINT_L, SENSOR_SOLDER_JOINT_W, SENSOR_SOLDER_JOINT_H]);
             }
