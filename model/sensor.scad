@@ -35,5 +35,18 @@ module sensor (xt = 0, yt = 0, zt = 0) {
             }
         }
         
+        translate([-SENSOR_CAP_L / 2, SENSOR_PCB_L / 2 - SENSOR_CAP_W, SENSOR_PCB_H + SENSOR_CAP_H / 2]) {
+            color("silver") {
+                cube([SENSOR_CAP_L, SENSOR_CAP_W, SENSOR_CAP_H]);
+            }
+        }
+
+        translate([-SENSOR_CAP_L / 2, -SENSOR_PCB_L / 2, SENSOR_PCB_H + SENSOR_CAP_H / 2]) {
+            color("silver") {
+                cube([SENSOR_SOLDER_JOINT_L, SENSOR_SOLDER_JOINT_W, SENSOR_SOLDER_JOINT_H]);
+            }
+        }
+
+        
     }
 }

@@ -72,6 +72,14 @@ SENSOR_PCB_L = 20.574;
 SENSOR_PCB_W = 45.339;
 SENSOR_PCB_H = 3.302;
 
+SENSOR_CAP_L = 10.77;
+SENSOR_CAP_W = 4.98;
+SENSOR_CAP_H = 3.35;
+
+SENSOR_SOLDER_JOINT_L = 9.75;
+SENSOR_SOLDER_JOINT_W = 3.05;
+SENSOR_SOLDER_JOINT_H = 1.83;
+
 SENSOR_TOTAL_H = SENSOR_BARREL_H + SENSOR_PCB_H;
 // 41.8084 is the length from the left barrel to the right barrel
 // subtract 1/2 D from both sides to get the foci.
