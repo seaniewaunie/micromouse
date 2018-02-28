@@ -128,8 +128,6 @@ void Solver::nextNode(){
             currentNode->visited = true;
         }
         else{           
-            // TODO: this could be an error because the locomotion has to turn around to
-            // account for this -- in the end, interpretting the maze is much easier though
             //Serial.println("adjusting to m_facing stored from memory"); 
            
             
@@ -394,22 +392,26 @@ int Solver::incrementWest(){
     }
 }
 
-
+// TODO: these functions need to be verified
 void Solver::goForward(){
-    // TODO: MAY not need to worry about difference for this one
     if(m_difference == 2){
-
+        m_diagnostics->getSouthLED()->flashLED();
+        m_diagnostics->getSouthLED()->flashLED();
+        // at this point, the locomotion objects "turn around" is called
     }
     else if(m_difference == 1){
-
+        m_diagnostics->getEastLED()->flashLED();
+        m_diagnostics->getEastLED()->flashLED();
     }
     else if(m_difference == -1){
-
+        m_diagnostics->getWestLED()->flashLED();
+        m_diagnostics->getWestLED()->flashLED();
     }
     else{
         m_diagnostics->getNorthLED()->flashLED();
         m_diagnostics->getNorthLED()->flashLED();
     }
+    // at the end of this function, go forward is executed
 }
 
 void Solver::turnRight(){
