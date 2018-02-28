@@ -192,6 +192,14 @@ difference() {
     // ~4 mm into top of layer 2
     dowel(xt = 103.4 + 1, yt = 33.2 - DOWEL_W, zt = GROUND_OFFSET + 33.8);
 
+    // top front right dowel
+    // ~4 mm into top of layer 2
+    dowel(xt = 156.82 - DOWEL_L - 3, yt = -32.2, zt = GROUND_OFFSET + 33.8);
+
+//    // top front left dowel
+//    // ~5 mm into top of layer 2
+//    dowel(xt = 160.82 - DOWEL_L - 3, yt = 31.2 - DOWEL_W, zt = GROUND_OFFSET + 32.8);
+
     // bottom back right dowel
     dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -34.5 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.248 + GROUND_OFFSET + TENERGY_H - DOWEL_H + 4);
 
@@ -223,14 +231,8 @@ difference() {
     plate(l = SENSOR_TOTAL_H, w = SENSOR_PCB_W, h = 10, xt = SENSOR_FORE_AFT_OFFSET + 115 + 11, yt = -SENSOR_PCB_W / 2, zt = 35 + GROUND_OFFSET, color = "DarkViolet");
 
     // cooling slot below front sensor
-    plate(l = SENSOR_TOTAL_H, w = H_BRIDGE_LOWER_W - 4, h = 3.15, xt = SENSOR_FORE_AFT_OFFSET + 115 + 11, yt = -H_BRIDGE_LOWER_W / 2 + 2, zt = 25 + GROUND_OFFSET - SENSOR_PCB_L / 2 - 3.15, color = "DarkViolet");
+    plate(l = SENSOR_TOTAL_H, w = H_BRIDGE_LOWER_W - 4, h = 3.16, xt = SENSOR_FORE_AFT_OFFSET + 115 + 11, yt = -H_BRIDGE_LOWER_W / 2 + 2, zt = 25 + GROUND_OFFSET - SENSOR_PCB_L / 2 - 3.15, color = "DarkViolet");
 
-}
-
-difference() {
-
-    //plate(l = DOWEL_XY_BUFFER_ZONE, w = DOWEL_XY_BUFFER_ZONE, h = DOWEL_H + 2, xt = 103.4 + 1, yt = -33.2, zt = GROUND_OFFSET + 35, color = "Blue");
-    
 }
 
 }
