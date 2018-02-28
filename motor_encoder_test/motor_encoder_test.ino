@@ -1,3 +1,5 @@
+#include <Motor.h>
+
 #include <Sensor.h>
 
 /* Reading rotary encoder values from single motor 
@@ -79,19 +81,19 @@ void loop() {
   // encoder sampling
   if(currentMillis - encoderPreviousMillis > encoderSampleDuration) {
     encoderPreviousMillis = currentMillis;
-    encoderPID_setDutyCycle(90.0);
+    encoderPID_setDutyCycle(180.0);
   }
 
   currentMillis = millis();
   if(currentMillis - sensorPreviousMillis > sensorSampleDuration) {
     sensorPreviousMillis = currentMillis;
-    sensorPID_setDutyCycle(5.4);
+    //sensorPID_setDutyCycle(5.4);
 
   }
 
   combinedDutyCycle = int(encoderDutyCycle + sensorDutyCycle);
-  Serial.print("DC: ");
-  Serial.println(combinedDutyCycle);
+  //Serial.print("DC: ");
+  //Serial.println(combinedDutyCycle);
   
 }
 
@@ -154,8 +156,8 @@ void sensorPID_setDutyCycle(const float desired_distance) {
   integral += error;
 }
 
-#define Ep 1
-#define Ed 0
+#define Ep 5
+#define Ed 2
 #define Ei 0
 
 void encoderPID_setDutyCycle(const float desired_distance) {
