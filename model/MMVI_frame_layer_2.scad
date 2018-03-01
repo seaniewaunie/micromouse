@@ -4,17 +4,10 @@
 
 // The purpose of this file is the custom frame.
 
-include <driven_wheel_system.scad>
-include <environment.scad>
+include <plate.scad>
 include <side_sensor_system.scad>
-include <led_system.scad>
-include <modified_led_system.scad>
-include <arduino.scad>
 include <sensor.scad>
-include <tenergy_battery.scad>
-include <pushbutton.scad>
 include <h_bridge.scad>
-include <caster_ball.scad>
 include <dowel.scad>
 include <model_constants.scad>
 
@@ -67,15 +60,15 @@ difference() {
 
     // top back left dowel
     // ~4 mm into top of layer 2
-    dowel(xt = 103.4 + 1, yt = 33.2 - DOWEL_W, zt = GROUND_OFFSET + 33.8);
+    //dowel(xt = 103.4 + 1, yt = 33.2 - DOWEL_W, zt = GROUND_OFFSET + 33.8);
 
     // top front right dowel
     // ~4 mm into top of layer 2
     dowel(xt = 156.82 - DOWEL_L - 3, yt = -32.2, zt = GROUND_OFFSET + 33.8);
 
 //    // top front left dowel
-//    // ~5 mm into top of layer 2
-//    dowel(xt = 160.82 - DOWEL_L - 3, yt = 31.2 - DOWEL_W, zt = GROUND_OFFSET + 32.8);
+    // ~4 mm into top of layer 2
+    dowel(xt = 161.82 - DOWEL_L - 3, yt = 28.2 - DOWEL_W, zt = GROUND_OFFSET + 33.8);
 
     // bottom back right dowel
     dowel(xt = 115 - DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_L / 2, yt = -34.5 + DOWEL_XY_BUFFER_ZONE / 2 - DOWEL_W / 2, zt = -11.248 + GROUND_OFFSET + TENERGY_H - DOWEL_H + 4);
@@ -113,3 +106,4 @@ difference() {
 }
 
 }
+
