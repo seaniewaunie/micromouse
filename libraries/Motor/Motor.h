@@ -52,13 +52,15 @@ public:
 	Motor(int,int,int,int,int);			//Motor with encoder
 	virtual ~Motor();
 
+	void spinMotor(int);
 	/*Control Interface to Outside World */
-	void moveStraight(float);
-	void turnLeft();
-	void turnRight();
+	void moveStraight(float distance = 18.0);
+	void turnLeft(float distance = 6.4);
+	void turnRight(float distance = 6.4);
 	inline void makeUTurn() { turnRight(); turnRight(); }
 
 	inline const bool getPolarity() { return polarity; }
+	void reversePolarity();
 
 	Encoder encoder;
 private:
@@ -70,8 +72,6 @@ private:
 	int inputValueToPin2;
 
 	bool polarity;		//0 for positive, 1 for negative
-
-	void reversePolarity();
 };
 
 

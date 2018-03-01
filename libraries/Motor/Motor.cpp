@@ -83,15 +83,22 @@ Motor::~Motor() {
 	//do nothing
 }
 
-void Motor::moveStraight(float distance) {
+void Motor::spinMotor(int dutyCycle) {
+	digitalWrite(inputPin1,inputValueToPin1);
+	digitalWrite(inputPin2,inputValueToPin2);
+	analogWrite(enablePin,dutyCycle);
+}
+
+void Motor::moveStraight(float distance = 18.0) {
+	/*call to PID and PWM */
+
+}
+
+void Motor::turnLeft(float distance = 6.4) {
 	/*call to PID and PWM */
 }
 
-void Motor::turnLeft() {
-	/*call to PID and PWM */
-}
-
-void Motor::turnRight() {
+void Motor::turnRight(float distance = 6.4) {
 	/*call to PID and PWM */
 }
 

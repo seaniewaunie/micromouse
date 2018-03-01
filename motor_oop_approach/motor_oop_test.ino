@@ -1,5 +1,8 @@
+#include <PID.h>
 #include <Motor.h>
 #include <Sensor.h>
+using namespace std;
+using namespace micromouse_pid_functions;
 
 /* Reading rotary encoder values from single motor 
  * and adjusting duty cycle via PID 
@@ -18,7 +21,7 @@
 #define LEncoderPinA 3 //Digital interrupt pin on Arduino triggered by hall effect sensor A 
 #define LEncoderPinB 4 //Digital interrupt pin on Arduino triggered by hall effect sensor B
 
-Motor leftMotor;
+
 
 /* ROTARY ENCODER CIRCUIT CONNECTION!!
  *  
@@ -30,15 +33,22 @@ Motor leftMotor;
  *  -motor --> H-bridge pin 2
  */
 
+Motor leftMotor;
+Motor rightMotor;
+
 void setup() {
   leftMotor = Motor(LMotorEnable,LMotorIn1,LMotorIn2,LEncoderPinA,LEncoderPinB);
+  rightMotor = Motor();
+
   attachInterrupt(digitalPinToInterrupt(leftMotor.encoder.getEncoderAPin()),LeftEncoderEventA_ISR_Wrapper,RISING);
-  attachInterrupt(digitalPinToInterrupt(leftMotor.encoder.getEncoderBPin()),LeftEncoderEventB_ISR_Wrapper,RISING);    
+  attachInterrupt(digitalPinToInterrupt(leftMotor.encoder.getEncoderBPin()),LeftEncoderEventB_ISR_Wrapper,RISING); 
+
+  moveStraight(&leftMotor,&rightMotor,18.0);
   Serial.begin(115200);
+
 }
 
 void loop() {
-  Serial.println(leftMotor.encoder.getEncoderPosition());
 }
 
 
