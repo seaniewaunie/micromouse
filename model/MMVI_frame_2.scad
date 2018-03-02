@@ -264,7 +264,7 @@ difference() {
 
 
 
-//arduino(xt = 103.4 + ARDUINO_W / 2, zt = 47 + GROUND_OFFSET);
+arduino(xt = 103.4, yt = -ARDUINO_L / 2 + 5, zt = 40 + GROUND_OFFSET);
 
 
 //difference() {
@@ -283,7 +283,7 @@ difference() {
 //
     //led_system(zt = 75, xt = 104);
     
-arduino(xt = 20, zt = 50 + GROUND_OFFSET);
+//arduino(xt = 20, zt = 50 + GROUND_OFFSET);
 
 modified_led_system(zt = 75, xt = -20);
 
