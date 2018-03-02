@@ -28,7 +28,8 @@ public:
 	inline const int getEncoderAPin() { return encoderAPin; }
 	inline const int getEncoderBPin() { return encoderBPin; }
 
-	signed long int getEncoderPosition();
+	inline signed long int getEncoderPosition() { return encoderPos; }
+	inline void resetEncoderPosition() { encoderPos = 0; }
 
 private:
 
@@ -41,28 +42,33 @@ private:
 };
 
 
+namespace encoder_interrupt_functions {
+
+	void leftEncoderEventA_ISR_Wrapper();
+	void leftEncoderEventB_ISR_Wrapper();
+	void rightEncoderEventA_ISR_Wrapper();
+	void rightEncoderEventB_ISR_Wrapper();
+
+}
+
 class Motor {
 public:
 
-	static const float wheel_radius = 0.40;
-	static const float wheel_circum = 2 * PI * wheel_radius;
+	static constexpr float wheel_radius = 0.40;
+	static constexpr float wheel_circum = 2 * PI * wheel_radius;
 
 	Motor();
 	Motor(int,int,int);							//Motor w/o encoder
 	Motor(int,int,int,int,int);			//Motor with encoder
 	virtual ~Motor();
 
-	void spinMotor(int);
-	/*Control Interface to Outside World */
-	void moveStraight(float distance = 18.0);
-	void turnLeft(float distance = 6.4);
-	void turnRight(float distance = 6.4);
-	inline void makeUTurn() { turnRight(); turnRight(); }
+	void spinMotor(int);						//rotate motor with duty cycle
 
 	inline const bool getPolarity() { return polarity; }
 	void reversePolarity();
 
 	Encoder encoder;
+
 private:
 
 	int enablePin;
@@ -72,9 +78,7 @@ private:
 	int inputValueToPin2;
 
 	bool polarity;		//0 for positive, 1 for negative
+
 };
-
-
-
 
 #endif /* MOTOR_H_ */

@@ -9,12 +9,19 @@
 #define _PID_H_
 
 #include "Arduino.h"
-#include "Motor.h"
-#include "Sensor.h"
+
+namespace micromouse_pid_functions {
+
+	int encoderPID_setDutyCycle(const float);
+	int sensorPID_setDutyCycle(const float);
+
+}
 
 class PID {
 
 public:
+
+	typedef int(*pid_func_ptr)(const float);
 
 	float Kp;
 	float Kd;
@@ -24,33 +31,22 @@ public:
 	PID(float,float,float);
 	~PID();
 	float calculateNewValue(float error);
-	void setSamplingTime(float st);
 	bool needToReverse();
+	void setPIDfunction(int(*pid_func)(const float));
+	inline float getError() { return error; }
+	inline void setError(float error) { this->error = error; }
+	void resetParameters();
+	float samplingTime;
+	pid_func_ptr pid_func;
 
 private:
 
 	float error;
 	float last_error;
-	float samplingTime;
 	double integral;
 	double derivative;
 
 };
-
-#ifndef __MM_PID_FUNC__
-#define __MM_PID_FUNC__
-
-namespace micromouse_pid_functions {
-
-	static unsigned long encoderSampleTime = 200;
-	static unsigned long sensorSampleTime = 500;
-
-	void moveStraight(Motor* lMotor, Motor* RMotor, float distance);
-	int encoderPID_setDutyCycle(const float desired_distance, Motor* lMotor, Motor* RMotor);
-	//int sensorPID_setDutyCycle(const float desired_distance, Sensor* lSensor, Sensor* RSensor);
-}
-
-#endif
 
 #endif /* _PID_H */
 
