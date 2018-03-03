@@ -22,18 +22,11 @@ Solver::Solver( const int northSensorPin, const int eastSensorPin, \
                                     southLEDPin, modeLEDPin);
     
     m_graph = new Graph();
+    
+    m_loco = new Locomotion();
 
     m_currentPosition = STARTING_INDEX;
-/*
-    for(int i = 0; i < MAX_MAZE_SIZE; i++){
-        m_visited[i] = false;
-        m_deadEndTracker[i] = false;
-        m_eastIsWallTracker[i] = false;
-        m_westIsWallTracker[i] = false;
-        m_northIsWallTracker[i] = false;
-        m_southIsWallTracker[i] = false;
-    }
-*/
+
     m_turnCounter = 0;
     m_facing = N;
 
@@ -75,6 +68,8 @@ void Solver::nextNode(){
     if(!m_isSolved)
         m_isSolved = ( m_diagnostics->update() );
 
+    // TODO: I thought of a really awesome way to upgrade this algorithm, I'll try doing that soon
+
     // if the maze hasn't been solved
     if(!m_isSolved){
         // if the node hasn't been mapped before
@@ -89,7 +84,6 @@ void Solver::nextNode(){
             }
             else{
                 wallCount++;
-                //m_northIsWallTracker[m_currentPosition] = true;
                 currentNode->northIsWall = true;
             }
             
@@ -98,7 +92,6 @@ void Solver::nextNode(){
             }
             else{
                 wallCount++;
-                //m_eastIsWallTracker[m_currentPosition] = true;
                 currentNode->eastIsWall = true;
             }
             
@@ -107,23 +100,18 @@ void Solver::nextNode(){
             }
             else{
                 wallCount++;
-                //m_westIsWallTracker[m_currentPosition] = true;
                 currentNode->westIsWall = true;
                 if(wallCount == 3){
-                    //m_deadEndTracker[m_currentPosition] = true;
                     currentNode->deadEnd = true;
                 }
             }
             
             if(m_startingNode){
                 m_startingNode = false;
-                //m_southIsWallTracker[m_currentPosition] = true;
                 currentNode->southIsWall = true;
             }
 
             // save the direction the mouse was facing when this node was mapped
-            //m_dirTracker[m_currentPosition] = m_facing;
-            //m_visited[m_currentPosition] = true;
             currentNode->direction = m_facing;
             currentNode->visited = true;
         }
@@ -132,51 +120,34 @@ void Solver::nextNode(){
            
             
             // TODO: refine this to work perfectly
-            //m_difference = m_dirTracker[m_currentPosition] - m_facing;
             m_difference = currentNode->direction - m_facing;
             if(m_difference < -1) m_difference = m_difference * -1; // makeshift abs() function
 
             cout << "m_difference between current facing and previous facing: " << m_difference << std::endl;
             
-            //m_facing = m_dirTracker[m_currentPosition];
             m_facing = currentNode->direction;
         }
 
         
         // update local variables to resemble current node
-        /*
-        northIsWall = m_northIsWallTracker[m_currentPosition];
-        eastIsWall = m_eastIsWallTracker[m_currentPosition];
-        westIsWall = m_westIsWallTracker[m_currentPosition];
-        southIsWall = m_southIsWallTracker[m_currentPosition];
-        */
-
         northIsWall = currentNode->northIsWall;
         eastIsWall = currentNode->eastIsWall;
         westIsWall = currentNode->westIsWall;
         southIsWall = currentNode->southIsWall;
 
-        // visually represent which direction mouse is facing BEFORE motion
-        //m_diagnostics->blinkLED(m_facing);
-
         // at this point a decision on where to move needs to be made
         // explore any unvisited nodes first -- clockwise priority excluding south
 
-
-                    
-        //if( !m_visited[m_currentPosition + incrementNorth()] && !northIsWall ){
         if( !m_nodeContainer[m_currentPosition+incrementNorth()].visited && !northIsWall){
             m_currentPosition += incrementNorth();
             
             goForward();
         }
-        //else if( !m_visited[m_currentPosition + incrementEast()] && !eastIsWall ){
         else if( !m_nodeContainer[m_currentPosition+incrementEast()].visited && !eastIsWall){
             m_currentPosition += incrementEast();
            
             turnRight();
         }
-        //else if( !m_visited[m_currentPosition + incrementWest()] && !westIsWall ){
         else if( !m_nodeContainer[m_currentPosition+incrementWest()].visited && !westIsWall){
             m_currentPosition += incrementWest();
            
@@ -184,32 +155,25 @@ void Solver::nextNode(){
         }
         else{
             // all routes the mouse could take have been explored
-//            m_deadEndTracker[m_currentPosition] = true;
             // at this point the mouse needs to move to nodes that are not leading to dead ends
-            //if( !m_deadEndTracker[m_currentPosition + incrementNorth()] && !northIsWall ){
             if( !m_nodeContainer[m_currentPosition+incrementNorth()].deadEnd && !northIsWall){
                 m_currentPosition += incrementNorth();
                
                 goForward();
             }
-            //else if( !m_deadEndTracker[m_currentPosition + incrementEast()] && !eastIsWall ){
             else if( !m_nodeContainer[m_currentPosition+incrementEast()].deadEnd && !eastIsWall){
                 m_currentPosition += incrementEast();
                 
                 turnRight();
             }
-            //else if( !m_deadEndTracker[m_currentPosition + incrementWest()] && !westIsWall ){
             else if( !m_nodeContainer[m_currentPosition+incrementWest()].deadEnd && !westIsWall){
                 m_currentPosition += incrementWest();
                               
                 turnLeft();
             }
             else{
-                //m_deadEndTracker[m_currentPosition] = true;
                 
                 currentNode->deadEnd = true;
-
-                //m_graph.setDeadEnd(m_currentPosition);
 
                 m_currentPosition += incrementSouth();
                
@@ -412,6 +376,7 @@ void Solver::goForward(){
         m_diagnostics->getNorthLED()->flashLED();
     }
     // at the end of this function, go forward is executed
+    //m_loco->goForward();
 }
 
 void Solver::turnRight(){
@@ -419,20 +384,32 @@ void Solver::turnRight(){
     if(m_difference == 2){
         m_diagnostics->getWestLED()->flashLED();
         m_diagnostics->getWestLED()->flashLED();
+        
+        //m_loco->turnLeft();
     }
     else if(m_difference == 1){
         m_diagnostics->getNorthLED()->flashLED();
         m_diagnostics->getNorthLED()->flashLED();
+
+        // nothing to do with orientation
     }
     else if(m_difference == -1){
         m_diagnostics->getSouthLED()->flashLED();
         m_diagnostics->getSouthLED()->flashLED();
+
+        //m_loco->turnAround();
     }
     else{ 
         m_diagnostics->getEastLED()->flashLED();
         m_diagnostics->getEastLED()->flashLED();
+
+        //m_loco->turnRight();
     }
+
     m_facing = static_cast<DIRECTION>((m_facing + 1)%4);
+    
+    // move to the next node
+    //m_loco->goForward();
 }
 
 void Solver::turnLeft(){

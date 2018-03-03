@@ -11,9 +11,8 @@
 
 #include "Arduino.h"
 #include "Diagnostics.h"
-//#include "Node.h"
-
 #include "Graph.h"
+#include "Locomotion.h"
 
 #define VERTICAL_INCREMENT 1
 #define HORIZONTAL_INCREMENT 7
@@ -62,27 +61,18 @@ class Solver {
     private:
         Graph *m_graph;
         Diagnostics *m_diagnostics;
+        Locomotion *m_loco;
+
         int m_currentPosition;
         int m_turnCounter;
         DIRECTION m_facing;
+
         int m_difference;
-        bool m_startingNode;
-        
+        bool m_startingNode;        
         bool m_isSolved;
 
-// this container will take up 1 byte * 49 
+        // this container will take up 1 byte * 49 
         Node m_nodeContainer[MAX_MAZE_SIZE];
-
-/*
-// these arrays take up A LOT of memory - 1 byte * 49 EACH
-        DIRECTION m_dirTracker[MAX_MAZE_SIZE];
-        bool m_deadEndTracker[MAX_MAZE_SIZE];
-        bool m_eastIsWallTracker[MAX_MAZE_SIZE];
-        bool m_westIsWallTracker[MAX_MAZE_SIZE];
-        bool m_northIsWallTracker[MAX_MAZE_SIZE];
-        bool m_southIsWallTracker[MAX_MAZE_SIZE];
-        bool m_visited[MAX_MAZE_SIZE];
-*/    
 
         // begin sprint mode variables
         bool m_isReadyToSprint;
