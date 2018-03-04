@@ -40,7 +40,7 @@ Solver::Solver( const int northSensorPin, const int eastSensorPin, \
 
 Solver::~Solver(){
     delete m_diagnostics;
-    delete m_graph;
+    //delete m_graph;
 }
 
 Diagnostics* Solver::getDiagnostics(){
@@ -60,7 +60,7 @@ void Solver::nextNode(){
 
     //Serial.print("m_facing before: ");
     //Serial.println(m_facing);
-    Serial.print("m_currentPosition before: ");
+    Serial.print(F("m_currentPosition before: "));
     Serial.println(m_currentPosition);
     
     Node* currentNode = &m_nodeContainer[m_currentPosition];
@@ -68,7 +68,7 @@ void Solver::nextNode(){
     if(!m_isSolved)
         m_isSolved = ( m_diagnostics->update() );
 
-    // BEGIN MAPPING CURRENT NODE
+    // TODO: I thought of a really awesome way to upgrade this algorithm, I'll try doing that soon
 
     // if the maze hasn't been solved
     if(!m_isSolved){
@@ -128,10 +128,7 @@ void Solver::nextNode(){
             m_facing = currentNode->direction;
         }
 
-        // END MAPPING NODE
-       
-        // BEGIN MOVEMENT DECISION
-
+        
         // update local variables to resemble current node
         northIsWall = currentNode->northIsWall;
         eastIsWall = currentNode->eastIsWall;
@@ -158,14 +155,32 @@ void Solver::nextNode(){
         }
         else{
             // all routes the mouse could take have been explored
-            // find shortest path leading to unvisited node
-            findShortestUnvisitedPath();
-            
-            // follow the path to unvisited node
-            traverseShortestPath();
-        }
+            // at this point the mouse needs to move to nodes that are not leading to dead ends
+            if( !m_nodeContainer[m_currentPosition+incrementNorth()].deadEnd && !northIsWall){
+                m_currentPosition += incrementNorth();
+               
+                goForward();
+            }
+            else if( !m_nodeContainer[m_currentPosition+incrementEast()].deadEnd && !eastIsWall){
+                m_currentPosition += incrementEast();
+                
+                turnRight();
+            }
+            else if( !m_nodeContainer[m_currentPosition+incrementWest()].deadEnd && !westIsWall){
+                m_currentPosition += incrementWest();
+                              
+                turnLeft();
+            }
+            else{
+                
+                currentNode->deadEnd = true;
 
-        // END MOVEMENT DECISION
+                m_currentPosition += incrementSouth();
+               
+                turnAround();
+            
+            }
+        }
 
         // visually represent when algorithm is 'done' working
         m_diagnostics->getModeLED()->turnOFF();
@@ -180,8 +195,8 @@ void Solver::nextNode(){
         // call the shortest path function to store directions
         m_isReadyToSprint = true;
 
-        m_graph->Dijkstra(0, m_currentPosition);
-        //m_graph->storePath(0, m_currentPosition); // store path from start to finish
+        m_graph->Dijkstra();
+        m_graph->storeEndPath(m_currentPosition);
 
         m_currentPosition = 0;
     }
@@ -196,83 +211,25 @@ void Solver::nextNode(){
         }
         m_diagnostics->getModeLED()->turnON();
 
-          
+        // traverse the path to get to the end
+        int nextIndex;
+        for(int i = 0; i < m_graph->getSPSize(); i++){
+            nextIndex = m_graph->getNextSPIndex();
+            
+            cout << "moving to " << nextIndex << endl;
+
+        }
+            
     }
 
     //Serial.print("m_facing after: ");
     //Serial.println(m_facing);
-    Serial.print("m_currentPosition after: ");
+    Serial.print(F("m_currentPosition after: "));
     Serial.println(m_currentPosition);
 
     
 }
 
-
-// finds the shortest path to an unvisited node
-void Solver::findShortestUnvisitedPath(){     
-    int min = MAX;
-    int minIndex = 0;
-
-    
-    for(int i = 0; i < MAX_MAZE_SIZE; i++){
-        if( !m_nodeContainer[i].visited ){
-            if( m_graph->getDistance(i) < min ){
-                 min = m_graph->getDistance(i);
-                 minIndex = i;
-            }
-        } 
-    }
-    cout << minIndex << endl;
-   
-    m_graph->Dijkstra(m_currentPosition, minIndex); // shortest path is stored
-}
-
-void Solver::traverseShortestPath(){
-
-    while(!m_graph->isSPEmpty()){
-        
-        int nextIndex = m_graph->getNextSPIndex();
-        //int nextIndex = 0;
-        
-        m_difference = m_nodeContainer[m_currentPosition].direction - m_facing;
-        if(m_difference < -1) m_difference = m_difference * -1; // makeshift abs() function
-
-        cout << "m_difference between current facing and previous facing: " << m_difference << std::endl;
-            
-        m_facing = m_nodeContainer[m_currentPosition].direction;
-
-        cout << "going to: " << nextIndex << endl;
-        if( m_currentPosition+incrementNorth() == nextIndex){
-            m_currentPosition += incrementNorth();
-           
-            goForward();
-        }
-        else if( m_currentPosition+incrementEast() == nextIndex){
-            m_currentPosition += incrementEast();
-            
-            turnRight();
-        }
-        else if( m_currentPosition+incrementWest() == nextIndex){
-            m_currentPosition += incrementWest();
-                          
-            turnLeft();
-        }
-        else if( m_currentPosition+incrementSouth() == nextIndex){
-            
-            m_nodeContainer[m_currentPosition].deadEnd = true;
-
-            m_currentPosition += incrementSouth();
-           
-            turnAround();
-        
-        }
-        else{
-            cout << "error tsp" << endl;
-            break;
-        }
-        //cout << "after: " << m_currentPosition << endl;
-    }
-}
 
 // the increment functions add to the position relative to the mouses facing direction.
 // when the mouse's north sensor is pointing(facing) east, moving the mouse "north" is actually moving
@@ -406,11 +363,11 @@ void Solver::goForward(){
         m_diagnostics->getSouthLED()->flashLED();
         // at this point, the locomotion objects "turn around" is called
     }
-    else if(m_difference == 3){
+    else if(m_difference == 1){
         m_diagnostics->getEastLED()->flashLED();
         m_diagnostics->getEastLED()->flashLED();
     }
-    else if(m_difference == 1){
+    else if(m_difference == -1){
         m_diagnostics->getWestLED()->flashLED();
         m_diagnostics->getWestLED()->flashLED();
     }
