@@ -35,7 +35,7 @@ translate([0, 0, 0]) {
 //tenergy_battery(yt = -TENERGY_L / 2, xt = 130, zt = -11.24 + GROUND_OFFSET);
 //caster_ball(xt = 170, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET);
 
-// bottom layer
+// layer 1
 union() {
 
     // rear portion of bottom layer
@@ -175,13 +175,13 @@ union() {
     
 
 // For visualizing 2nd layer
-//side_sensor_system(xt = 115 + SENSOR_FORE_AFT_OFFSET, zt = GROUND_OFFSET + 2.5);
+side_sensor_system(xt = 115 + SENSOR_FORE_AFT_OFFSET, zt = GROUND_OFFSET + 2.5);
 //rotate([-90, 0, -90]) {
 //    sensor(yt = -25 - GROUND_OFFSET, zt = FRONT_SENSOR_FORE_AFT_OFFSET + 115);
 //}
 //h_bridge(xt = 85.4 + SENSOR_FORE_AFT_OFFSET, yt = -H_BRIDGE_LOWER_W / 2, zt = 10 + GROUND_OFFSET);
 
-// middle layer
+// layer 2
 union() {
 
     // bottom front right dowel
@@ -263,8 +263,28 @@ difference() {
 }
 
 
+// layer 3
+union() {
 
-arduino(xt = 103.4, yt = -ARDUINO_L / 2 + 5, zt = 40 + GROUND_OFFSET);
+    difference() {
+        plate(l = ARDUINO_PCB_W - 33.7 + ARDUINO_BOLT_HOLE_D / 2, w = 6, h = ARDUINO_H + 20, xt = 103.4, yt = -H_BRIDGE_LOWER_W / 2 - SENSOR_TOTAL_H + 3, zt = 55, color = "DarkViolet");
+
+        dowel(xt = 103.4 + 1, yt = -33.2, zt = GROUND_OFFSET + 32.8);
+        
+        plate(l = ARDUINO_PCB_W - 41 + ARDUINO_BOLT_HOLE_D / 2 + 1.2, w = 8, h = 35, xt = 102.4, yt = -H_BRIDGE_LOWER_W / 2 - SENSOR_TOTAL_H + 2, zt = 61, color = "DarkViolet");
+    }
+    
+    difference() {
+        plate(l = 7.1, w = 13, h = 4, xt = 103.4 + ARDUINO_PCB_W - 40.8 + ARDUINO_BOLT_HOLE_D / 2, yt = -H_BRIDGE_LOWER_W / 2 - SENSOR_TOTAL_H + 3, zt = 75 + ARDUINO_H, color = "DarkViolet");
+ 
+        translate([103.4 + ARDUINO_PCB_W - 34.1376 - ARDUINO_BOLT_HOLE_D / 2, -ARDUINO_L / 2 + 7 + 1.09 + ARDUINO_BOLT_HOLE_D / 2, 69]) {
+            cylinder(d = ARDUINO_BOLT_HOLE_D, h = ARDUINO_H + 17);
+        }
+    }
+    
+}
+
+arduino(xt = 103.4, yt = -ARDUINO_L / 2 + 7, zt = 75);
 
 
 //difference() {
