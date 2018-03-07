@@ -266,7 +266,7 @@ arduino(xt = 103.4, yt = -ARDUINO_L / 2 + 7, zt = 75);
 
 pushbutton(xt = 115 + PUSHBUTTON_BODY_L / 2, yt = -H_BRIDGE_LOWER_W / 2 - SENSOR_TOTAL_H - 3, zt = 79 + ARDUINO_H);
 
-translate([0, 0, 79 + ARDUINO_H + 5]) {
+translate([0, 0, 79 + ARDUINO_H + 0]) {
     // mode LED
     led(color = "green", xt = 115 + 7.1 + LED_CASE_D, yt = -H_BRIDGE_LOWER_W / 2 - SENSOR_TOTAL_H + 3.25 + LED_CASE_D / 2);
         
