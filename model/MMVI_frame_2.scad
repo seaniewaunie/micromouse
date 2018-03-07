@@ -264,6 +264,8 @@ difference() {
 // For visualizing layer 3
 arduino(xt = 103.4, yt = -ARDUINO_L / 2 + 7, zt = 75);
 
+pushbutton(xt = 115 + PUSHBUTTON_BODY_L / 2, yt = -H_BRIDGE_LOWER_W / 2 - SENSOR_TOTAL_H - 3, zt = 79 + ARDUINO_H);
+
 translate([0, 0, 79 + ARDUINO_H + 5]) {
     // mode LED
     led(color = "green", xt = 115 + 7.1 + LED_CASE_D, yt = -H_BRIDGE_LOWER_W / 2 - SENSOR_TOTAL_H + 3.25 + LED_CASE_D / 2);
@@ -274,16 +276,19 @@ translate([0, 0, 79 + ARDUINO_H + 5]) {
     // right LED
     led(xt = 156.82 - DOWEL_L - 3 - ARDUINO_BOLT_HOLE_D / 2 + 0.2, yt = -H_BRIDGE_LOWER_W / 2 - SENSOR_TOTAL_H - 3 + LED_CASE_D / 2 + 2, rotation = true);
     
-    
     // front LED
     led(xt = 103.4 + ARDUINO_PCB_W + 6.5 + LED_CASE_D / 4, yt = H_BRIDGE_LOWER_W / 2 + 3.15 + (LED_CASE_D) / 2);
     
+    // left LED
     led(xt = 103.4 + ARDUINO_PCB_W + 0.5 + (LED_CASE_D - 2) / 2 + (LED_CASE_D - 2) / 2, yt = H_BRIDGE_LOWER_W / 2 + 6 + ARDUINO_BOLT_HOLE_D + (LED_CASE_D - 2) / 2, rotation = true);
 
 }
 
 // layer 3 back right portion
 union() {
+ 
+    // Pushbutton protrusion
+    plate(l = PUSHBUTTON_BODY_L - 3, w = PUSHBUTTON_BODY_W, h = 4, xt = 115 + PUSHBUTTON_BODY_L / 2 + 1.5, yt = -H_BRIDGE_LOWER_W / 2 - SENSOR_TOTAL_H - 3, zt = 79 + ARDUINO_H - 4, color = "DarkViolet");
     
     // Mode LED protrusion
     difference() {
@@ -400,6 +405,3 @@ union() {
         }
     }
 }
-
-
-pushbutton(zt = 90, yt = 15);
