@@ -216,7 +216,7 @@ void Solver::findShortestUnvisitedPath(){
     
     for(int i = 0; i < MAX_MAZE_SIZE; i++){
         if( !m_nodeContainer[i].visited ){
-            if( m_graph->getDistance(i) < min ){
+            if( m_graph->getDistance(i) <= min ){
                  min = m_graph->getDistance(i);
                  minIndex = i;
             }
