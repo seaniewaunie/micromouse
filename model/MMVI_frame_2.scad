@@ -91,7 +91,7 @@ union() {
         plate(l = 3.5, w = CASTER_BALL_HOUSING_L, h = 2 * CASTER_BALL_HOUSING_H + 1, xt = 166.5, yt = -CASTER_BALL_HOUSING_L / 2, zt = -10.61 + GROUND_OFFSET, color = "DarkViolet");
         
         // wall depression between Tenergy & caster ball
-        plate(l = CASTER_BALL_HOUSING_W, w = CASTER_BALL_HOUSING_L, h = CASTER_BALL_HOUSING_H, xt = 169, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET, color = "DarkViolet");
+        plate(l = 1.5, w = CASTER_BALL_HOUSING_L, h = CASTER_BALL_HOUSING_H, xt = 169, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET, color = "DarkViolet");
 
     }
 
@@ -104,7 +104,7 @@ union() {
         plate(l = TENERGY_W, w = 12, h = 6, xt = 130, yt = -6 - TENERGY_L / 5, zt = 2, color = "DarkViolet");
 
         // wall depression between Tenergy & caster ball
-        plate(l = CASTER_BALL_HOUSING_W, w = CASTER_BALL_HOUSING_L, h = CASTER_BALL_HOUSING_H, xt = 169, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET, color = "DarkViolet");
+        plate(l = 1.5, w = CASTER_BALL_HOUSING_L, h = CASTER_BALL_HOUSING_H, xt = 169, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET, color = "DarkViolet");
 
 
         // Tenergy wiring/cooling cutout
@@ -145,9 +145,11 @@ union() {
 
     difference() {
         // caster ball upport support
-        plate(l = CASTER_BALL_HOUSING_W, w = CASTER_BALL_HOUSING_L, h = CASTER_BALL_HOUSING_H, xt = 170, yt = -CASTER_BALL_HOUSING_L / 2, zt = -10.61 + GROUND_OFFSET, color = "DarkViolet");
+        plate(l = CASTER_BALL_HOUSING_W, w = CASTER_BALL_HOUSING_L, h = CASTER_BALL_HOUSING_H - 4, xt = 170, yt = -CASTER_BALL_HOUSING_L / 2, zt = -6.61 + GROUND_OFFSET, color = "DarkViolet");
 
-        caster_ball(xt = 170, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET);
+        plate(l = CASTER_BALL_HOUSING_W + 1, w = CASTER_BALL_HOUSING_L + 2, h = CASTER_BALL_HOUSING_H, xt = 170, yt = -CASTER_BALL_HOUSING_L / 2 - 1, zt = -13.61 + GROUND_OFFSET, color = "DarkViolet");
+        
+        //caster_ball(xt = 170, yt = -CASTER_BALL_HOUSING_L / 2, zt = -13.61 + GROUND_OFFSET);
 
         // hole for right caster ball screw
         translate([170 + CASTER_BALL_HOUSING_W / 2, (-CASTER_BALL_HOUSING_L / 2) + (CASTER_BALL_SCREW_HOLE_D / 2) + CASTER_BALL_EDGE_TO_HOLE_L, -10.61 + GROUND_OFFSET]) {
