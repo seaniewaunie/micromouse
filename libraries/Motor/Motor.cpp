@@ -31,21 +31,37 @@ Encoder::~Encoder() {
 	//do nothing
 }
 
+const int Encoder::getEncoderAPin() {
+	return encoderAPin;
+}
+
+const int Encoder::getEncoderBPin() {
+	return encoderBPin;
+}
+
+signed long int Encoder::getEncoderPosition() {
+	return encoderPos;
+}
+
+void Encoder::resetEncoderPosition() {
+	encoderPos = 0;
+}
+
 void Encoder::encoderEventA_ISR() {
 	if((PIND & inputMask) == inputMask) {
-		encoderPos--;	//counter clockwise
+		this->encoderPos--;	//counter clockwise
 	}
 	else {
-		encoderPos++;	//clockwise
+		this->encoderPos++;	//clockwise
 	}
 }
 
 void Encoder::encoderEventB_ISR() {
 	if((PIND & inputMask) == inputMask) {
-		encoderPos++;
+		encoderPos--;
 	}
 	else {
-		encoderPos--;
+		encoderPos++;
 	}
 }
 
@@ -87,7 +103,11 @@ Motor::Motor(int enablePin, int inputPin1, int inputPin2) {
 	//default direction of motor is clockwise
 	this->inputValueToPin1 = 1;
 	this->inputValueToPin2 = 0;
-	this->polarity = 0;
+
+	digitalWrite(inputPin1,inputValueToPin1);
+	digitalWrite(inputPin2,inputValueToPin2);
+
+	encoder = Encoder();
 }
 
 Motor::Motor(int enablePin, int inputPin1, int inputPin2, int APin, int BPin) {
@@ -103,7 +123,10 @@ Motor::Motor(int enablePin, int inputPin1, int inputPin2, int APin, int BPin) {
 		//default direction of motor is clockwise
 	this->inputValueToPin1 = 1;
 	this->inputValueToPin2 = 0;
-	this->polarity = 0;
+
+	digitalWrite(inputPin1,inputValueToPin1);
+	digitalWrite(inputPin2,inputValueToPin2);
+
 	encoder = Encoder(APin,BPin);
 }
 
@@ -112,16 +135,26 @@ Motor::~Motor() {
 }
 
 void Motor::spinMotor(int dutyCycle) {
-	digitalWrite(inputPin1,inputValueToPin1);
-	digitalWrite(inputPin2,inputValueToPin2);
-	analogWrite(enablePin,dutyCycle);
+	analogWrite(this->enablePin,dutyCycle);
 }
 
-void Motor::reversePolarity()  {
+void Motor::reverseDirection()  {
 
 	int T = inputValueToPin1;
 	inputValueToPin1 = inputValueToPin2;
 	inputValueToPin2 = T;
-	polarity = !polarity;
+
+	digitalWrite(inputPin1,inputValueToPin1);
+	digitalWrite(inputPin2,inputValueToPin2);
 }
+
+void Motor::resetDirection() {
+	inputValueToPin1 = 1;
+	inputValueToPin2 = 0;
+	digitalWrite(inputPin1,inputValueToPin1);
+	digitalWrite(inputPin2,inputValueToPin2);
+}
+
+
+
 

@@ -10,13 +10,6 @@
 
 #include "Arduino.h"
 
-namespace micromouse_pid_functions {
-
-	int encoderPID_setDutyCycle(const float);
-	int sensorPID_setDutyCycle(const float);
-
-}
-
 class PID {
 
 public:
@@ -31,15 +24,12 @@ public:
 	PID(float,float,float);
 	~PID();
 	float calculateNewValue(float error);
-	bool needToReverse();
 	void setPIDfunction(int(*pid_func)(const float));
-	inline float getError() { return error; }
-	inline void setError(float error) { this->error = error; }
+	float getError();
+	void setError(float);
 	void resetParameters();
 	float samplingTime;
 	pid_func_ptr pid_func;
-
-private:
 
 	float error;
 	float last_error;
@@ -47,6 +37,15 @@ private:
 	double derivative;
 
 };
+
+namespace micromouse_pid_functions {
+
+	int leftEncoderPID_setDutyCycle(const float);
+	int rightEncoderPID_setDutyCycle(const float);
+
+	int sensorPID_setDutyCycle(const float);
+
+}
 
 #endif /* _PID_H */
 

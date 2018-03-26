@@ -13,15 +13,17 @@ extern Motor *rMotor;
 extern Sensor* lSensor;
 extern Sensor* rSensor;
 
-extern PID *encoderPID;
+extern PID *leftEncoderPID;
+extern PID *rightEncoderPID;
+
 extern PID *sensorPID;
 
 class Locomotion {
 
 public:
 
-	static constexpr float encoderSampleTime = 300;
-	static constexpr float sensorSampleTime = 500;
+	static constexpr float encoderSampleTime = 100;
+	static constexpr float sensorSampleTime = 300;
 
 	Locomotion();
 	~Locomotion();

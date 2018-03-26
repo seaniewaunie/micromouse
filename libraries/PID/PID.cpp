@@ -37,13 +37,6 @@ float PID::calculateNewValue(float error) {
 	return newValue;
 }
 
-bool PID::needToReverse() {
-	if(error*last_error < 0)
-		return true;
-	else
-		return false;
-}
-
 void PID::setPIDfunction(int(*pid_func)(const float desired_distance)) {
 	this->pid_func = pid_func;
 }
@@ -52,37 +45,54 @@ void PID::resetParameters() {
 	error = last_error = derivative = integral = 0;
 }
 
+float PID::getError() {
+	return error;
+}
+
+void PID::setError(float error) {
+	this->error = error;
+}
+
 namespace micromouse_pid_functions {
 
-	int encoderPID_setDutyCycle(const float desired_distance) {
-		long int leftEncoderPos = lMotor->encoder.getEncoderPosition();
-		long int rightEncoderPos = lMotor->encoder.getEncoderPosition();
-		long int AverageEncoderPos = (leftEncoderPos + rightEncoderPos)/2;
-
+	int leftEncoderPID_setDutyCycle(const float desired_distance) {
+		long int leftEncoderPos = abs(lMotor->encoder.getEncoderPosition());
 		float actual_distance = ((float)leftEncoderPos/Encoder::CPR) * Motor::wheel_circum;
 		float error = 100.0 * ((desired_distance - actual_distance)/desired_distance);
-		float newDutyCycle = encoderPID->calculateNewValue(error);
-		if(encoderPID->needToReverse()) {
-			lMotor->reversePolarity();
-			rMotor->reversePolarity();
-		}
+		float newDutyCycle = leftEncoderPID->calculateNewValue(error);
 
-		Serial.print("Actual_distance: ");
-		Serial.println(actual_distance);
 
 		if(newDutyCycle >= 255.0) {
 			return 255;
 		}
-		else if(newDutyCycle < 45.0) {
-			encoderPID->setError(error);
-			return 0;
-		}
 		else {
+			if(newDutyCycle < 45.0) {
+				return 0;
+			}
 			return int(newDutyCycle);
 		}
 	}
 
+	int rightEncoderPID_setDutyCycle(const float desired_distance) {
+			long int rightEncoderPos = abs(rMotor->encoder.getEncoderPosition());
+			float actual_distance = ((float)rightEncoderPos/Encoder::CPR) * Motor::wheel_circum;
+			float error = 100.0 * ((desired_distance - actual_distance)/desired_distance);
+			float newDutyCycle = rightEncoderPID->calculateNewValue(error);
+
+			if(newDutyCycle >= 255.0) {
+				return 255;
+			}
+			else {
+				if(newDutyCycle < 50.0) {
+					return 0;
+				}
+				return int(newDutyCycle);
+			}
+		}
+
+
 	int sensorPID_setDutyCycle(const float desired_distance) {
+		int rbias = 1;
 
 		float left_actual_distance = lSensor->getDistance();
 		float right_actual_distance = rSensor->getDistance();
@@ -93,19 +103,26 @@ namespace micromouse_pid_functions {
 		float error = 0;
 
 		if(l_valid && r_valid) {
-			error = abs(left_actual_distance - right_actual_distance);
+			error = left_actual_distance - right_actual_distance;
+			if(error < 0)
+				rbias = -1;
 		}
 		else if(l_valid && !r_valid) {
 			error = desired_distance - left_actual_distance;
+			if(error > 0)
+				rbias = -1;
 		}
 		else if(!l_valid && r_valid) {
 			error = desired_distance - right_actual_distance;
+			if(error < 0)
+				rbias = -1;
+
 		}
 		else {
 			error = 0;
 		}
-		float newDutyCycle = sensorPID->calculateNewValue(error);
-		return int(newDutyCycle);
+		float newDutyCycle = sensorPID->calculateNewValue(abs(error));
+		return int(newDutyCycle*rbias);
 	}
 }
 

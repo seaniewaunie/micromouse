@@ -22,14 +22,17 @@ public:
 	Encoder(int, int);					//constructor with arguments to specify digital pins
 	virtual ~Encoder();
 
+	const int getEncoderAPin();
+	const int getEncoderBPin();
+
+	void setEncoderAPin(int);
+	void setEncoderBPin(int);
+
+	signed long int getEncoderPosition();
+	void resetEncoderPosition();
+
 	void encoderEventA_ISR();		//Interrupt Service Routine for event on encoder A pin
 	void encoderEventB_ISR();		//Interrupt Service Routine for event on encoder B pin
-
-	inline const int getEncoderAPin() { return encoderAPin; }
-	inline const int getEncoderBPin() { return encoderBPin; }
-
-	inline signed long int getEncoderPosition() { return encoderPos; }
-	inline void resetEncoderPosition() { encoderPos = 0; }
 
 private:
 
@@ -38,9 +41,7 @@ private:
 
 	volatile signed long int encoderPos = 0;		//variable to keep track of encoder position
 	volatile unsigned char inputMask = 0;									//mask to extract vital bits from the poll bytes
-
 };
-
 
 namespace encoder_interrupt_functions {
 
@@ -54,7 +55,7 @@ namespace encoder_interrupt_functions {
 class Motor {
 public:
 
-	static constexpr float wheel_radius = 0.40;
+	static constexpr float wheel_radius = 1.6;
 	static constexpr float wheel_circum = 2 * PI * wheel_radius;
 
 	Motor();
@@ -62,10 +63,9 @@ public:
 	Motor(int,int,int,int,int);			//Motor with encoder
 	virtual ~Motor();
 
-	void spinMotor(int);						//rotate motor with duty cycle
-
-	inline const bool getPolarity() { return polarity; }
-	void reversePolarity();
+	void spinMotor(int);
+	void reverseDirection();
+	void resetDirection();
 
 	Encoder encoder;
 
@@ -73,11 +73,9 @@ private:
 
 	int enablePin;
 	int inputPin1;
-	int inputValueToPin1;
 	int inputPin2;
+	int inputValueToPin1;
 	int inputValueToPin2;
-
-	bool polarity;		//0 for positive, 1 for negative
 
 };
 

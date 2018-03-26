@@ -4,20 +4,25 @@
 	Motor *rMotor;
 	Sensor *lSensor;
 	Sensor *rSensor;
-	PID *encoderPID;
+	PID *leftEncoderPID;
+	PID *rightEncoderPID;
 	PID *sensorPID;
 
 Locomotion::Locomotion() {
 
-		lMotor = new Motor(10,9,8,leftEncoderPinA,leftEncoderPinB);
+		lMotor = new Motor(leftMotorEnable,leftMotorIn1,leftMotorIn2,leftEncoderPinA,leftEncoderPinB);
 	  rMotor = new Motor(rightMotorEnable,rightMotorIn1,rightMotorIn2,rightEncoderPinA,rightEncoderPinB);
 
 	  lSensor = new Sensor(leftSensorEnable);
 	  rSensor = new Sensor(rightSensorEnable);
 
-	  encoderPID = new PID(10,0.7,0.07);
-	  encoderPID->setPIDfunction(&(micromouse_pid_functions::encoderPID_setDutyCycle));
-	  sensorPID = new PID(0.2,0,0);
+	  leftEncoderPID = new PID(10,0.7,0.2);
+	  rightEncoderPID = new PID(10,0.7,0.2);
+
+	  leftEncoderPID->setPIDfunction(&(micromouse_pid_functions::leftEncoderPID_setDutyCycle));
+	  rightEncoderPID->setPIDfunction(&(micromouse_pid_functions::rightEncoderPID_setDutyCycle));
+
+	  sensorPID = new PID(1,0.5,0);
 	  sensorPID->setPIDfunction(&(micromouse_pid_functions::sensorPID_setDutyCycle));
 
 	  attachInterrupt(digitalPinToInterrupt(lMotor->encoder.getEncoderAPin()),encoder_interrupt_functions::leftEncoderEventA_ISR_Wrapper,RISING);
@@ -30,35 +35,108 @@ Locomotion::~Locomotion() {
 	//do nothing;
 }
 
+
 void Locomotion::goForward() {
-	float desired = 18.0 + (encoderPID->getError()/100.0 * 18.0);
-	encoderPID->resetParameters();
+
 	lMotor->encoder.resetEncoderPosition();
 	rMotor->encoder.resetEncoderPosition();
+	leftEncoderPID->resetParameters();
+	rightEncoderPID->resetParameters();
+	sensorPID->resetParameters();
 
-	int encoderWeight = 1, sensorWeight = 0.5;
-	int encoderDutyCycle = 1;
-	int sensorDutyCycle = 1;
-	int dutyCycle = 1;
+	lMotor->resetDirection();
+	rMotor->resetDirection();
 
-	Serial.print("desired ");
-	Serial.println(desired);
-	unsigned long encoderPreviousMillis, sensorPreviousMillis;
+	rMotor->reverseDirection();
+
+	float desired = 18.0;
+
+	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
+	unsigned long encoderPreviousMillis,sensorPreviousMillis;
 	do {
 		unsigned long currentMillis = millis();
 		if(currentMillis - encoderPreviousMillis > Locomotion::encoderSampleTime) {
-			encoderDutyCycle = encoderPID->pid_func(desired);
-			Serial.print("DutyCycle ");
-			Serial.println(encoderDutyCycle);
+			lMotorDutyCycle = leftEncoderPID->pid_func(desired);
+			rMotorDutyCycle = rightEncoderPID->pid_func(desired);
 			encoderPreviousMillis = currentMillis;
 		}
-
-		if(currentMillis - sensorPreviousMillis > sensorSampleTime) {
-			sensorDutyCycle = sensorPID->pid_func(5.0);
+		/*if(currentMillis - sensorPreviousMillis > Locomotion::sensorSampleTime) {
+			int sensorDutyCycle = sensorPID->pid_func(5.0)/2;
+			if(sensorDutyCycle < 0) {
+				lMotorDutyCycle += sensorDutyCycle;
+				rMotorDutyCycle -= -1*sensorDutyCycle;
+			}
+			else {
+				lMotorDutyCycle -= -1*sensorDutyCycle;
+				rMotorDutyCycle += sensorDutyCycle;
+			}
 			sensorPreviousMillis = currentMillis;
 		}*/
-		dutyCycle = encoderWeight * encoderDutyCycle + sensorWeight * sensorDutyCycle;
-		lMotor->spinMotor(dutyCycle);
-		rMotor->spinMotor(dutyCycle);
-	} while(dutyCycle > 0);
+		rMotor->spinMotor(rMotorDutyCycle);
+		lMotor->spinMotor(lMotorDutyCycle);
+	} while(lMotorDutyCycle > 0 || rMotorDutyCycle > 0);
+}
+
+void Locomotion::turnRight() {
+
+		lMotor->encoder.resetEncoderPosition();
+		rMotor->encoder.resetEncoderPosition();
+		leftEncoderPID->resetParameters();
+		rightEncoderPID->resetParameters();
+
+		lMotor->resetDirection();
+		rMotor->resetDirection();
+
+		float desired = 5.5;
+
+		int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
+
+		unsigned long encoderPreviousMillis;
+		do {
+			unsigned long currentMillis = millis();
+			if(currentMillis - encoderPreviousMillis > Locomotion::encoderSampleTime/2) {
+				lMotorDutyCycle = leftEncoderPID->pid_func(desired);
+				rMotorDutyCycle = rightEncoderPID->pid_func(desired);
+				encoderPreviousMillis = currentMillis;
+			}
+			rMotor->spinMotor(rMotorDutyCycle);
+			lMotor->spinMotor(lMotorDutyCycle);
+		} while(lMotorDutyCycle > 0 || rMotorDutyCycle > 0);
+
+}
+
+void Locomotion::turnLeft() {
+	lMotor->encoder.resetEncoderPosition();
+	rMotor->encoder.resetEncoderPosition();
+	leftEncoderPID->resetParameters();
+	rightEncoderPID->resetParameters();
+
+	lMotor->resetDirection();
+	rMotor->resetDirection();
+
+	lMotor->reverseDirection();
+	rMotor->reverseDirection();
+
+	float desired = 5.5;
+
+	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
+
+	unsigned long encoderPreviousMillis;
+	do {
+		unsigned long currentMillis = millis();
+		if(currentMillis - encoderPreviousMillis > Locomotion::encoderSampleTime/2) {
+			lMotorDutyCycle = leftEncoderPID->pid_func(desired);
+			rMotorDutyCycle = rightEncoderPID->pid_func(desired);
+			encoderPreviousMillis = currentMillis;
+		}
+		rMotor->spinMotor(rMotorDutyCycle);
+		lMotor->spinMotor(lMotorDutyCycle);
+	} while(lMotorDutyCycle > 0 || rMotorDutyCycle > 0);
+
+}
+
+void Locomotion::makeUTurn() {
+	turnRight();
+	delay(250);
+	turnRight();
 }
