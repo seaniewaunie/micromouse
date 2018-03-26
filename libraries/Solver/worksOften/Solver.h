@@ -9,7 +9,7 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
-//#include "Arduino.h"
+#include "Arduino.h"
 #include "Diagnostics.h"
 #include "Graph.h"
 //#include "Locomotion.h"
@@ -50,9 +50,6 @@ class Solver {
         int incrementEast();
         int incrementSouth();
         int incrementWest();
-
-        void findShortestUnvisitedPath();
-        void traverseShortestPath();
 
         void goForward();
         void turnRight();

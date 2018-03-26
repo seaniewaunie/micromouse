@@ -21,14 +21,15 @@ Solver solver(NORTH_SENSOR_PIN, EAST_SENSOR_PIN, WEST_SENSOR_PIN, \
                         SOUTH_LED_PIN, MODE_LED_PIN);
 
 Button button(BUTTON_PIN, PULLDOWN);
-
+ 
 
 //Graph test(49);
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  Serial.println(sizeof(Node));
+  //Serial.println(sizeof(Node));
+  Serial.print(sizeof(dijkstra_t));
   
 }
 

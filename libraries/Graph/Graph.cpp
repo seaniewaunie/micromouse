@@ -8,21 +8,27 @@ using namespace std;
 Graph::Graph(){
     m_currentSize = 0;
     
-    for(int i = 0; i < MAX_MAZE_SIZE; i++)
-        m_dist[i] = INT_MAX, m_sptSet[i] = false, m_parent[i] = 99;
+    for(int i = 0; i < MAX_MAZE_SIZE; i++){
+        m_dutilContainer[i].dist = MAX;
+        m_dutilContainer[i].sptSet = false;
+        m_dutilContainer[i].parent = MAX;
+    }
 
-    m_dist[STARTING_NODE] = 0;
+    //m_dist[STARTING_NODE] = 0;
     
-    m_parent[STARTING_NODE] = -1;
+    m_dutilContainer[STARTING_NODE].parent = -1;
+    //m_parent[STARTING_NODE] = -1;
+   
+    m_shortestPath = queue<int>();
+    //m_shortestPath = new QueueArray<uint8_t>();
     // shortest path will always start with 0
-    m_shortestPath.push_back(STARTING_NODE);
-
-    m_pathLength = 0;
-    m_SPIndex = 0;
+    //m_shortestPath.push_back(STARTING_NODE);
+    //m_shortestPath->setPrinter(Serial);
 }
 
 Graph::~Graph(){
     // empty destructor
+    //delete m_shortestPath;
 }
 
 void Graph::addEdge(int u, int v, int w){
@@ -31,6 +37,7 @@ void Graph::addEdge(int u, int v, int w){
     m_currentSize++;
 }
 
+/*
 void Graph::printGraph(){
     int v, w;
     for(int i = 0; i < MAX_MAZE_SIZE; i++){
@@ -46,34 +53,53 @@ void Graph::printGraph(){
         }
     }
 }
+*/
 
-void Graph::printPath(int j){
-    if(m_parent[j] == -1)
+void Graph::printPath(int from, int to){
+    if(m_dutilContainer[from].parent == -1)
         return;
-    
-    //if(m_parent[j] != 99)
-        printPath(m_parent[j]);
+   
+    if(m_dutilContainer[from].parent != MAX)
+        printPath(m_dutilContainer[from].parent, to);
 
-    cout << j << " ";
+    Serial.print(from);
+    Serial.print(" ");
 }
 
-void Graph::printSolution(){
-    int src = 0;
-    cout << F("Node\tDistance\tPath") << endl;
-    for(int i = 1; i < MAX_MAZE_SIZE; i++){
-        if(m_dist[i] != INT_MAX){
+
+void Graph::printSolution(int from, int to){
+    int src = from;
+    cout << "Node\tDistance\tPath" << endl;
+    for(int i = 0; i < MAX_MAZE_SIZE; i++){
+        if(m_dutilContainer[i].dist != MAX){
             cout << src << "->" << i;
-            cout << "\t" << m_dist[i];
+            cout << "\t" << m_dutilContainer[i].dist;
             cout << "\t" << src << " ";
-            if(m_parent[i] != 99)
-                printPath(i);
+            if(m_dutilContainer[i].parent != MAX)
+                if(i == to)
+                    storePath(to, src);
+                    //printPath(i, src);
+                else
+                    printPath(to, src);
             cout << "\n";
         }
     }
 }
 
 
-void Graph::Dijkstra(){
+void Graph::Dijkstra(int from, int to){
+    // reset distances 
+    for(int i = 0; i < MAX_MAZE_SIZE; i++){
+        m_dutilContainer[i].dist = MAX;
+        m_dutilContainer[i].sptSet = false;
+        m_dutilContainer[i].parent = MAX;
+    }  
+
+    m_dutilContainer[from].parent = -1;
+ 
+    m_dutilContainer[from].dist = 0;
+    
+    
     int u, v, w;
     // each index in maze
     for(int i = 0; i < MAX_MAZE_SIZE-1; i++){
@@ -84,51 +110,78 @@ void Graph::Dijkstra(){
             v = it->first;
             w = it->second;
             //cout << "\t\tu: " << u << "\tv: " << v << "\tw: " << w << endl;
-            m_sptSet[u] = true;
+            m_dutilContainer[u].sptSet = true;
 
-            if(!m_sptSet[v] && w && m_dist[u] != INT_MAX && m_dist[u]+w < m_dist[v]){
-                m_dist[v] = m_dist[u] + w;
-                m_parent[v] = u;
+            if(!m_dutilContainer[v].sptSet && w && m_dutilContainer[u].dist != MAX && m_dutilContainer[u].dist+w < m_dutilContainer[v].dist){
+                m_dutilContainer[v].dist = m_dutilContainer[u].dist + w;
+                m_dutilContainer[v].parent = u;
             }
         }
         //cout << "\n";
     }
-    
-    printSolution();
+    storePath(to, from);
+
+    //printSolution(from, to);
 }
 
-
-void Graph::setEndIndex(int i){
-    m_endIndex = i;
-}
-
-int Graph::minDistance(){
-    int min = INT_MAX, min_index;
+uint8_t Graph::minDistance(){
+    int min = MAX, min_index;
     
     for(int v = 0; v < MAX_MAZE_SIZE; v++)
-        if(m_sptSet[v] == false && m_dist[v] <= min)
-            min = m_dist[v], min_index = v;
+        if(m_dutilContainer[v].sptSet == false && m_dutilContainer[v].dist <= min)
+            min = m_dutilContainer[v].dist, min_index = v;
 
     return min_index;
 }
 
+/*
 void Graph::storeEndPath(int end){
     if(m_parent[end] == -1)
         return;
     
-    if(m_parent[end] != 99)
+    if(m_parent[end] != MAX)
         storeEndPath(m_parent[end]);
 
     //cout << end << " ";
     m_pathLength++;
-    m_shortestPath.push_back(end);
+    m_shortestPath->push(end);
+}
+*/
+
+void Graph::storePath(int from, int to){
+    if(m_dutilContainer[from].parent == -1){
+        return;
+    }
+
+    if(m_dutilContainer[from].parent != MAX)
+        storePath(m_dutilContainer[from].parent, to);
+
+    Serial.print(from);
+    Serial.print(" and ");
+    //m_pathLength++;
+    m_shortestPath.push(static_cast<int>(from));
+    cout << m_shortestPath.back() << endl;
+    //m_shortestPath.pop();
 }
 
-int Graph::getNextSPIndex(){ 
-    return m_shortestPath[m_SPIndex++];
+
+queue<int> Graph::getShortestPath(){
+    return m_shortestPath;
 }
 
-int Graph::getSPSize(){
-    return m_pathLength;
+uint8_t Graph::getDistance(int to){
+    return m_dutilContainer[to].dist;
+}
+
+bool Graph::isSPEmpty(){
+    return m_shortestPath.empty();
+}
+
+int Graph::getNextSPIndex(){
+    //m_shortestPath.pop_back();
+    int ret = m_shortestPath.front();
+    m_shortestPath.pop();
+    cout << ret << endl;
+    return ret;
 }
 
