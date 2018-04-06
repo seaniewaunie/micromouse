@@ -12,7 +12,7 @@
 //#include "Arduino.h"
 #include "Diagnostics.h"
 #include "Graph.h"
-#include "Locomotion.h"
+//#include "Locomotion.h"
 
 #define VERTICAL_INCREMENT 1
 #define HORIZONTAL_INCREMENT 7
@@ -36,7 +36,10 @@ struct Node{
 class Solver {
     public:
         Solver();
-        Solver(Locomotion *loco, Diagnostics *diag, Graph *graph);
+        Solver(const int northSensorPin, const int eastSensorPin, \
+            const int westSensorPin, const int northLEDPin, \
+            const int eastLEDPin, const int westLEDPin, \
+            const int southLEDPin, const int modeLEDPin);
         ~Solver();
         
         Diagnostics* getDiagnostics();
@@ -61,7 +64,7 @@ class Solver {
     private:
         Graph *m_graph;
         Diagnostics *m_diagnostics;
-        Locomotion *m_loco;
+        //Locomotion *m_loco;
 
         int m_currentPosition;
         int m_turnCounter;

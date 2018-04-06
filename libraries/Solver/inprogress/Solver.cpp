@@ -11,23 +11,18 @@ Solver::Solver(){
     //empty
 }
 
-Solver::Solver( Locomotion *loco, Diagnostics *diag, Graph *graph)
+Solver::Solver( const int northSensorPin, const int eastSensorPin, \
+                const int westSensorPin, const int northLEDPin, \
+                const int eastLEDPin, const int westLEDPin, \
+                const int southLEDPin, const int modeLEDPin)
 {
-    m_diagnostics = new Diagnostics(13, 12, \
-                                    11, A1, \
-                                    A2, A3, \
-                                    A4, A5);
+    m_diagnostics = new Diagnostics(northSensorPin, eastSensorPin, \
+                                    westSensorPin, northLEDPin, \
+                                    eastLEDPin, westLEDPin, \
+                                    southLEDPin, modeLEDPin);
     
-    //m_diagnostics = diag;
-    /*m_graph = new Graph();*/
     m_graph = new Graph();
-
-    m_loco = new Locomotion();
-   
-    cout << " gets here" << endl;  
-    //m_diagnostics->celebrate();
-    //m_loco->goForward();
-
+    
     //m_loco = new Locomotion();
 
     m_currentPosition = STARTING_INDEX;
@@ -40,7 +35,7 @@ Solver::Solver( Locomotion *loco, Diagnostics *diag, Graph *graph)
     m_isSolved = false;    
 
     m_isReadyToSprint = false;
-    cout << "end constr" << endl;
+
 }
 
 Solver::~Solver(){
@@ -424,7 +419,7 @@ void Solver::goForward(){
         m_diagnostics->getNorthLED()->flashLED();
     }
     // at the end of this function, go forward is executed
-    m_loco->goForward();
+    //m_loco->goForward();
 }
 
 void Solver::turnRight(){
