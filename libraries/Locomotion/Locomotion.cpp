@@ -16,8 +16,9 @@ Locomotion::Locomotion() {
 	  lSensor = new Sensor(leftSensorEnable);
 	  rSensor = new Sensor(rightSensorEnable);
 
-	  leftEncoderPID = new PID(10,0.7,0.2);
-	  rightEncoderPID = new PID(10,0.7,0.2);
+
+	  leftEncoderPID = new PID(0,0,0);
+	  rightEncoderPID = new PID(0,0,0);
 
 	  leftEncoderPID->setPIDfunction(&(micromouse_pid_functions::leftEncoderPID_setDutyCycle));
 	  rightEncoderPID->setPIDfunction(&(micromouse_pid_functions::rightEncoderPID_setDutyCycle));
@@ -41,7 +42,9 @@ void Locomotion::goForward() {
 	lMotor->encoder.resetEncoderPosition();
 	rMotor->encoder.resetEncoderPosition();
 	leftEncoderPID->resetParameters();
+	leftEncoderPID->setCoefficients(7,0,-0.015);
 	rightEncoderPID->resetParameters();
+	rightEncoderPID->setCoefficients(10,0,-0.006);
 	sensorPID->resetParameters();
 
 	lMotor->resetDirection();
@@ -59,17 +62,9 @@ void Locomotion::goForward() {
 			lMotorDutyCycle = leftEncoderPID->pid_func(desired);
 			rMotorDutyCycle = rightEncoderPID->pid_func(desired);
 			encoderPreviousMillis = currentMillis;
-		}
-		/*if(currentMillis - sensorPreviousMillis > Locomotion::sensorSampleTime) {
-			int sensorDutyCycle = sensorPID->pid_func(5.0)/2;
-			if(sensorDutyCycle < 0) {
-				lMotorDutyCycle += sensorDutyCycle;
-				rMotorDutyCycle -= -1*sensorDutyCycle;
-			}
-			else {
-				lMotorDutyCycle -= -1*sensorDutyCycle;
-				rMotorDutyCycle += sensorDutyCycle;
-			}
+		}/*
+		if(currentMillis - sensorPreviousMillis > Locomotion::sensorSampleTime) {
+			sensorDutyCycle = sensorPID->pid_func(5.0) / 2;
 			sensorPreviousMillis = currentMillis;
 		}*/
 		rMotor->spinMotor(rMotorDutyCycle);
@@ -82,12 +77,14 @@ void Locomotion::turnRight() {
 		lMotor->encoder.resetEncoderPosition();
 		rMotor->encoder.resetEncoderPosition();
 		leftEncoderPID->resetParameters();
+		leftEncoderPID->setCoefficients(3.5,0,0.025);
 		rightEncoderPID->resetParameters();
+		rightEncoderPID->setCoefficients(3.7,0,0.04);
 
 		lMotor->resetDirection();
 		rMotor->resetDirection();
 
-		float desired = 5.5;
+		float desired = 6;
 
 		int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 
@@ -109,7 +106,9 @@ void Locomotion::turnLeft() {
 	lMotor->encoder.resetEncoderPosition();
 	rMotor->encoder.resetEncoderPosition();
 	leftEncoderPID->resetParameters();
+	leftEncoderPID->setCoefficients(3.7,0,0.021);
 	rightEncoderPID->resetParameters();
+	rightEncoderPID->setCoefficients(3.85,0,0.068);
 
 	lMotor->resetDirection();
 	rMotor->resetDirection();
@@ -117,7 +116,7 @@ void Locomotion::turnLeft() {
 	lMotor->reverseDirection();
 	rMotor->reverseDirection();
 
-	float desired = 5.5;
+	float desired = 6;
 
 	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 

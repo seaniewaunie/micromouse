@@ -23,7 +23,7 @@ class Locomotion {
 public:
 
 	static constexpr float encoderSampleTime = 100;
-	static constexpr float sensorSampleTime = 300;
+	static constexpr float sensorSampleTime = 500;
 
 	Locomotion();
 	~Locomotion();
@@ -35,3 +35,5 @@ public:
 };
 
 #endif
+
+

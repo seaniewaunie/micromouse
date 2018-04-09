@@ -27,6 +27,7 @@ public:
 	void setPIDfunction(int(*pid_func)(const float));
 	float getError();
 	void setError(float);
+	void setCoefficients(float,float,float);
 	void resetParameters();
 	float samplingTime;
 	pid_func_ptr pid_func;
