@@ -1,47 +1,48 @@
 #include <Solver.h>
 #include <Button.h>
+#include <Locomotion.h>
+
 
 // Pin Declarations
-#define NORTH_SENSOR_PIN 2
-#define EAST_SENSOR_PIN 3
-#define WEST_SENSOR_PIN 4
+#define NORTH_SENSOR_PIN 13
+#define EAST_SENSOR_PIN 12
+#define WEST_SENSOR_PIN 11
   
-#define NORTH_LED_PIN 5
-#define EAST_LED_PIN 6
-#define WEST_LED_PIN 7
-#define SOUTH_LED_PIN 8
+#define MODE_LED_PIN A5
+#define SOUTH_LED_PIN A4
+#define WEST_LED_PIN A3
+#define EAST_LED_PIN A2
+#define NORTH_LED_PIN A1
 
-#define MODE_LED_PIN 9
+//#define BUTTON_PIN 0
 
-#define BUTTON_PIN 10
 
-// Instantiate Diagnostics Object
-Solver solver(NORTH_SENSOR_PIN, EAST_SENSOR_PIN, WEST_SENSOR_PIN, \
-                        NORTH_LED_PIN,    EAST_LED_PIN,    WEST_LED_PIN, \
-                        SOUTH_LED_PIN, MODE_LED_PIN);
 
-Button button(BUTTON_PIN, PULLDOWN);
+// Instantiate Objects
+
+//Button button(BUTTON_PIN, PULLDOWN);
+
+Solver solver = Solver();
  
-
-//Graph test(49);
-
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   //Serial.println(sizeof(Node));
-  Serial.print(sizeof(dijkstra_t));
-  
+  //Serial.print(sizeof(dijkstra_t));
+  //loco = new Locomotion();
+  //loco->goForward();
+
+  delay(1000); 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if(button.uniquePress()){
-  
-    Serial.println("Button pressed");
+  //if(button.uniquePress()){
+  //delay(1000);
+    //Serial.println("Button pressed");
     //e.DFS();
     solver.nextNode();
-  }
-  
+  //}
   solver.getDiagnostics()->update();
   delay(50);
   

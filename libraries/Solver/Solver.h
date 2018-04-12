@@ -36,13 +36,12 @@ struct Node{
 class Solver {
     public:
         Solver();
-        Solver(Locomotion *loco, Diagnostics *diag, Graph *graph);
         ~Solver();
-        
+
         Diagnostics* getDiagnostics();
 
-        void nextNode(); 
-        
+        void nextNode();
+
         int incrementNorth();
         int incrementEast();
         int incrementSouth();
@@ -68,7 +67,7 @@ class Solver {
         DIRECTION m_facing;
 
         int m_difference;
-        bool m_startingNode;        
+        bool m_startingNode;
         bool m_isSolved;
 
         Node m_nodeContainer[MAX_MAZE_SIZE];

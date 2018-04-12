@@ -3,9 +3,9 @@
  * Created: 12/11/17
  * Version: 1.3
  * Last Edit: 1/30/18
- * 
+ *
  * Diagnostics Implementation file
- */ 
+ */
 
 #include "Arduino.h"
 #include "Diagnostics.h"
@@ -13,26 +13,18 @@
 #define LED_DELAY_MS 100
 #define MAZE_LENGTH_CM 108
 
-Diagnostics::Diagnostics(){
-    //empty
-}
+Diagnostics::Diagnostics() {
 
+    m_northSensor = new Sensor(NORTH_SENSOR_PIN);
+    m_eastSensor = new Sensor(EAST_SENSOR_PIN);
+    m_westSensor = new Sensor(WEST_SENSOR_PIN);
 
-Diagnostics::Diagnostics(const int northSensorPin, const int eastSensorPin, \
-                         const int westSensorPin, const int northLEDPin, \
-                         const int eastLEDPin, const int westLEDPin, \
-                         const int southLEDPin, const int modeLEDPin)
-{ 
-    m_northSensor = new Sensor(northSensorPin);
-    m_eastSensor = new Sensor(eastSensorPin);
-    m_westSensor = new Sensor(westSensorPin);
+    m_northLED = new LED(NORTH_LED_PIN);
+    m_eastLED = new LED(EAST_LED_PIN);
+    m_westLED = new LED(WEST_LED_PIN);
+    m_southLED = new LED(SOUTH_LED_PIN);
 
-    m_northLED = new LED(northLEDPin);
-    m_eastLED = new LED(eastLEDPin);
-    m_westLED = new LED(westLEDPin);
-    m_southLED = new LED(southLEDPin);
-
-    m_modeLED = new LED(modeLEDPin);
+    m_modeLED = new LED(MODE_LED_PIN);
 }
 
 Diagnostics::~Diagnostics(){
@@ -52,11 +44,11 @@ bool Diagnostics::update(){
     // if there is no wall, the LED associated with it will turn on
 
     // north Sensor
-    if(m_northSensor->isWall()) 
+    if(m_northSensor->isWall())
         m_northLED->turnON();
-    else 
+    else
         m_northLED->turnOFF();
-    
+
     // east Sensor
     if(m_eastSensor->isWall())
         m_eastLED->turnON();
@@ -81,7 +73,7 @@ void Diagnostics::celebrate(){
         m_southLED->turnOFF();
         m_modeLED->turnOFF();
         delay(LED_DELAY_MS);
-         
+
         m_northLED->turnON();
         m_eastLED->turnON();
         m_westLED->turnON();
@@ -115,7 +107,7 @@ bool Diagnostics::checkWin(){
 
 void Diagnostics::blinkLED(DIRECTION dir){
     LED *useThis;
-    
+
     switch(dir){
         case N:
             useThis = m_northLED;
@@ -134,7 +126,7 @@ void Diagnostics::blinkLED(DIRECTION dir){
     for(int i = 0; i < 4; i++){
         useThis->flashLED();
     }
-   
+
 }
 
 

@@ -9,12 +9,11 @@
 #define WEST_SENSOR_PIN 11
 
 // Pin declarations for LED's
-#define NORTH_LED_PIN 7
-#define EAST_LED_PIN 6
-#define WEST_LED_PIN 5
-#define SOUTH_LED_PIN 4
-
-#define MODE_LED_PIN 3
+#define MODE_LED_PIN A5
+#define SOUTH_LED_PIN A4
+#define WEST_LED_PIN A3
+#define EAST_LED_PIN A2
+#define NORTH_LED_PIN A1
 
 // Instantiate Diagnostics Object
 Diagnostics diagnostics(NORTH_SENSOR_PIN, WEST_SENSOR_PIN, EAST_SENSOR_PIN, \
@@ -28,11 +27,11 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  for(int i = 0; i < 100; i++){
+  //for(int i = 0; i < 100; i++){
     diagnostics.update();
     delay(100);
-  }
-  diagnostics.celebrate();
+  //}
+  //diagnostics.celebrate();
   //diagnostics.getNorthLED()->flashLED();
-  delay(1000);
+  //delay(1000);
 }
