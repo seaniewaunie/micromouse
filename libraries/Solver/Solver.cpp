@@ -227,11 +227,12 @@ void Solver::findShortestUnvisitedPath(){
 
 void Solver::traverseShortestPath(){
 
+    // while m_graph's shortest path vector is not empty
     while(!m_graph->isSPEmpty()){
-
+        // grab the next index
         int nextIndex = m_graph->getNextSPIndex();
-        //int nextIndex = 0;
 
+        // calculatre the orientational difference
         m_difference = m_nodeContainer[m_currentPosition].direction - m_facing;
         if(m_difference < -1) m_difference = m_difference * -1; // makeshift abs() function
 
@@ -240,6 +241,9 @@ void Solver::traverseShortestPath(){
         m_facing = m_nodeContainer[m_currentPosition].direction;
 
         cout << "going to: " << nextIndex << endl;
+
+        // determine which way to go in order
+        // to get to the next index
         if( m_currentPosition+incrementNorth() == nextIndex){
             m_currentPosition += incrementNorth();
 
