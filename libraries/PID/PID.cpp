@@ -12,7 +12,6 @@ PID::PID() {
 	Kp = Kd = Ki = 0;
 	error = last_error = 0;
 	integral = derivative = 0;
-	samplingTime = 0;
 }
 
 PID::PID(float Kp, float Kd, float Ki) {
@@ -22,7 +21,6 @@ PID::PID(float Kp, float Kd, float Ki) {
 
 	error = last_error = 0;
 	integral = derivative = 0;
-	samplingTime = 0;
 }
 
 PID::~PID() {
@@ -65,12 +63,13 @@ namespace micromouse_pid_functions {
 	int leftEncoderPID_setDutyCycle(const float desired_distance) {
 		long int leftEncoderPos = abs(lMotor->encoder.getEncoderPosition());
 		float actual_distance = ((float)leftEncoderPos/Encoder::CPR) * Motor::wheel_circum;
-		float error = 100.0 * ((desired_distance - actual_distance)/desired_distance);
+		float error = desired_distance - actual_distance;
 		float newDutyCycle = leftEncoderPID->calculateNewValue(error);
 
-		Serial.print("L:"); Serial.println(actual_distance);
-		if(newDutyCycle >= 255.0) {
-			return 255;
+		//Serial.print("L:"); Serial.println(actual_distance);
+
+		if(newDutyCycle >= 200.0) {
+			return 200;
 		}
 		else {
 			if(newDutyCycle < 45.0) {
@@ -83,62 +82,22 @@ namespace micromouse_pid_functions {
 	int rightEncoderPID_setDutyCycle(const float desired_distance) {
 			long int rightEncoderPos = abs(rMotor->encoder.getEncoderPosition());
 			float actual_distance = ((float)rightEncoderPos/Encoder::CPR) * Motor::wheel_circum;
-			float error = 100.0 * ((desired_distance - actual_distance)/desired_distance);
+			float error = desired_distance - actual_distance;
 			float newDutyCycle = rightEncoderPID->calculateNewValue(error);
 
 			Serial.print("R:"); Serial.println(actual_distance);
 
-			if(newDutyCycle >= 255.0) {
-				return 255;
+			if(newDutyCycle >= 200.0) {
+				return 200;
 			}
 			else {
-				if(newDutyCycle < 50.0) {
+				if(newDutyCycle < 45.0) {
 					return 0;
 				}
 				return int(newDutyCycle);
 			}
-		}
-
-
-	int sensorPID_setDutyCycle(const float desired_distance) {
-
-		int sign = 1;
-
-		float left_actual_distance = lSensor->getDistance();
-		float right_actual_distance = rSensor->getDistance();
-
-
-		bool l_valid = lSensor->isWall();
-		bool r_valid = rSensor->isWall();
-
-		float error = 0;
-
-		if(l_valid && r_valid) {
-			error = left_actual_distance - right_actual_distance;
-			if(error < 0)
-				sign = -1;
-		}
-		else if(l_valid && !r_valid) {
-			error = desired_distance - left_actual_distance;
-			if(error > 0)
-					sign = -1;
-		}
-		else if(!l_valid && r_valid) {
-			error = desired_distance - right_actual_distance;
-			if(error < 0)
-				sign = -1;
-		}
-		else {
-			error = 0;
-		}
-		float newDutyCycle = abs(error);
-
-		return int(newDutyCycle*sign ) % 10;
 	}
 }
-
-
-
 
 
 

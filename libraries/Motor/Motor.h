@@ -19,36 +19,28 @@ public:
 	static const int EPR = CPR*EPC; //events per revolution
 
 	Encoder();								//default constructor
-	Encoder(int, int);					//constructor with arguments to specify digital pins
+	Encoder(int);				//constructor with arguments to specify digital pins
 	virtual ~Encoder();
 
-	const int getEncoderAPin();
-	const int getEncoderBPin();
-
-	void setEncoderAPin(int);
-	void setEncoderBPin(int);
+	const int getEncoderPin();
+	void setEncoderPin(int);
 
 	signed long int getEncoderPosition();
 	void resetEncoderPosition();
 
-	void encoderEventA_ISR();		//Interrupt Service Routine for event on encoder A pin
-	void encoderEventB_ISR();		//Interrupt Service Routine for event on encoder B pin
+	void encoderEvent_ISR();		//Interrupt Service Routine for event on encoder A pin
 
 private:
 
-	int encoderAPin;		//digital input on Arduino for which encoder A input is connected
-	int encoderBPin;		//digital input on Arduino for which encoder B input is connected
-
+	int encoderPin;		//digital input on Arduino for which encoder A input is connected
 	volatile signed long int encoderPos = 0;		//variable to keep track of encoder position
 	volatile unsigned char inputMask = 0;									//mask to extract vital bits from the poll bytes
 };
 
 namespace encoder_interrupt_functions {
 
-	void leftEncoderEventA_ISR_Wrapper();
-	void leftEncoderEventB_ISR_Wrapper();
-	void rightEncoderEventA_ISR_Wrapper();
-	void rightEncoderEventB_ISR_Wrapper();
+	void leftEncoderEvent_ISR_Wrapper();
+	void rightEncoderEvent_ISR_Wrapper();
 
 }
 
@@ -60,7 +52,7 @@ public:
 
 	Motor();
 	Motor(int,int,int);							//Motor w/o encoder
-	Motor(int,int,int,int,int);			//Motor with encoder
+	Motor(int,int,int,int);			//Motor with encoder
 	virtual ~Motor();
 
 	void spinMotor(int);

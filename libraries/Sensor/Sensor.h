@@ -18,19 +18,19 @@
 #define SENSOR_H
 
 #include "Arduino.h"
-#include "NewPing.h"
 
 class Sensor {
   
   public:
-    Sensor(const int pin);
+    Sensor();
+    Sensor(const int, const int);
     ~Sensor();
-    float getDistance();
+    long getDistance();
     bool isWall();
     
   private:
-    int m_pin;
-    NewPing *m_sonar;
+    int m_trigPin;
+    int m_echoPin;
 };
 
 #endif

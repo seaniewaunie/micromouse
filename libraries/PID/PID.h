@@ -29,22 +29,18 @@ public:
 	void setError(float);
 	void setCoefficients(float,float,float);
 	void resetParameters();
-	float samplingTime;
-	pid_func_ptr pid_func;
 
+	pid_func_ptr pid_func;
 	float error;
 	float last_error;
 	double integral;
 	double derivative;
-
 };
 
 namespace micromouse_pid_functions {
 
 	int leftEncoderPID_setDutyCycle(const float);
 	int rightEncoderPID_setDutyCycle(const float);
-
-	int sensorPID_setDutyCycle(const float);
 
 }
 

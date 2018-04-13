@@ -10,20 +10,18 @@
 extern Motor *lMotor;
 extern Motor *rMotor;
 
+extern Sensor* fSensor;
 extern Sensor* lSensor;
 extern Sensor* rSensor;
 
 extern PID *leftEncoderPID;
 extern PID *rightEncoderPID;
 
-extern PID *sensorPID;
-
 class Locomotion {
 
 public:
 
-	static constexpr float encoderSampleTime = 100;
-	static constexpr float sensorSampleTime = 500;
+	//static constexpr float encoderSampleTime = 50; continuous sampling
 
 	Locomotion();
 	~Locomotion();
@@ -31,7 +29,6 @@ public:
 	void turnRight();
 	void turnLeft();
 	void makeUTurn();
-
 };
 
 #endif
