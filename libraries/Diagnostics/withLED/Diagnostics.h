@@ -1,8 +1,8 @@
 /*
  * Author: Sean Graff
  * Created: 12/8/17
- * Version: 2.0
- * Last Edited: 4/13/18
+ * Version: 1.1
+ * Last Edited: 1/30/18
  *
  * Description: The diagnostic system allows for visual inspection to ensure that the Micromouse
  * is performing as expected. For our purpose, it will also serve as a tool to demonstrate
@@ -19,8 +19,6 @@
  * The MODE LED signifies which mode the micromouse is operating in. When this LED is OFF, the MM is operating in "Traversal" mode.
  * When the LED is ON, the MM is operating in "Sprint" mode.
  *
- ***** Due to memory constraints, the LED functionality had to be removed.
- *
  */
 
 #ifndef DIAGNOSTICS_H
@@ -31,14 +29,14 @@
 #include "LED.h"
 //#include "Node.h"
 
-#define NORTH_SENSOR_TRIG_PIN A0
-#define NORTH_SENSOR_ECHO_PIN A1
-#define EAST_SENSOR_TRIG_PIN 13
-#define EAST_SENSOR_ECHO_PIN 4
-#define WEST_SENSOR_TRIG_PIN 11
-#define WEST_SENSOR_ECHO_PIN 12
-
-#define MODE_LED_PIN LED_BUILTIN
+#define NORTH_SENSOR_PIN 13
+#define EAST_SENSOR_PIN 12
+#define WEST_SENSOR_PIN 11
+#define NORTH_LED_PIN A1
+#define EAST_LED_PIN A2
+#define WEST_LED_PIN A3
+#define SOUTH_LED_PIN A4
+#define MODE_LED_PIN A5
 
 enum DIRECTION{
     N,
@@ -51,9 +49,8 @@ class Diagnostics {
 
   public:
     Diagnostics();
-
+    
     ~Diagnostics();
-
     bool update();
     void celebrate();
 
@@ -65,6 +62,11 @@ class Diagnostics {
     Sensor *getEastSensor();
     Sensor *getWestSensor();
 
+    LED *getNorthLED();
+    LED *getEastLED();
+    LED *getWestLED();
+    LED *getSouthLED();
+
     LED *getModeLED();
 
 
@@ -73,6 +75,12 @@ class Diagnostics {
     Sensor *m_northSensor;
     Sensor *m_eastSensor;
     Sensor *m_westSensor;
+
+    // LED's to suppliment each sensor
+    LED *m_northLED;
+    LED *m_eastLED;
+    LED *m_westLED;
+    LED *m_southLED;
 
     // LED for mode of operation
     LED *m_modeLED;

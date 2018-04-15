@@ -11,11 +11,11 @@
 #define rightMotorIn2 10
 #define rightEncoderPin 2
 
-#define frontSensorTrig 0
+#define frontSensorTrig A0
 #define leftSensorTrig 11
 #define rightSensorTrig 13
 
-#define frontSensorEcho 0
+#define frontSensorEcho A1
 #define leftSensorEcho 12
 #define rightSensorEcho 4
 

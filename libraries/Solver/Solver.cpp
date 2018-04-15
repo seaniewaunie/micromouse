@@ -45,6 +45,10 @@ Diagnostics* Solver::getDiagnostics(){
     return m_diagnostics;
 }
 
+Locomotion* Solver::getLocomotion(){
+    return m_loco;
+}
+
 void Solver::nextNode(){
     // visually represent how long this function takes by flashing the MODE led
     m_diagnostics->getModeLED()->turnON();
@@ -404,21 +408,21 @@ int Solver::incrementWest(){
 // TODO: these functions need to be verified
 void Solver::goForward(){
     if(m_difference == 2){
-        m_diagnostics->getSouthLED()->flashLED();
-        m_diagnostics->getSouthLED()->flashLED();
+        //m_diagnostics->getSouthLED()->flashLED();
+        //m_diagnostics->getSouthLED()->flashLED();
         // at this point, the locomotion objects "turn around" is called
     }
     else if(m_difference == 3){
-        m_diagnostics->getEastLED()->flashLED();
-        m_diagnostics->getEastLED()->flashLED();
+        //m_diagnostics->getEastLED()->flashLED();
+        //m_diagnostics->getEastLED()->flashLED();
     }
     else if(m_difference == 1){
-        m_diagnostics->getWestLED()->flashLED();
-        m_diagnostics->getWestLED()->flashLED();
+        //m_diagnostics->getWestLED()->flashLED();
+        //m_diagnostics->getWestLED()->flashLED();
     }
     else{
-        m_diagnostics->getNorthLED()->flashLED();
-        m_diagnostics->getNorthLED()->flashLED();
+        //m_diagnostics->getNorthLED()->flashLED();
+        //m_diagnostics->getNorthLED()->flashLED();
     }
     // at the end of this function, go forward is executed
     m_loco->goForward();
@@ -427,26 +431,26 @@ void Solver::goForward(){
 void Solver::turnRight(){
     //Serial.println("Turning right");
     if(m_difference == 2){
-        m_diagnostics->getWestLED()->flashLED();
-        m_diagnostics->getWestLED()->flashLED();
+        //m_diagnostics->getWestLED()->flashLED();
+        //m_diagnostics->getWestLED()->flashLED();
 
         //m_loco->turnLeft();
     }
     else if(m_difference == 1){
-        m_diagnostics->getNorthLED()->flashLED();
-        m_diagnostics->getNorthLED()->flashLED();
+        //m_diagnostics->getNorthLED()->flashLED();
+        //m_diagnostics->getNorthLED()->flashLED();
 
         // nothing to do with orientation
     }
     else if(m_difference == -1){
-        m_diagnostics->getSouthLED()->flashLED();
-        m_diagnostics->getSouthLED()->flashLED();
+        //m_diagnostics->getSouthLED()->flashLED();
+        //m_diagnostics->getSouthLED()->flashLED();
 
         //m_loco->turnAround();
     }
     else{
-        m_diagnostics->getEastLED()->flashLED();
-        m_diagnostics->getEastLED()->flashLED();
+        //m_diagnostics->getEastLED()->flashLED();
+        //m_diagnostics->getEastLED()->flashLED();
 
         //m_loco->turnRight();
     }
@@ -459,20 +463,20 @@ void Solver::turnRight(){
 
 void Solver::turnLeft(){
     if(m_difference == 2){
-        m_diagnostics->getEastLED()->flashLED();
-        m_diagnostics->getEastLED()->flashLED();
+        //m_diagnostics->getEastLED()->flashLED();
+        //m_diagnostics->getEastLED()->flashLED();
     }
     else if(m_difference == 1){
-        m_diagnostics->getNorthLED()->flashLED();
-        m_diagnostics->getNorthLED()->flashLED();
+        //m_diagnostics->getNorthLED()->flashLED();
+        //m_diagnostics->getNorthLED()->flashLED();
     }
     else if(m_difference == -1){
-        m_diagnostics->getSouthLED()->flashLED();
-        m_diagnostics->getSouthLED()->flashLED();
+        //m_diagnostics->getSouthLED()->flashLED();
+        //m_diagnostics->getSouthLED()->flashLED();
     }
     else{
-        m_diagnostics->getWestLED()->flashLED();
-        m_diagnostics->getWestLED()->flashLED();
+        //m_diagnostics->getWestLED()->flashLED();
+        //m_diagnostics->getWestLED()->flashLED();
     }
 
     //Serial.println("Turning left");
@@ -482,20 +486,20 @@ void Solver::turnLeft(){
 void Solver::turnAround(){
     //Serial.println("Turning around");
     if(m_difference == 2){
-        m_diagnostics->getNorthLED()->flashLED();
-        m_diagnostics->getNorthLED()->flashLED();
+        //m_diagnostics->getNorthLED()->flashLED();
+        //m_diagnostics->getNorthLED()->flashLED();
     }
     else if(m_difference == -1){
-        m_diagnostics->getEastLED()->flashLED();
-        m_diagnostics->getEastLED()->flashLED();
+        //m_diagnostics->getEastLED()->flashLED();
+        //m_diagnostics->getEastLED()->flashLED();
     }
     else if(m_difference == 1){
-        m_diagnostics->getWestLED()->flashLED();
-        m_diagnostics->getWestLED()->flashLED();
+        //m_diagnostics->getWestLED()->flashLED();
+        //m_diagnostics->getWestLED()->flashLED();
     }
     else{
-        m_diagnostics->getSouthLED()->flashLED();
-        m_diagnostics->getSouthLED()->flashLED();
+        //m_diagnostics->getSouthLED()->flashLED();
+        //m_diagnostics->getSouthLED()->flashLED();
     }
 
     m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
