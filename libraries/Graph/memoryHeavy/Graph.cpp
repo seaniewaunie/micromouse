@@ -7,19 +7,19 @@ using namespace std;
 
 Graph::Graph(){
     m_currentSize = 0;
-/*
+
     for(int i = 0; i < MAX_MAZE_SIZE; i++){
         m_dutilContainer[i].dist = MAX;
         m_dutilContainer[i].sptSet = false;
         m_dutilContainer[i].parent = MAX;
     }
-*/
+
     //m_dist[STARTING_NODE] = 0;
 
-//    m_dutilContainer[STARTING_NODE].parent = -1;
+    m_dutilContainer[STARTING_NODE].parent = -1;
     //m_parent[STARTING_NODE] = -1;
 
-//    m_shortestPath = queue<uint8_t>();
+    m_shortestPath = queue<uint8_t>();
     //m_shortestPath = new QueueArray<uint8_t>();
     // shortest path will always start with 0
     //m_shortestPath.push_back(STARTING_NODE);
@@ -54,7 +54,7 @@ void Graph::printGraph(){
     }
 }
 */
-/*
+
 void Graph::printPath(int from, int to){
     if(m_dutilContainer[from].parent == -1)
         return;
@@ -65,8 +65,8 @@ void Graph::printPath(int from, int to){
     Serial.print(from);
     Serial.print(" ");
 }
-*/
-/*
+
+
 void Graph::printSolution(int from, int to){
     int src = from;
     cout << "Node\tDistance\tPath" << endl;
@@ -85,8 +85,8 @@ void Graph::printSolution(int from, int to){
         }
     }
 }
-*/
-/*
+
+
 void Graph::Dijkstra(int from, int to){
     // reset distances
     for(int i = 0; i < MAX_MAZE_SIZE; i++){
@@ -123,8 +123,7 @@ void Graph::Dijkstra(int from, int to){
 
     //printSolution(from, to);
 }
-*/
-/*
+
 uint8_t Graph::minDistance(){
     int min = MAX, min_index;
 
@@ -134,7 +133,7 @@ uint8_t Graph::minDistance(){
 
     return min_index;
 }
-*/
+
 /*
 void Graph::storeEndPath(int end){
     if(m_parent[end] == -1)
@@ -148,7 +147,7 @@ void Graph::storeEndPath(int end){
     m_shortestPath->push(end);
 }
 */
-/*
+
 void Graph::storePath(int from, int to){
     if(m_dutilContainer[from].parent == -1){
         return;
@@ -164,23 +163,20 @@ void Graph::storePath(int from, int to){
     cout << m_shortestPath.back() << endl;
     //m_shortestPath.pop();
 }
-*/
-/*
+
+
 queue<uint8_t> Graph::getShortestPath(){
     return m_shortestPath;
 }
-*/
-/*
+
 uint8_t Graph::getDistance(int to){
     return m_dutilContainer[to].dist;
 }
-*/
-/*
+
 bool Graph::isSPEmpty(){
     return m_shortestPath.empty();
 }
-*/
-/*
+
 int Graph::getNextSPIndex(){
     //m_shortestPath.pop_back();
     int ret = m_shortestPath.front();
@@ -188,4 +184,3 @@ int Graph::getNextSPIndex(){
     cout << ret << endl;
     return ret;
 }
-*/

@@ -21,7 +21,6 @@ class Graph{
 
         void addEdge(int u, int v, int w);
         void printGraph();
-        void Dijkstra();
 
         // dijkstra utilities
         int minDistance();

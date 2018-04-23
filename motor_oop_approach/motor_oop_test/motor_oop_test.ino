@@ -1,4 +1,7 @@
 #include <Locomotion.h>
+#include <Button.h>
+
+#define BUTTON_PIN A2
 /* Reading rotary encoder values from single motor 
  * and adjusting duty cycle via PID 
  *  by Erfan Turdi
@@ -18,16 +21,23 @@
  *  -motor --> H-bridge pin 2
  */
 
+Button button(BUTTON_PIN, PULLDOWN);
 Locomotion* loco = new Locomotion();
 
 void setup() {
   Serial.begin(115200);
-  loco->goForward();
-  delay(2000);
-  loco->goForward();
 }
 
 void loop() {
   
+  if(button.uniquePress()){
+    //loco->goForward();
+    delay(2000);
+    loco->turnRight();
+    //delay(2000);
+    //loco->turnLeft();
+    //delay(2000);
+    //loco->makeUTurn();
+  }
 }
 

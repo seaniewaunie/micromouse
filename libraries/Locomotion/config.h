@@ -2,8 +2,8 @@
 #define __CONFIG_H__
 
 #define leftMotorEnable 5
-#define leftMotorIn1 7
-#define leftMotorIn2 8
+#define leftMotorIn1 11
+#define leftMotorIn2 12
 #define leftEncoderPin 3
 
 #define rightMotorEnable 6
@@ -12,11 +12,11 @@
 #define rightEncoderPin 2
 
 #define frontSensorTrig A0
-#define leftSensorTrig 11
+#define leftSensorTrig A3
 #define rightSensorTrig 13
 
 #define frontSensorEcho A1
-#define leftSensorEcho 12
+#define leftSensorEcho A4 
 #define rightSensorEcho 4
 
 #endif

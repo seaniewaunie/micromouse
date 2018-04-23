@@ -9,7 +9,7 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
-#include "Arduino.h"
+//#include "Arduino.h"
 #include "Diagnostics.h"
 #include "Graph.h"
 #include "Locomotion.h"
@@ -36,20 +36,20 @@ struct Node{
 class Solver {
     public:
         Solver();
-        Solver(const int northSensorPin, const int eastSensorPin, \
-            const int westSensorPin, const int northLEDPin, \
-            const int eastLEDPin, const int westLEDPin, \
-            const int southLEDPin, const int modeLEDPin);
         ~Solver();
 
         Diagnostics* getDiagnostics();
+        Locomotion* getLocomotion();
 
-        bool nextNode();
+        void nextNode();
 
         int incrementNorth();
         int incrementEast();
         int incrementSouth();
         int incrementWest();
+
+        void findShortestUnvisitedPath();
+        void traverseShortestPath();
 
         void goForward();
         void turnRight();

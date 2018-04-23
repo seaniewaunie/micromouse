@@ -17,8 +17,12 @@ void loop() {
   // put your main code here, to run repeatedly:
   //for(int i = 0; i < 100; i++){
     diagnostics->update();
+    Serial.println("North, East, West");
+    Serial.print(diagnostics->getNorthSensor()->getDistance());
+    Serial.print(", \t");
+    Serial.print(diagnostics->getEastSensor()->getDistance());
+    Serial.print(", \t");
     Serial.println(diagnostics->getWestSensor()->getDistance());
-    Serial.println("working!");
     delay(100);
   //}
   //diagnostics.celebrate();

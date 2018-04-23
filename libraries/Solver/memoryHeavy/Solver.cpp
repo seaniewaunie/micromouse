@@ -5,18 +5,26 @@
 
 #include "Solver.h"
 
-using namespace std;
+//using namespace std;
 
 Solver::Solver()
 {
     m_diagnostics = new Diagnostics();
 
+    //m_diagnostics = diag;
+    /*m_graph = new Graph();*/
     m_graph = new Graph();
 
     m_loco = new Locomotion();
 
+    //m_diagnostics->celebrate();
+    //m_loco->goForward();
+
+    //m_loco = new Locomotion();
+
     m_currentPosition = STARTING_INDEX;
 
+    m_difference = 0;
     m_turnCounter = 0;
     m_facing = N;
 
@@ -25,28 +33,23 @@ Solver::Solver()
     m_isSolved = false;
 
     m_isReadyToSprint = false;
-    m_difference = 0;
-
-    for(uint8_t i = 0; i < MAX_MAZE_SIZE; i++){
-        m_nodeContainer[i].visited = false;
-        m_nodeContainer[i].northIsWall = false;
-        m_nodeContainer[i].eastIsWall = false;
-        m_nodeContainer[i].westIsWall = false;
-        m_nodeContainer[i].southIsWall = false;
-    }
-
 }
 
 Solver::~Solver(){
     delete m_diagnostics;
-    //delete m_graph;
+    delete m_graph;
+    delete m_loco;
 }
 
 Diagnostics* Solver::getDiagnostics(){
     return m_diagnostics;
 }
 
-bool Solver::nextNode(){
+Locomotion* Solver::getLocomotion(){
+    return m_loco;
+}
+
+void Solver::nextNode(){
     // visually represent how long this function takes by flashing the MODE led
     m_diagnostics->getModeLED()->turnON();
 
@@ -67,14 +70,14 @@ bool Solver::nextNode(){
     if(!m_isSolved)
         m_isSolved = ( m_diagnostics->update() );
 
+    // BEGIN MAPPING CURRENT NODE
+
     // if the maze hasn't been solved
     if(!m_isSolved){
-        Serial.print("node visited: ");
-        Serial.println(currentNode->visited);
         // if the node hasn't been mapped before
         //if( !m_visited[m_currentPosition] ){
         if( !currentNode->visited ){
-            //Serial.println("Node has not been mapped before");
+            Serial.println(F("Node has not been mapped before"));
             m_difference = 0;
             // if north has no wall
             if( !m_diagnostics->getNorthSensor()->isWall() ){
@@ -120,31 +123,21 @@ bool Solver::nextNode(){
 
             // TODO: refine this to work perfectly
             m_difference = currentNode->direction - m_facing;
-            if(m_difference < 0) m_difference = m_difference * -1; // makeshift abs() function
-
-            cout << "m_difference between current facing and previous facing: " << m_difference << std::endl;
+            //if(m_difference < -1) m_difference = m_difference * -1; // makeshift abs() function
 
             m_facing = currentNode->direction;
         }
 
+        // END MAPPING NODE
+
+        // BEGIN MOVEMENT DECISION
+        Serial.println(m_difference);
 
         // update local variables to resemble current node
         northIsWall = currentNode->northIsWall;
         eastIsWall = currentNode->eastIsWall;
         westIsWall = currentNode->westIsWall;
         southIsWall = currentNode->southIsWall;
-        Serial.print("N, E, W: ");
-        Serial.print(northIsWall);
-        Serial.print(",");
-        Serial.print(eastIsWall);
-        Serial.print(",");
-        Serial.println(westIsWall);
-
-        Serial.print("m_facing, difference: ");
-        Serial.print(m_facing);
-        Serial.print(",");
-        Serial.println(m_difference);
-
 
         // at this point a decision on where to move needs to be made
         // explore any unvisited nodes first -- clockwise priority excluding south
@@ -166,35 +159,18 @@ bool Solver::nextNode(){
         }
         else{
             // all routes the mouse could take have been explored
-            // at this point the mouse needs to move to nodes that are not leading to dead ends
-            if( !m_nodeContainer[m_currentPosition+incrementNorth()].deadEnd && !northIsWall){
-                m_currentPosition += incrementNorth();
+            // find shortest path leading to unvisited node
+            findShortestUnvisitedPath();
 
-                goForward();
-            }
-            else if( !m_nodeContainer[m_currentPosition+incrementEast()].deadEnd && !eastIsWall){
-                m_currentPosition += incrementEast();
-
-                turnRight();
-            }
-            else if( !m_nodeContainer[m_currentPosition+incrementWest()].deadEnd && !westIsWall){
-                m_currentPosition += incrementWest();
-
-                turnLeft();
-            }
-            else{
-
-                currentNode->deadEnd = true;
-
-                m_currentPosition += incrementSouth();
-
-                turnAround();
-
-            }
+            // follow the path to unvisited node
+            traverseShortestPath();
         }
+
+        // END MOVEMENT DECISION
 
         // visually represent when algorithm is 'done' working
         m_diagnostics->getModeLED()->turnOFF();
+
     }
     else if(!m_isReadyToSprint){
         // can celebrate and also perform DFS to find the shortest path, and visually represent sprint mode
@@ -205,8 +181,8 @@ bool Solver::nextNode(){
         // call the shortest path function to store directions
         m_isReadyToSprint = true;
 
-        //m_graph->Dijkstra();
-        //m_graph->storeEndPath(m_currentPosition);
+        m_graph->Dijkstra(0, m_currentPosition);
+        //m_graph->storePath(0, m_currentPosition); // store path from start to finish
 
         m_currentPosition = 0;
     }
@@ -221,27 +197,88 @@ bool Solver::nextNode(){
         }
         m_diagnostics->getModeLED()->turnON();
 
-        // traverse the path to get to the end
-        /*
-        int nextIndex;
-        for(int i = 0; i < m_graph->getSPSize(); i++){
-            nextIndex = m_graph->getNextSPIndex();
 
-            cout << "moving to " << nextIndex << endl;
-
-        }
-        */
     }
 
     //Serial.print("m_facing after: ");
     //Serial.println(m_facing);
-    Serial.print(F("m_currentPosition after: "));
+    Serial.print("m_currentPosition after: ");
     Serial.println(m_currentPosition);
-    
-    if(!m_isSolved) return false;
-    else return true;
+
+
 }
 
+
+// finds the shortest path to an unvisited node
+void Solver::findShortestUnvisitedPath(){
+    int min = MAX;
+    int minIndex = 0;
+
+
+    for(int i = 0; i < MAX_MAZE_SIZE; i++){
+        if( !m_nodeContainer[i].visited ){
+            if( m_graph->getDistance(i) <= min ){
+                 min = m_graph->getDistance(i);
+                 minIndex = i;
+            }
+        }
+    }
+    Serial.println(minIndex);
+
+    m_graph->Dijkstra(m_currentPosition, minIndex); // shortest path is stored
+}
+
+void Solver::traverseShortestPath(){
+
+    // while m_graph's shortest path vector is not empty
+    while(!m_graph->isSPEmpty()){
+        // grab the next index
+        int nextIndex = m_graph->getNextSPIndex();
+
+        // calculatre the orientational difference
+        m_difference = m_nodeContainer[m_currentPosition].direction - m_facing;
+        //if(m_difference < -1) m_difference = m_difference * -1; // makeshift abs() function
+
+        Serial.println(m_difference);
+
+        m_facing = m_nodeContainer[m_currentPosition].direction;
+
+        Serial.print(F("going to: "));
+        Serial.println(nextIndex);
+
+        // determine which way to go in order
+        // to get to the next index
+        if( m_currentPosition+incrementNorth() == nextIndex){
+            m_currentPosition += incrementNorth();
+
+            goForward();
+        }
+        else if( m_currentPosition+incrementEast() == nextIndex){
+            m_currentPosition += incrementEast();
+
+            turnRight();
+        }
+        else if( m_currentPosition+incrementWest() == nextIndex){
+            m_currentPosition += incrementWest();
+
+            turnLeft();
+        }
+        else if( m_currentPosition+incrementSouth() == nextIndex){
+
+            m_nodeContainer[m_currentPosition].deadEnd = true;
+
+            m_currentPosition += incrementSouth();
+
+            turnAround();
+
+        }
+        else{
+            Serial.println(F("error tsp"));
+            break;
+        }
+        //cout << "after: " << m_currentPosition << endl;
+    }
+}
 
 // the increment functions add to the position relative to the mouses facing direction.
 // when the mouse's north sensor is pointing(facing) east, moving the mouse "north" is actually moving
@@ -370,23 +407,24 @@ int Solver::incrementWest(){
 
 // TODO: these functions need to be verified
 void Solver::goForward(){
+    m_difference = 0;
     if(m_difference == 2){
         //m_diagnostics->getSouthLED()->flashLED();
         //m_diagnostics->getSouthLED()->flashLED();
         // at this point, the locomotion objects "turn around" is called
         m_loco->makeUTurn();
     }
-    else if(m_difference == 1){
+    else if(m_difference == -1){
         //m_diagnostics->getEastLED()->flashLED();
         //m_diagnostics->getEastLED()->flashLED();
         m_loco->turnRight();
     }
-    else if(m_difference == -1){
+    else if(m_difference == 1){
         //m_diagnostics->getWestLED()->flashLED();
         //m_diagnostics->getWestLED()->flashLED();
         m_loco->turnLeft();
     }
-    else{
+    else if(m_difference == 0){
         //m_diagnostics->getNorthLED()->flashLED();
         //m_diagnostics->getNorthLED()->flashLED();
     }
@@ -395,11 +433,11 @@ void Solver::goForward(){
 }
 
 void Solver::turnRight(){
-    Serial.println("Turning right");
+    m_difference = 0;
+    //Serial.println("Turning right");
     if(m_difference == 2){
         //m_diagnostics->getWestLED()->flashLED();
         //m_diagnostics->getWestLED()->flashLED();
-
         m_loco->turnLeft();
     }
     else if(m_difference == 1){
@@ -414,7 +452,7 @@ void Solver::turnRight(){
 
         m_loco->makeUTurn();
     }
-    else{
+    else if(m_difference == 0){
         //m_diagnostics->getEastLED()->flashLED();
         //m_diagnostics->getEastLED()->flashLED();
 
@@ -428,7 +466,7 @@ void Solver::turnRight(){
 }
 
 void Solver::turnLeft(){
-    Serial.println("turn left called");
+    m_difference = 0;
     if(m_difference == 2){
         //m_diagnostics->getEastLED()->flashLED();
         //m_diagnostics->getEastLED()->flashLED();
@@ -441,22 +479,24 @@ void Solver::turnLeft(){
     else if(m_difference == -1){
         //m_diagnostics->getSouthLED()->flashLED();
         //m_diagnostics->getSouthLED()->flashLED();
+
         m_loco->makeUTurn();
     }
-    else{
+    else if(m_difference == 0){
         //m_diagnostics->getWestLED()->flashLED();
         //m_diagnostics->getWestLED()->flashLED();
+
         m_loco->turnLeft();
     }
-
-    m_loco->goForward();
 
     //Serial.println("Turning left");
     m_facing = static_cast<DIRECTION>((m_facing + 3)%4);
+
+    m_loco->goForward();
 }
 
 void Solver::turnAround(){
-    Serial.println("Turning around");
+    //Serial.println("Turning around");
     if(m_difference == 2){
         //m_diagnostics->getNorthLED()->flashLED();
         //m_diagnostics->getNorthLED()->flashLED();
@@ -464,20 +504,23 @@ void Solver::turnAround(){
     else if(m_difference == -1){
         //m_diagnostics->getEastLED()->flashLED();
         //m_diagnostics->getEastLED()->flashLED();
+
         m_loco->turnRight();
     }
     else if(m_difference == 1){
         //m_diagnostics->getWestLED()->flashLED();
         //m_diagnostics->getWestLED()->flashLED();
+
         m_loco->turnLeft();
     }
-    else{
+    else if(m_difference == 0){
         //m_diagnostics->getSouthLED()->flashLED();
         //m_diagnostics->getSouthLED()->flashLED();
+
         m_loco->makeUTurn();
     }
 
-    m_loco->goForward();
-
     m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
+
+    m_loco->goForward();
 }

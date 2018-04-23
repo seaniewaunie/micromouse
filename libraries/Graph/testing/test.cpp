@@ -49,10 +49,10 @@ int main(){
 
     //g.setEndIndex(30);
 
-    //g.printGraph();
+    g.printGraph();
 
-    g.Dijkstra();
+//    g.Dijkstra();
     //g.printSolution();
-    g.storeEndPath(30);
+    //g.storeEndPath(30);
     return 0;
 }

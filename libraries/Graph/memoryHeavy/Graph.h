@@ -11,7 +11,7 @@
 //#include <iostream>
 #include <vector>
 #include <utility>
-//#include <queue>
+#include <queue>
 //#include "QueueArray.h"
 
 #define MAX_MAZE_SIZE 49
@@ -33,22 +33,21 @@ class Graph{
 
         void addEdge(int u, int v, int w);
         //void printGraph();
-//        void Dijkstra(int from, int to);
+        void Dijkstra(int from, int to);
         void setEndIndex(int i);
 
         // dijkstra utilities
         uint8_t minDistance();
-//        void printSolution(int from, int to);
-//        void printPath(int from, int to);
+        void printSolution(int from, int to);
+        void printPath(int from, int to);
         //void storeEndPath(int end); // stores the path to end node
-/*
         void storePath(int from, int to);
         std::queue<uint8_t> getShortestPath();
         uint8_t getDistance(int to);
 
         bool isSPEmpty();
         int getNextSPIndex();
-*/
+
     private:
         // weighted graph variables
         uint8_t m_endIndex;
@@ -56,9 +55,9 @@ class Graph{
         uint8_t m_currentSize;
 
         // dijkstra variables
-//        std::queue<uint8_t> m_shortestPath; // keeps track of path to next node
+        std::queue<uint8_t> m_shortestPath; // keeps track of path to next node
 
-//        dijkstra_t m_dutilContainer[MAX_MAZE_SIZE];
+        dijkstra_t m_dutilContainer[MAX_MAZE_SIZE];
 
         /*
         bool m_sptSet[MAX_MAZE_SIZE];

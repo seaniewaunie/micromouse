@@ -94,7 +94,7 @@ void Locomotion::turnRight() {
 		lMotor->resetDirection();
 		rMotor->resetDirection();
 
-		float desired = 5.7;
+		float desired = 2.75; // 5.7 for turn around
 
 		int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 
@@ -124,7 +124,7 @@ void Locomotion::turnLeft() {
 	lMotor->reverseDirection();
 	rMotor->reverseDirection();
 
-	float desired = 5.7;
+	float desired = 2.5;
 
 	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 
