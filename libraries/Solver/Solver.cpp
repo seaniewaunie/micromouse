@@ -59,8 +59,8 @@ bool Solver::nextNode(){
 
     //Serial.print("m_facing before: ");
     //Serial.println(m_facing);
-    Serial.print(F("m_currentPosition before: "));
-    Serial.println(m_currentPosition);
+    //Serial.print(F("m_currentPosition before: "));
+    //Serial.println(m_currentPosition);
 
     Node* currentNode = &m_nodeContainer[m_currentPosition];
     // a maze is solved if distance check returns true or
@@ -69,8 +69,8 @@ bool Solver::nextNode(){
 
     // if the maze hasn't been solved
     if(!m_isSolved){
-        Serial.print("node visited: ");
-        Serial.println(currentNode->visited);
+        //Serial.print("node visited: ");
+        //Serial.println(currentNode->visited);
         // if the node hasn't been mapped before
         //if( !m_visited[m_currentPosition] ){
         if( !currentNode->visited ){
@@ -133,6 +133,7 @@ bool Solver::nextNode(){
         eastIsWall = currentNode->eastIsWall;
         westIsWall = currentNode->westIsWall;
         southIsWall = currentNode->southIsWall;
+        /*
         Serial.print("N, E, W: ");
         Serial.print(northIsWall);
         Serial.print(",");
@@ -144,7 +145,7 @@ bool Solver::nextNode(){
         Serial.print(m_facing);
         Serial.print(",");
         Serial.println(m_difference);
-
+        //*/
 
         // at this point a decision on where to move needs to be made
         // explore any unvisited nodes first -- clockwise priority excluding south
@@ -235,8 +236,8 @@ bool Solver::nextNode(){
 
     //Serial.print("m_facing after: ");
     //Serial.println(m_facing);
-    Serial.print(F("m_currentPosition after: "));
-    Serial.println(m_currentPosition);
+    //Serial.print(F("m_currentPosition after: "));
+    //Serial.println(m_currentPosition);
     
     if(!m_isSolved) return false;
     else return true;
@@ -395,7 +396,7 @@ void Solver::goForward(){
 }
 
 void Solver::turnRight(){
-    Serial.println("Turning right");
+    //Serial.println("Turning right");
     if(m_difference == 2){
         //m_diagnostics->getWestLED()->flashLED();
         //m_diagnostics->getWestLED()->flashLED();
@@ -428,7 +429,7 @@ void Solver::turnRight(){
 }
 
 void Solver::turnLeft(){
-    Serial.println("turn left called");
+    //Serial.println("turn left called");
     if(m_difference == 2){
         //m_diagnostics->getEastLED()->flashLED();
         //m_diagnostics->getEastLED()->flashLED();
@@ -456,7 +457,7 @@ void Solver::turnLeft(){
 }
 
 void Solver::turnAround(){
-    Serial.println("Turning around");
+    //Serial.println("Turning around");
     if(m_difference == 2){
         //m_diagnostics->getNorthLED()->flashLED();
         //m_diagnostics->getNorthLED()->flashLED();

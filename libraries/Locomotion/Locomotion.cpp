@@ -10,7 +10,7 @@
 
 Locomotion::Locomotion() {
 
-		lMotor = new Motor(leftMotorEnable,leftMotorIn1,leftMotorIn2,leftEncoderPin);
+	  lMotor = new Motor(leftMotorEnable,leftMotorIn1,leftMotorIn2,leftEncoderPin);
 	  rMotor = new Motor(rightMotorEnable,rightMotorIn1,rightMotorIn2,rightEncoderPin);
 
 	  fSensor = new Sensor(frontSensorTrig,frontSensorEcho);
@@ -47,7 +47,7 @@ void Locomotion::goForward() {
 	rMotor->reverseDirection();
 
 
-	float desired_straight = 18.0;
+	float desired_straight = 8.0;
 	float desired_side = 5;
 
 	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
@@ -80,6 +80,7 @@ void Locomotion::goForward() {
 		rMotor->spinMotor(rMotorDutyCycle);
 		lMotor->spinMotor(lMotorDutyCycle);
 	} while(lMotorDutyCycle > 0 || rMotorDutyCycle > 0);
+	//delay(500);
 }
 
 void Locomotion::turnRight() {

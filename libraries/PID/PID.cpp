@@ -66,7 +66,7 @@ namespace micromouse_pid_functions {
 		float error = desired_distance - actual_distance;
 		float newDutyCycle = leftEncoderPID->calculateNewValue(error);
 
-		//Serial.print("L:"); Serial.println(actual_distance);
+		//		Serial.print("L:"); Serial.println(actual_distance);
 
 		if(newDutyCycle >= 200.0) {
 			return 200;

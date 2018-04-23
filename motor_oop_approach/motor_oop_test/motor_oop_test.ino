@@ -31,9 +31,12 @@ void setup() {
 void loop() {
   
   if(button.uniquePress()){
-    //loco->goForward();
-    delay(2000);
+    loco->goForward();
+    loco->goForward();
+    loco->goForward();
     loco->turnRight();
+    //delay(2000);
+    //loco->turnRight();
     //delay(2000);
     //loco->turnLeft();
     //delay(2000);

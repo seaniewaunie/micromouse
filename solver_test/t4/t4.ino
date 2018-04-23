@@ -41,7 +41,10 @@ void loop() {
     solver->getDiagnostics()->getModeLED()->flashLED();
     delay(2000);
     
-    while(!solver->nextNode()); // do while returning false
+    while(!solver->nextNode()){
+      delay(1000); // do while returning false
+      Serial.println(freeRam());
+    }
   }
   
   delay(100);
