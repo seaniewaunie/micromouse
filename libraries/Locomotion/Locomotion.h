@@ -6,6 +6,8 @@
 #include "config.h"
 #include "PID.h"
 #include "Arduino.h"
+#define frontSensorTrig A0
+#define frontSensorEcho A1
 
 extern Motor *lMotor;
 extern Motor *rMotor;

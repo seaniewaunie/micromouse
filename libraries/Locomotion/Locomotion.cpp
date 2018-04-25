@@ -47,7 +47,7 @@ void Locomotion::goForward() {
 	rMotor->reverseDirection();
 
 
-	float desired_straight = 8.0;
+	float desired_straight = 12.0;
 	float desired_side = 5;
 
 	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
@@ -58,8 +58,14 @@ void Locomotion::goForward() {
 
 			long leftDistance = lSensor->getDistance();
 			long rightDistance = rSensor->getDistance();
-			int error = 0;
-			if(leftDistance < 16 && rightDistance < 16) {
+                        //long frontDistance = fSensor->getDistance();
+                        int error = 0;
+	                //Serial.println(frontDistance);
+                        //Serial.println(rightDistance);
+                        //Serial.println(leftDistance);
+                        //Serial.println("-----------");
+                        
+		        if(leftDistance < 16 && rightDistance < 16) {
 				error = rightDistance - leftDistance;
 			}
 			else if(leftDistance >= 16 && rightDistance < 16) {
@@ -73,14 +79,14 @@ void Locomotion::goForward() {
 			}
 
 			if(lMotorDutyCycle != 0 && rMotorDutyCycle != 0) {
-				lMotorDutyCycle += error*5;
-				rMotorDutyCycle -= error*5;
+				lMotorDutyCycle += error*10;
+				rMotorDutyCycle -= error*10;
 			}
-;
+			
 		rMotor->spinMotor(rMotorDutyCycle);
 		lMotor->spinMotor(lMotorDutyCycle);
 	} while(lMotorDutyCycle > 0 || rMotorDutyCycle > 0);
-	//delay(500);
+	delay(500);
 }
 
 void Locomotion::turnRight() {
