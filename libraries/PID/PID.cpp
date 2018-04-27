@@ -18,7 +18,6 @@ PID::PID(float Kp, float Kd, float Ki) {
 	this->Kp = Kp;
 	this->Kd = Kd;
 	this->Ki = Ki;
-
 	error = last_error = 0;
 	integral = derivative = 0;
 }
@@ -43,14 +42,6 @@ void PID::resetParameters() {
 	error = last_error = derivative = integral = 0;
 }
 
-float PID::getError() {
-	return error;
-}
-
-void PID::setError(float error) {
-	this->error = error;
-}
-
 void PID::setCoefficients(float kp,float kd,float ki) {
 	this->Kp = kp;
 	this->Kd = kd;
@@ -66,7 +57,7 @@ namespace micromouse_pid_functions {
 		float error = desired_distance - actual_distance;
 		float newDutyCycle = leftEncoderPID->calculateNewValue(error);
 
-		//		Serial.print("L:"); Serial.println(actual_distance);
+		//Serial.print("L:"); Serial.println(actual_distance);
 
 		if(newDutyCycle >= 200.0) {
 			return 200;

@@ -42,7 +42,7 @@ void loop() {
     delay(2000);
     
     while(!solver->nextNode()){
-      delay(1000); // do while returning false
+      delay(50); // do while returning false
       //Serial.println(freeRam());
     }
   }

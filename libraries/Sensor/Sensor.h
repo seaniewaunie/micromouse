@@ -18,7 +18,7 @@
 #define SENSOR_H
 
 #include "Arduino.h"
-#include "NewPing.h"
+//#include "NewPing.h"
 
 class Sensor {
 
@@ -31,7 +31,7 @@ class Sensor {
     bool isWall();
 
   private:
-    NewPing *m_sonar;
+    //NewPing *m_sonar;
 
     int m_trigPin;
     int m_echoPin;

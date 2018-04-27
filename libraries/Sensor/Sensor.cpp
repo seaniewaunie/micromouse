@@ -26,11 +26,11 @@ Sensor::Sensor(const int trigPin, const int echoPin){
     pinMode(m_trigPin, OUTPUT);
     pinMode(m_echoPin, INPUT);
 
-    m_sonar = new NewPing(trigPin, echoPin, MAX_DISTANCE);
+    //m_sonar = new NewPing(trigPin, echoPin, MAX_DISTANCE);
 }
 
 Sensor::~Sensor(){
-    delete m_sonar;
+    //delete m_sonar;
 }
 
 long Sensor::getDistance(){
@@ -53,11 +53,15 @@ long Sensor::getDistance(){
 }
 
 float Sensor::ping(){
-    return m_sonar->ping_cm();
+    //return m_sonar->ping_cm();
 }
 
 bool Sensor::isWall(){
+		if(getDistance() < CRITICAL_DISTANCE)
+			return true;
+		return false;
+		/*
     if(ping() < CRITICAL_DISTANCE)
         return true;
-    return false;
+    return false;*/
 }

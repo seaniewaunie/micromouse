@@ -15,33 +15,27 @@ class PID {
 public:
 
 	typedef int(*pid_func_ptr)(const float);
-
+	pid_func_ptr pid_func;
 	float Kp;
 	float Kd;
 	float Ki;
+	float error;
+	float last_error;
+	double integral;
+	double derivative;
 
 	PID();
 	PID(float,float,float);
 	~PID();
 	float calculateNewValue(float error);
 	void setPIDfunction(int(*pid_func)(const float));
-	float getError();
-	void setError(float);
 	void setCoefficients(float,float,float);
 	void resetParameters();
-
-	pid_func_ptr pid_func;
-	float error;
-	float last_error;
-	double integral;
-	double derivative;
 };
 
 namespace micromouse_pid_functions {
-
 	int leftEncoderPID_setDutyCycle(const float);
 	int rightEncoderPID_setDutyCycle(const float);
-
 }
 
 #endif /* _PID_H */

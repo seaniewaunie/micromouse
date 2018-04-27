@@ -1,4 +1,5 @@
 #include <Solver.h>
+#include <Locomotion.h>
 
 // Pin Declarations
 #define NORTH_SENSOR_PIN 13

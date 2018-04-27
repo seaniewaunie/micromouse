@@ -6,8 +6,6 @@
 #include "config.h"
 #include "PID.h"
 #include "Arduino.h"
-#define frontSensorTrig A0
-#define frontSensorEcho A1
 
 extern Motor *lMotor;
 extern Motor *rMotor;
@@ -22,9 +20,6 @@ extern PID *rightEncoderPID;
 class Locomotion {
 
 public:
-
-	//static constexpr float encoderSampleTime = 50; continuous sampling
-
 	Locomotion();
 	~Locomotion();
 	void goForward();

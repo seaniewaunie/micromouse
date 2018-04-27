@@ -31,13 +31,14 @@
 #include "LED.h"
 //#include "Node.h"
 
+/*
 #define NORTH_SENSOR_TRIG_PIN A0
 #define NORTH_SENSOR_ECHO_PIN A1
 #define EAST_SENSOR_TRIG_PIN 13
 #define EAST_SENSOR_ECHO_PIN 4
 #define WEST_SENSOR_TRIG_PIN A3
 #define WEST_SENSOR_ECHO_PIN A4
-
+*/
 #define MODE_LED_PIN LED_BUILTIN
 
 enum DIRECTION{
@@ -70,10 +71,11 @@ class Diagnostics {
 
   private:
     // the micromouse has 3 sensors per the Preliminary Design
+    /*
     Sensor *m_northSensor;
     Sensor *m_eastSensor;
     Sensor *m_westSensor;
-
+    */
     // LED for mode of operation
     LED *m_modeLED;
 };

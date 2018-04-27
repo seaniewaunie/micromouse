@@ -19,15 +19,10 @@ Encoder::Encoder(int pin) {
 	pinMode(encoderPin, INPUT_PULLUP);
 	/* Add Interrupts in Arduino Setup! */
 	encoderPos = 0;
-	inputMask = (1 << encoderPin);
 }
 
 Encoder::~Encoder() {
 	//do nothing
-}
-
-const int Encoder::getEncoderPin() {
-	return encoderPin;
 }
 
 signed long int Encoder::getEncoderPosition() {
@@ -59,27 +54,6 @@ Motor::Motor() {
 	//do nothing
 }
 
-Motor::Motor(int enablePin, int inputPin1, int inputPin2) {
-
-	this->enablePin = enablePin;
-	this->inputPin1 = inputPin1;
-	this->inputPin2 = inputPin2;
-
-	/*Arduino Setting */
-	pinMode(enablePin, OUTPUT);
-	pinMode(inputPin1, OUTPUT);
-	pinMode(inputPin2, OUTPUT);
-
-	//default direction of motor is clockwise
-	this->inputValueToPin1 = 1;
-	this->inputValueToPin2 = 0;
-
-	digitalWrite(inputPin1,inputValueToPin1);
-	digitalWrite(inputPin2,inputValueToPin2);
-
-	encoder = Encoder();
-}
-
 Motor::Motor(int enablePin, int inputPin1, int inputPin2, int ePin) {
 	this->enablePin = enablePin;
 	this->inputPin1 = inputPin1;
@@ -109,7 +83,6 @@ void Motor::spinMotor(int dutyCycle) {
 }
 
 void Motor::reverseDirection()  {
-
 	int T = inputValueToPin1;
 	inputValueToPin1 = inputValueToPin2;
 	inputValueToPin2 = T;
