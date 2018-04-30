@@ -46,6 +46,10 @@ Diagnostics* Solver::getDiagnostics(){
     return m_diagnostics;
 }
 
+Locomotion* Solver::getLocomotion(){
+    return m_loco;
+}
+
 bool Solver::nextNode(){
     // visually represent how long this function takes by flashing the MODE led
     m_diagnostics->getModeLED()->turnON();

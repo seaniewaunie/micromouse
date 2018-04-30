@@ -43,6 +43,7 @@ class Solver {
         ~Solver();
 
         Diagnostics* getDiagnostics();
+        Locomotion* getLocomotion();
 
         bool nextNode();
 

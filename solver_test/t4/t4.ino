@@ -40,11 +40,15 @@ void loop() {
     solver->getDiagnostics()->getModeLED()->flashLED();
     solver->getDiagnostics()->getModeLED()->flashLED();
     delay(2000);
+
+    //solver->getLocomotion()->makeUTurn();
     
+    //*
     while(!solver->nextNode()){
       delay(50); // do while returning false
       //Serial.println(freeRam());
     }
+    //*/
   }
   
   delay(100);
