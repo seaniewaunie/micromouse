@@ -22,7 +22,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-    Serial.println(freeRam());
+    //Serial.println(freeRam());
   //*
   solver->getDiagnostics()->update();
   //solver->getDiagnostics()->getModeLED()->flashLED();
@@ -40,12 +40,10 @@ void loop() {
     solver->getDiagnostics()->getModeLED()->flashLED();
     solver->getDiagnostics()->getModeLED()->flashLED();
     delay(2000);
-
-    //solver->getLocomotion()->makeUTurn();
-    
+    //solver->nextNode();
     //*
     while(!solver->nextNode()){
-      delay(50); // do while returning false
+      delay(100); // do while returning false
       //Serial.println(freeRam());
     }
     //*/

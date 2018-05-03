@@ -44,7 +44,7 @@ void Locomotion::goForward() {
 	leftEncoderPID->setCoefficients(23,0,0.068);
 	rightEncoderPID->setCoefficients(22,0,0.063);
 
-	float desired_straight = 16;
+	float desired_straight = 17;
 	float desired_side = 4.5;
 
 	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
@@ -60,7 +60,7 @@ void Locomotion::goForward() {
 
 			int error = 0;
 
-			if(frontDistance <= 5 && frontDistance != 0) {
+			if(frontDistance <= 4 && frontDistance != 0) {
 					lMotorDutyCycle = 0;
 					rMotorDutyCycle = 0;
 					goto apply;

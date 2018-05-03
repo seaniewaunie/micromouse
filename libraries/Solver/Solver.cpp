@@ -33,6 +33,7 @@ Solver::Solver()
         m_nodeContainer[i].eastIsWall = false;
         m_nodeContainer[i].westIsWall = false;
         m_nodeContainer[i].southIsWall = false;
+        m_nodeContainer[i].deadEnd = false;
     }
 
 }
@@ -123,12 +124,13 @@ bool Solver::nextNode(){
 
 
             // TODO: refine this to work perfectly
+           // m_difference = currentNode->direction - m_facing;
             m_difference = currentNode->direction - m_facing;
             if(m_difference < 0) m_difference = m_difference * -1; // makeshift abs() function
 
-            cout << "m_difference between current facing and previous facing: " << m_difference << std::endl;
+            //cout << "m_difference between current facing and previous facing: " << m_difference << std::endl;
 
-            m_facing = currentNode->direction;
+            //m_facing = currentNode->direction;
         }
 
 
@@ -137,7 +139,7 @@ bool Solver::nextNode(){
         eastIsWall = currentNode->eastIsWall;
         westIsWall = currentNode->westIsWall;
         southIsWall = currentNode->southIsWall;
-        /*
+        //*
         Serial.print("N, E, W: ");
         Serial.print(northIsWall);
         Serial.print(",");
@@ -155,45 +157,50 @@ bool Solver::nextNode(){
         // explore any unvisited nodes first -- clockwise priority excluding south
 
         if( !m_nodeContainer[m_currentPosition+incrementNorth()].visited && !northIsWall){
+            goForward();
             m_currentPosition += incrementNorth();
 
-            goForward();
         }
         else if( !m_nodeContainer[m_currentPosition+incrementEast()].visited && !eastIsWall){
-            m_currentPosition += incrementEast();
-
             turnRight();
+            m_currentPosition += incrementNorth();
+
+//            m_currentPosition += incrementEast();
         }
         else if( !m_nodeContainer[m_currentPosition+incrementWest()].visited && !westIsWall){
-            m_currentPosition += incrementWest();
-
             turnLeft();
+            m_currentPosition += incrementNorth();
+
+//            m_currentPosition += incrementWest();
+
         }
         else{
             // all routes the mouse could take have been explored
             // at this point the mouse needs to move to nodes that are not leading to dead ends
             if( !m_nodeContainer[m_currentPosition+incrementNorth()].deadEnd && !northIsWall){
+                goForward();
                 m_currentPosition += incrementNorth();
 
-                goForward();
             }
             else if( !m_nodeContainer[m_currentPosition+incrementEast()].deadEnd && !eastIsWall){
-                m_currentPosition += incrementEast();
-
                 turnRight();
+                m_currentPosition += incrementNorth();
+                //m_currentPosition += incrementEast();
+
             }
             else if( !m_nodeContainer[m_currentPosition+incrementWest()].deadEnd && !westIsWall){
-                m_currentPosition += incrementWest();
-
                 turnLeft();
+                m_currentPosition += incrementNorth();
+                //m_currentPosition += incrementWest();
+
             }
             else{
-
+                turnAround();
                 currentNode->deadEnd = true;
 
-                m_currentPosition += incrementSouth();
+                //m_currentPosition += incrementSouth();
+                m_currentPosition += incrementNorth();
 
-                turnAround();
 
             }
         }
@@ -375,58 +382,76 @@ int Solver::incrementWest(){
 
 // TODO: these functions need to be verified
 void Solver::goForward(){
-    if(m_difference == 2){
-        //m_diagnostics->getSouthLED()->flashLED();
-        //m_diagnostics->getSouthLED()->flashLED();
-        // at this point, the locomotion objects "turn around" is called
+    //Serial.println("go forward called");
+
+    if(m_difference == 0){
+        // do nothing we are good
+    }
+    else if(m_difference == 2){
         m_loco->makeUTurn();
+        m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
     }
     else if(m_difference == 1){
-        //m_diagnostics->getEastLED()->flashLED();
-        //m_diagnostics->getEastLED()->flashLED();
-        m_loco->turnRight();
+        if(m_nodeContainer[m_currentPosition].direction < m_facing){
+            m_loco->turnLeft();
+            m_facing = static_cast<DIRECTION>((m_facing + 3)%4);
+       }
+        else{
+            m_loco->turnRight();
+            m_facing = static_cast<DIRECTION>((m_facing + 1)%4);
+        }
     }
-    else if(m_difference == -1){
-        //m_diagnostics->getWestLED()->flashLED();
-        //m_diagnostics->getWestLED()->flashLED();
-        m_loco->turnLeft();
+    else if(m_difference == 3){
+        if(m_nodeContainer[m_currentPosition].direction < m_facing){
+            m_loco->turnRight();
+            m_facing = static_cast<DIRECTION>((m_facing + 1)%4);
+        }
+        else{
+            m_loco->turnLeft();
+            m_facing = static_cast<DIRECTION>((m_facing + 3)%4);
+
+        }
     }
     else{
-        //m_diagnostics->getNorthLED()->flashLED();
-        //m_diagnostics->getNorthLED()->flashLED();
+        Serial.println("err GF");
     }
-    // at the end of this function, go forward is executed
+   // at the end of this function, go forward is executed
     m_loco->goForward();
 }
 
 void Solver::turnRight(){
-    //Serial.println("Turning right");
-    if(m_difference == 2){
-        //m_diagnostics->getWestLED()->flashLED();
-        //m_diagnostics->getWestLED()->flashLED();
+    //Serial.println("Turn right called");
 
+    if(m_difference == 0){
+        m_loco->turnRight();
+        m_facing = static_cast<DIRECTION>((m_facing + 1)%4);
+    }
+    else if(m_difference == 2){
         m_loco->turnLeft();
+        m_facing = static_cast<DIRECTION>((m_facing + 3)%4);
     }
     else if(m_difference == 1){
-        //m_diagnostics->getNorthLED()->flashLED();
-        //m_diagnostics->getNorthLED()->flashLED();
-
-        // nothing to do with orientation
+        if(m_nodeContainer[m_currentPosition].direction < m_facing){
+            // do nothing
+       }
+        else{
+            m_loco->makeUTurn();
+            m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
+        }
     }
-    else if(m_difference == -1){
-        //m_diagnostics->getSouthLED()->flashLED();
-        //m_diagnostics->getSouthLED()->flashLED();
-
-        m_loco->makeUTurn();
+    else if(m_difference == 3){
+        if(m_nodeContainer[m_currentPosition].direction < m_facing){
+            m_loco->makeUTurn();
+            m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
+        }
+        else{
+            // do nothing
+        }
     }
     else{
-        //m_diagnostics->getEastLED()->flashLED();
-        //m_diagnostics->getEastLED()->flashLED();
-
-        m_loco->turnRight();
+        Serial.println("err TR");
     }
-
-    m_facing = static_cast<DIRECTION>((m_facing + 1)%4);
+    //m_facing = static_cast<DIRECTION>((m_facing + 1)%4);
 
     // move to the next node
     m_loco->goForward();
@@ -434,55 +459,75 @@ void Solver::turnRight(){
 
 void Solver::turnLeft(){
     //Serial.println("turn left called");
-    if(m_difference == 2){
-        //m_diagnostics->getEastLED()->flashLED();
-        //m_diagnostics->getEastLED()->flashLED();
+
+    if(m_difference == 0){
+        m_loco->turnLeft();
+        m_facing = static_cast<DIRECTION>((m_facing + 3)%4);
+    }
+    else if(m_difference == 2){
         m_loco->turnRight();
+        m_facing = static_cast<DIRECTION>((m_facing + 1)%4);
     }
     else if(m_difference == 1){
-        //m_diagnostics->getNorthLED()->flashLED();
-        //m_diagnostics->getNorthLED()->flashLED();
+        if(m_nodeContainer[m_currentPosition].direction < m_facing){
+            m_loco->makeUTurn();
+            m_facing = static_cast<DIRECTION>((m_facing+2)%4);
+       }
+        else{
+            // do nothing
+        }
     }
-    else if(m_difference == -1){
-        //m_diagnostics->getSouthLED()->flashLED();
-        //m_diagnostics->getSouthLED()->flashLED();
-        m_loco->makeUTurn();
+    else if(m_difference == 3){
+        if(m_nodeContainer[m_currentPosition].direction > m_facing){
+            m_loco->makeUTurn();
+            m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
+        }
+        else{
+            // do nothing
+        }
     }
     else{
-        //m_diagnostics->getWestLED()->flashLED();
-        //m_diagnostics->getWestLED()->flashLED();
-        m_loco->turnLeft();
+        Serial.println("err TL");
     }
-
-    m_loco->goForward();
+     m_loco->goForward();
 
     //Serial.println("Turning left");
-    m_facing = static_cast<DIRECTION>((m_facing + 3)%4);
 }
 
 void Solver::turnAround(){
-    //Serial.println("Turning around");
-    if(m_difference == 2){
-        //m_diagnostics->getNorthLED()->flashLED();
-        //m_diagnostics->getNorthLED()->flashLED();
+    //Serial.println("Turn around called");
+
+    if(m_difference == 0){
+        m_loco->makeUTurn();
+        m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
     }
-    else if(m_difference == -1){
-        //m_diagnostics->getEastLED()->flashLED();
-        //m_diagnostics->getEastLED()->flashLED();
-        m_loco->turnRight();
+    else if(m_difference == 2){
+        // do nothing
     }
     else if(m_difference == 1){
-        //m_diagnostics->getWestLED()->flashLED();
-        //m_diagnostics->getWestLED()->flashLED();
-        m_loco->turnLeft();
+        if(m_nodeContainer[m_currentPosition].direction < m_facing){
+            m_loco->turnRight();
+            m_facing = static_cast<DIRECTION>((m_facing+1)%4);
+       }
+        else{
+            m_loco->turnLeft();
+            m_facing = static_cast<DIRECTION>((m_facing+3)%4);
+        }
+    }
+    else if(m_difference == 3){
+        if(m_nodeContainer[m_currentPosition].direction > m_facing){
+            m_loco->turnRight();
+            m_facing = static_cast<DIRECTION>((m_facing+1)%4);
+       }
+        else{
+            m_loco->turnLeft();
+            m_facing = static_cast<DIRECTION>((m_facing+3)%4);
+        }
     }
     else{
-        //m_diagnostics->getSouthLED()->flashLED();
-        //m_diagnostics->getSouthLED()->flashLED();
-        m_loco->makeUTurn();
+        Serial.println("err TA");
     }
-
     m_loco->goForward();
 
-    m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
+    //m_facing = static_cast<DIRECTION>((m_facing + 2)%4);
 }
