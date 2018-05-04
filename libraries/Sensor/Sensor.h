@@ -19,6 +19,8 @@
 
 #include "Arduino.h"
 //#include "NewPing.h"
+#define CRITICAL_DISTANCE 10 // we determined 16 to be the critical distance
+
 
 class Sensor {
 

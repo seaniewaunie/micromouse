@@ -46,6 +46,7 @@ void Locomotion::goForward() {
 
 	float desired_straight = 17;
 	float desired_side = 4.5;
+        bool firstMovement = true;
 
 	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 	do {
@@ -58,9 +59,9 @@ void Locomotion::goForward() {
 
 
 
-			int error = 0;
+			long error = 0;
 
-			if(frontDistance <= 4 && frontDistance != 0) {
+			if(frontDistance <= 4 && frontDistance != 0 || (frontDistance-4 % 18 == 0 && !firstMovement)) {
 					lMotorDutyCycle = 0;
 					rMotorDutyCycle = 0;
 					goto apply;
@@ -81,8 +82,8 @@ void Locomotion::goForward() {
 
 			if(lMotorDutyCycle != 0 && rMotorDutyCycle != 0) {
 				if(error > 0) {
-					lMotorDutyCycle += 30;
-					rMotorDutyCycle -= 30;
+					lMotorDutyCycle += 32;
+					rMotorDutyCycle -= 32;
 				}
 				else if(error < 0) {
 					lMotorDutyCycle -= 30;
@@ -90,6 +91,7 @@ void Locomotion::goForward() {
 				}
 				else {}
 			}
+                        firstMovement = false;
 
 apply:		rMotor->spinMotor(rMotorDutyCycle);
 					lMotor->spinMotor(lMotorDutyCycle);

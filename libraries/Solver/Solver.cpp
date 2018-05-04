@@ -140,6 +140,7 @@ bool Solver::nextNode(){
         westIsWall = currentNode->westIsWall;
         southIsWall = currentNode->southIsWall;
         //*
+        Serial.println(m_currentPosition);
         Serial.print("N, E, W: ");
         Serial.print(northIsWall);
         Serial.print(",");
@@ -150,8 +151,10 @@ bool Solver::nextNode(){
         Serial.print("m_facing, difference: ");
         Serial.print(m_facing);
         Serial.print(",");
-        Serial.println(m_difference);
-        //*/
+        Serial.print(m_difference);
+        Serial.print(",");
+        Serial.println(currentNode->deadEnd);
+       //*/
 
         // at this point a decision on where to move needs to be made
         // explore any unvisited nodes first -- clockwise priority excluding south
@@ -163,46 +166,54 @@ bool Solver::nextNode(){
         }
         else if( !m_nodeContainer[m_currentPosition+incrementEast()].visited && !eastIsWall){
             turnRight();
-            m_currentPosition += incrementNorth();
+            //m_currentPosition += incrementNorth();
 
-//            m_currentPosition += incrementEast();
+            m_currentPosition += incrementEast();
         }
         else if( !m_nodeContainer[m_currentPosition+incrementWest()].visited && !westIsWall){
             turnLeft();
-            m_currentPosition += incrementNorth();
+            //m_currentPosition += incrementNorth();
 
-//            m_currentPosition += incrementWest();
+            m_currentPosition += incrementWest();
 
         }
         else{
             // all routes the mouse could take have been explored
             // at this point the mouse needs to move to nodes that are not leading to dead ends
-            if( !m_nodeContainer[m_currentPosition+incrementNorth()].deadEnd && !northIsWall){
+/*            if( !m_nodeContainer[m_currentPosition+incrementNorth()].deadEnd && !northIsWall){
                 goForward();
                 m_currentPosition += incrementNorth();
 
             }
             else if( !m_nodeContainer[m_currentPosition+incrementEast()].deadEnd && !eastIsWall){
                 turnRight();
-                m_currentPosition += incrementNorth();
-                //m_currentPosition += incrementEast();
+                //m_currentPosition += incrementNorth();
+                m_currentPosition += incrementEast();
 
             }
             else if( !m_nodeContainer[m_currentPosition+incrementWest()].deadEnd && !westIsWall){
                 turnLeft();
-                m_currentPosition += incrementNorth();
-                //m_currentPosition += incrementWest();
+                //m_currentPosition += incrementNorth();
+                m_currentPosition += incrementWest();
 
             }
             else{
                 turnAround();
-                currentNode->deadEnd = true;
 
-                //m_currentPosition += incrementSouth();
-                m_currentPosition += incrementNorth();
+                m_currentPosition += incrementSouth();
+                //m_currentPosition += incrementNorth();
+                currentNode->deadEnd = true;
 
 
             }
+*/
+            turnAround();
+
+            m_currentPosition += incrementSouth();
+            //m_currentPosition += incrementNorth();
+            currentNode->deadEnd = true;
+
+
         }
 
         // visually represent when algorithm is 'done' working
@@ -262,7 +273,7 @@ bool Solver::nextNode(){
 // these increment functions could be implemented with a modulous type circular function possible
 int Solver::incrementNorth(){
 //    Serial.println("Increment North called");
-    switch(m_facing){
+    switch(m_nodeContainer[m_currentPosition].direction){
         case N:
             if(m_currentPosition+VERTICAL_INCREMENT < MAX_MAZE_SIZE)
                 return VERTICAL_INCREMENT;
@@ -292,7 +303,7 @@ int Solver::incrementNorth(){
 
 int Solver::incrementEast(){
 //    Serial.println("Increment East called");
-    switch(m_facing){
+    switch(m_nodeContainer[m_currentPosition].direction){
         case N:
             if(m_currentPosition+HORIZONTAL_INCREMENT < MAX_MAZE_SIZE)
                 return HORIZONTAL_INCREMENT;
@@ -322,7 +333,7 @@ int Solver::incrementEast(){
 
 int Solver::incrementSouth(){
 //    Serial.println("Increment South called");
-    switch(m_facing){
+    switch(m_nodeContainer[m_currentPosition].direction){
         case N:
             if(m_currentPosition-VERTICAL_INCREMENT < 0)
                 return MAX_MAZE_SIZE-VERTICAL_INCREMENT;
@@ -352,7 +363,7 @@ int Solver::incrementSouth(){
 
 int Solver::incrementWest(){
     //Serial.println("Increment West called");
-    switch(m_facing){
+    switch(m_nodeContainer[m_currentPosition].direction){
         case N:
             if(m_currentPosition-HORIZONTAL_INCREMENT >= 0)
                 return -HORIZONTAL_INCREMENT;

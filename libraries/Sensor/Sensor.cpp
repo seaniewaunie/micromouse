@@ -13,8 +13,6 @@
 #define MAX_DISTANCE 400
 #define MIN_DISTANCE 0
 
-#define CRITICAL_DISTANCE 13 // we determined 16 to be the critical distance
-
 Sensor::Sensor(){
     /* do nothing */
 }
