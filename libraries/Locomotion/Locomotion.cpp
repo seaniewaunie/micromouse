@@ -45,7 +45,7 @@ void Locomotion::goForward() {
 	rightEncoderPID->setCoefficients(22,0,0.063);
 
 	float desired_straight = 17;
-	float desired_side = 4.5;
+	float desired_side = 5;
         bool firstMovement = true;
 
 	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
@@ -82,8 +82,8 @@ void Locomotion::goForward() {
 
 			if(lMotorDutyCycle != 0 && rMotorDutyCycle != 0) {
 				if(error > 0) {
-					lMotorDutyCycle += 32;
-					rMotorDutyCycle -= 32;
+					lMotorDutyCycle += 30;
+					rMotorDutyCycle -= 30;
 				}
 				else if(error < 0) {
 					lMotorDutyCycle -= 30;
@@ -111,7 +111,7 @@ void Locomotion::turnRight() {
 		leftEncoderPID->setCoefficients(28,0,0.43);
 		rightEncoderPID->setCoefficients(28,0,0.45);
 
-		float desired = 2.9;
+		float desired = 2.78;
 
 		int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 		do {
@@ -137,7 +137,7 @@ void Locomotion::turnLeft() {
 	leftEncoderPID->setCoefficients(28,0,0.43);
 	rightEncoderPID->setCoefficients(28,0,0.45);
 
-	float desired = 2.9;
+	float desired = 2.78;
 
 	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 	do {
@@ -160,7 +160,7 @@ void Locomotion::makeUTurn() {
 			leftEncoderPID->setCoefficients(28,0,0.43);
 			rightEncoderPID->setCoefficients(28,0,0.45);
 
-			float desired = 6;
+			float desired = 6.2;
 
 			int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 			do {
