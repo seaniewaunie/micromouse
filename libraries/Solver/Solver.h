@@ -65,6 +65,7 @@ class Solver {
         Locomotion *m_loco;
 
         int m_currentPosition;
+        int m_endNode;
         int m_turnCounter;
         DIRECTION m_facing;
 

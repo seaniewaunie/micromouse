@@ -228,10 +228,13 @@ bool Solver::nextNode(){
         // call the shortest path function to store directions
         m_isReadyToSprint = true;
 
+        m_endNode = m_currentPosition;
         //m_graph->Dijkstra();
         //m_graph->storeEndPath(m_currentPosition);
 
         m_currentPosition = 0;
+        m_facing = N;
+        m_difference = 0;
     }
     else{
         // button pressed AND shortest path is set in memory...
@@ -243,17 +246,103 @@ bool Solver::nextNode(){
             delay(500);
         }
         m_diagnostics->getModeLED()->turnON();
+        
+        while(m_currentPosition != m_endNode){
+            Node* currentNode = &m_nodeContainer[m_currentPosition];
+            if( !currentNode->visited ){
+                //Serial.println("Node has not been mapped before");
+                m_difference = 0;
+                // if north has no wall
+                if( !m_diagnostics->getNorthSensor()->isWall() ){
+                    // add an edge from the current node to the north node
+                    m_graph->addEdge( m_currentPosition, m_currentPosition+incrementNorth(), STRAIGHT_WEIGHT );
+                }
+                else{
+                    wallCount++;
+                    currentNode->northIsWall = true;
+                }
 
-        // traverse the path to get to the end
-        /*
-        int nextIndex;
-        for(int i = 0; i < m_graph->getSPSize(); i++){
-            nextIndex = m_graph->getNextSPIndex();
+                if( !m_diagnostics->getEastSensor()->isWall() ){
+                    m_graph->addEdge( m_currentPosition, m_currentPosition+incrementEast(), TURN_WEIGHT );
+                }
+                else{
+                    wallCount++;
+                    currentNode->eastIsWall = true;
+                }
 
-            cout << "moving to " << nextIndex << endl;
+                if( !m_diagnostics->getWestSensor()->isWall() ){
+                    m_graph->addEdge(m_currentPosition, m_currentPosition+incrementWest(), TURN_WEIGHT);
+                }
+                else{
+                    wallCount++;
+                    currentNode->westIsWall = true;
+                    if(wallCount == 3){
+                        currentNode->deadEnd = true;
+                    }
+                }
 
+                if(m_startingNode){
+                    m_startingNode = false;
+                    currentNode->southIsWall = true;
+                }
+
+                // save the direction the mouse was facing when this node was mapped
+                currentNode->direction = m_facing;
+                currentNode->visited = true;
+            }
+            else{
+                //Serial.println("adjusting to m_facing stored from memory");
+
+
+                // TODO: refine this to work perfectly
+               // m_difference = currentNode->direction - m_facing;
+                m_difference = currentNode->direction - m_facing;
+                if(m_difference < 0) m_difference = m_difference * -1; // makeshift abs() function
+
+                //cout << "m_difference between current facing and previous facing: " << m_difference << std::endl;
+
+                //m_facing = currentNode->direction;
+            }
+
+
+
+            northIsWall = currentNode->northIsWall;
+            eastIsWall = currentNode->eastIsWall;
+            westIsWall = currentNode->westIsWall;
+            southIsWall = currentNode->southIsWall;
+
+            if( !m_nodeContainer[m_currentPosition+incrementNorth()].deadEnd && !northIsWall){
+                goForward();
+                m_currentPosition += incrementNorth();
+
+            }
+            else if( !m_nodeContainer[m_currentPosition+incrementEast()].deadEnd && !eastIsWall){
+                turnRight();
+                //m_currentPosition += incrementNorth();
+                m_currentPosition += incrementEast();
+
+            }
+            else if( !m_nodeContainer[m_currentPosition+incrementWest()].deadEnd && !westIsWall){
+                turnLeft();
+                //m_currentPosition += incrementNorth();
+                m_currentPosition += incrementWest();
+
+            }
+            else{
+                turnAround();
+
+                m_currentPosition += incrementSouth();
+                //m_currentPosition += incrementNorth();
+                currentNode->deadEnd = true;
+
+
+            }
+            delay(100);
         }
-        */
+        m_currentPosition = 0;
+        m_facing = N;
+        m_difference = 0;
+
     }
 
     //Serial.print("m_facing after: ");
