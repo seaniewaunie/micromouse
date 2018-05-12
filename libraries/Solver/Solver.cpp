@@ -62,10 +62,10 @@ bool Solver::nextNode(){
     bool westIsWall;
     bool southIsWall;
 
-    //Serial.print("m_facing before: ");
-    //Serial.println(m_facing);
-    //Serial.print(F("m_currentPosition before: "));
-    //Serial.println(m_currentPosition);
+    ////Serial.print("m_facing before: ");
+    ////Serial.println(m_facing);
+    ////Serial.print(F("m_currentPosition before: "));
+    ////Serial.println(m_currentPosition);
 
     Node* currentNode = &m_nodeContainer[m_currentPosition];
     // a maze is solved if distance check returns true or
@@ -74,12 +74,12 @@ bool Solver::nextNode(){
 
     // if the maze hasn't been solved
     if(!m_isSolved){
-        //Serial.print("node visited: ");
-        //Serial.println(currentNode->visited);
+        ////Serial.print("node visited: ");
+        ////Serial.println(currentNode->visited);
         // if the node hasn't been mapped before
         //if( !m_visited[m_currentPosition] ){
         if( !currentNode->visited ){
-            //Serial.println("Node has not been mapped before");
+            ////Serial.println("Node has not been mapped before");
             m_difference = 0;
             // if north has no wall
             if( !m_diagnostics->getNorthSensor()->isWall() ){
@@ -120,7 +120,7 @@ bool Solver::nextNode(){
             currentNode->visited = true;
         }
         else{
-            //Serial.println("adjusting to m_facing stored from memory");
+            ////Serial.println("adjusting to m_facing stored from memory");
 
 
             // TODO: refine this to work perfectly
@@ -140,20 +140,20 @@ bool Solver::nextNode(){
         westIsWall = currentNode->westIsWall;
         southIsWall = currentNode->southIsWall;
         //*
-        Serial.println(m_currentPosition);
-        Serial.print("N, E, W: ");
-        Serial.print(northIsWall);
-        Serial.print(",");
-        Serial.print(eastIsWall);
-        Serial.print(",");
-        Serial.println(westIsWall);
+        //Serial.println(m_currentPosition);
+        //Serial.print("N, E, W: ");
+        //Serial.print(northIsWall);
+        //Serial.print(",");
+        //Serial.print(eastIsWall);
+        //Serial.print(",");
+        //Serial.println(westIsWall);
 
-        Serial.print("m_facing, difference: ");
-        Serial.print(m_facing);
-        Serial.print(",");
-        Serial.print(m_difference);
-        Serial.print(",");
-        Serial.println(currentNode->deadEnd);
+        //Serial.print("m_facing, difference: ");
+        //Serial.print(m_facing);
+        //Serial.print(",");
+        //Serial.print(m_difference);
+        //Serial.print(",");
+        //Serial.println(currentNode->deadEnd);
        //*/
 
         // at this point a decision on where to move needs to be made
@@ -250,7 +250,7 @@ bool Solver::nextNode(){
         while(m_currentPosition != m_endNode){
             Node* currentNode = &m_nodeContainer[m_currentPosition];
             if( !currentNode->visited ){
-                //Serial.println("Node has not been mapped before");
+                ////Serial.println("Node has not been mapped before");
                 m_difference = 0;
                 // if north has no wall
                 if( !m_diagnostics->getNorthSensor()->isWall() ){
@@ -291,7 +291,7 @@ bool Solver::nextNode(){
                 currentNode->visited = true;
             }
             else{
-                //Serial.println("adjusting to m_facing stored from memory");
+                ////Serial.println("adjusting to m_facing stored from memory");
 
 
                 // TODO: refine this to work perfectly
@@ -345,10 +345,10 @@ bool Solver::nextNode(){
 
     }
 
-    //Serial.print("m_facing after: ");
-    //Serial.println(m_facing);
-    //Serial.print(F("m_currentPosition after: "));
-    //Serial.println(m_currentPosition);
+    ////Serial.print("m_facing after: ");
+    ////Serial.println(m_facing);
+    ////Serial.print(F("m_currentPosition after: "));
+    ////Serial.println(m_currentPosition);
     
     if(!m_isSolved) return false;
     else return true;
@@ -361,7 +361,7 @@ bool Solver::nextNode(){
 
 // these increment functions could be implemented with a modulous type circular function possible
 int Solver::incrementNorth(){
-//    Serial.println("Increment North called");
+//    //Serial.println("Increment North called");
     switch(m_nodeContainer[m_currentPosition].direction){
         case N:
             if(m_currentPosition+VERTICAL_INCREMENT < MAX_MAZE_SIZE)
@@ -391,7 +391,7 @@ int Solver::incrementNorth(){
 }
 
 int Solver::incrementEast(){
-//    Serial.println("Increment East called");
+//    //Serial.println("Increment East called");
     switch(m_nodeContainer[m_currentPosition].direction){
         case N:
             if(m_currentPosition+HORIZONTAL_INCREMENT < MAX_MAZE_SIZE)
@@ -421,7 +421,7 @@ int Solver::incrementEast(){
 }
 
 int Solver::incrementSouth(){
-//    Serial.println("Increment South called");
+//    //Serial.println("Increment South called");
     switch(m_nodeContainer[m_currentPosition].direction){
         case N:
             if(m_currentPosition-VERTICAL_INCREMENT < 0)
@@ -451,7 +451,7 @@ int Solver::incrementSouth(){
 }
 
 int Solver::incrementWest(){
-    //Serial.println("Increment West called");
+    ////Serial.println("Increment West called");
     switch(m_nodeContainer[m_currentPosition].direction){
         case N:
             if(m_currentPosition-HORIZONTAL_INCREMENT >= 0)
@@ -482,7 +482,7 @@ int Solver::incrementWest(){
 
 // TODO: these functions need to be verified
 void Solver::goForward(){
-    //Serial.println("go forward called");
+    ////Serial.println("go forward called");
 
     if(m_difference == 0){
         // do nothing we are good
@@ -513,14 +513,14 @@ void Solver::goForward(){
         }
     }
     else{
-        Serial.println("err GF");
+        //Serial.println("err GF");
     }
    // at the end of this function, go forward is executed
     m_loco->goForward();
 }
 
 void Solver::turnRight(){
-    //Serial.println("Turn right called");
+    ////Serial.println("Turn right called");
 
     if(m_difference == 0){
         m_loco->turnRight();
@@ -549,7 +549,7 @@ void Solver::turnRight(){
         }
     }
     else{
-        Serial.println("err TR");
+        //Serial.println("err TR");
     }
     //m_facing = static_cast<DIRECTION>((m_facing + 1)%4);
 
@@ -558,7 +558,7 @@ void Solver::turnRight(){
 }
 
 void Solver::turnLeft(){
-    //Serial.println("turn left called");
+    ////Serial.println("turn left called");
 
     if(m_difference == 0){
         m_loco->turnLeft();
@@ -587,15 +587,15 @@ void Solver::turnLeft(){
         }
     }
     else{
-        Serial.println("err TL");
+        //Serial.println("err TL");
     }
      m_loco->goForward();
 
-    //Serial.println("Turning left");
+    ////Serial.println("Turning left");
 }
 
 void Solver::turnAround(){
-    //Serial.println("Turn around called");
+    ////Serial.println("Turn around called");
 
     if(m_difference == 0){
         m_loco->makeUTurn();
@@ -625,7 +625,7 @@ void Solver::turnAround(){
         }
     }
     else{
-        Serial.println("err TA");
+        //Serial.println("err TA");
     }
     m_loco->goForward();
 

@@ -44,24 +44,39 @@ void Locomotion::goForward() {
 	leftEncoderPID->setCoefficients(23,0,0.068);
 	rightEncoderPID->setCoefficients(22,0,0.063);
 
-	float desired_straight = 17;
+	long leftDistance, rightDistance, frontDistance, error, offset, correction = 0;
+	frontDistance = fSensor->getDistance();
+	if(frontDistance < 60) {
+		int count = 0;
+		long previous = 0;
+		while(count <= 3) {
+			frontDistance = fSensor->getDistance();
+			if(previous == frontDistance)
+				count++;
+			else
+				count = 0;
+			previous = frontDistance;
+		}
+		offset = (frontDistance + 3) % 17;
+		correction = offset - 9;
+	}
+	float desired_straight = 17 + correction;
 	float desired_side = 5;
-        bool firstMovement = true;
 
 	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
+
 	do {
+
 			lMotorDutyCycle = leftEncoderPID->pid_func(desired_straight);
 			rMotorDutyCycle = rightEncoderPID->pid_func(desired_straight);
 
-			long leftDistance = lSensor->getDistance();
-			long rightDistance = rSensor->getDistance();
-			long frontDistance = fSensor->getDistance();
+			leftDistance = lSensor->getDistance();
+			rightDistance = rSensor->getDistance();
+			frontDistance = fSensor->getDistance();
 
+			error = 0;
 
-
-			long error = 0;
-
-			if(frontDistance <= 4 && frontDistance != 0 || (frontDistance-4 % 18 == 0 && !firstMovement)) {
+			if(frontDistance <= 4 && frontDistance != 0 ) {
 					lMotorDutyCycle = 0;
 					rMotorDutyCycle = 0;
 					goto apply;
@@ -81,17 +96,9 @@ void Locomotion::goForward() {
 			}
 
 			if(lMotorDutyCycle != 0 && rMotorDutyCycle != 0) {
-				if(error > 0) {
-					lMotorDutyCycle += 30;
-					rMotorDutyCycle -= 30;
-				}
-				else if(error < 0) {
-					lMotorDutyCycle -= 30;
-					rMotorDutyCycle += 30;
-				}
-				else {}
+				lMotorDutyCycle += int(error*15);
+				rMotorDutyCycle -= int(error*15);
 			}
-                        firstMovement = false;
 
 apply:		rMotor->spinMotor(rMotorDutyCycle);
 					lMotor->spinMotor(lMotorDutyCycle);
@@ -111,7 +118,7 @@ void Locomotion::turnRight() {
 		leftEncoderPID->setCoefficients(28,0,0.43);
 		rightEncoderPID->setCoefficients(28,0,0.45);
 
-		float desired = 2.78;
+		float desired = 2.65;
 
 		int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 		do {
@@ -120,6 +127,7 @@ void Locomotion::turnRight() {
 			rMotor->spinMotor(rMotorDutyCycle);
 			lMotor->spinMotor(lMotorDutyCycle);
 		} while(lMotorDutyCycle > 0 || rMotorDutyCycle > 0);
+		delay(200);
 
 }
 
@@ -137,7 +145,7 @@ void Locomotion::turnLeft() {
 	leftEncoderPID->setCoefficients(28,0,0.43);
 	rightEncoderPID->setCoefficients(28,0,0.45);
 
-	float desired = 2.78;
+	float desired = 2.65;
 
 	int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 	do {
@@ -146,7 +154,7 @@ void Locomotion::turnLeft() {
 		rMotor->spinMotor(rMotorDutyCycle);
 		lMotor->spinMotor(lMotorDutyCycle);
 	} while(lMotorDutyCycle > 0 || rMotorDutyCycle > 0);
-
+	delay(200);
 }
 
 void Locomotion::makeUTurn() {
@@ -160,7 +168,14 @@ void Locomotion::makeUTurn() {
 			leftEncoderPID->setCoefficients(28,0,0.43);
 			rightEncoderPID->setCoefficients(28,0,0.45);
 
-			float desired = 6.2;
+			long leftDistance = lSensor->getDistance();
+			long rightDistance = rSensor->getDistance();
+			if(leftDistance > rightDistance) {
+				lMotor->reverseDirection();
+				rMotor->reverseDirection();
+			}
+
+			float desired = 5.5;
 
 			int lMotorDutyCycle = 1, rMotorDutyCycle = 1;
 			do {
@@ -169,4 +184,8 @@ void Locomotion::makeUTurn() {
 				rMotor->spinMotor(rMotorDutyCycle);
 				lMotor->spinMotor(lMotorDutyCycle);
 			} while(lMotorDutyCycle > 0 || rMotorDutyCycle > 0);
+			delay(200);
+
 }
+
+

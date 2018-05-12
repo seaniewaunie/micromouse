@@ -39,14 +39,12 @@ long Sensor::getDistance(){
     delayMicroseconds(10);
     digitalWrite(m_trigPin, LOW);
     duration = pulseIn(m_echoPin, HIGH);
-
     long distance = duration/2/29.1;
     // if it's greater than this distance, an error occured
     if(distance < MAX_DISTANCE)
         return distance;
     else
         return MAX_DISTANCE;
-
 
 }
 

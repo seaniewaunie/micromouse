@@ -59,11 +59,11 @@ namespace micromouse_pid_functions {
 
 		//Serial.print("L:"); Serial.println(actual_distance);
 
-		if(newDutyCycle >= 200.0) {
-			return 200;
+		if(newDutyCycle >= 180.0) {
+			return 180;
 		}
 		else {
-			if(newDutyCycle < 45.0) {
+			if(newDutyCycle < 50.0) {
 				return 0;
 			}
 			return int(newDutyCycle);
@@ -78,11 +78,11 @@ namespace micromouse_pid_functions {
 
 			//Serial.print("R:"); Serial.println(actual_distance);
 
-			if(newDutyCycle >= 200.0) {
-				return 200;
+			if(newDutyCycle >= 180.0) {
+				return 180;
 			}
 			else {
-				if(newDutyCycle < 45.0) {
+				if(newDutyCycle < 50.0) {
 					return 0;
 				}
 				return int(newDutyCycle);
